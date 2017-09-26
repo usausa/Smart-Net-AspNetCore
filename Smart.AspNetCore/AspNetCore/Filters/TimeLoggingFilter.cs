@@ -11,8 +11,6 @@
     /// </summary>
     public class TimeLoggingFilter : IActionFilter
     {
-        private const string Key = "_TimeLogging";
-
         private readonly ILogger<TimeLoggingFilter> logger;
 
         private readonly TimeLoggingOptions options;
@@ -34,7 +32,7 @@
         /// <param name="context"></param>
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            context.HttpContext.Items[Key] = Stopwatch.StartNew();
+            context.HttpContext.Items[options.Key] = Stopwatch.StartNew();
         }
 
         /// <summary>
@@ -43,7 +41,7 @@
         /// <param name="context"></param>
         public void OnActionExecuted(ActionExecutedContext context)
         {
-            var watch = (Stopwatch)context.HttpContext.Items[Key];
+            var watch = (Stopwatch)context.HttpContext.Items[options.Key];
             var elapsed = watch.ElapsedMilliseconds;
 
             if (watch.ElapsedMilliseconds >= options.Thresold)

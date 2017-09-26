@@ -10,6 +10,8 @@
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
 
+    using Smart.AspNetCore.Filters;
+
     public class Startup
     {
         public IConfiguration Configuration { get; }
@@ -31,7 +33,18 @@
                 options.LowercaseUrls = true;
             });
 
-            services.AddMvc()
+            services.AddExceptionLogging();
+            services.AddTimeLogging(options =>
+            {
+                options.Thresold = 5000;
+            });
+
+            services
+                .AddMvc(options =>
+                {
+                    options.Filters.AddExceptionLogging();
+                    options.Filters.AddTimeLogging();
+                })
                 .AddJsonOptions(options =>
                 {
                     options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();

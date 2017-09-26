@@ -4,7 +4,7 @@
 
     using Microsoft.AspNetCore.Mvc;
 
-    using WebApplication.Models;
+    using WebApplication.Mvc.Models;
 
     public class ErrorController : Controller
     {
