@@ -1,6 +1,5 @@
 ﻿namespace Smart.AspNetCore.TagHelpers
 {
-    using Microsoft.AspNetCore.Mvc.ModelBinding;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.AspNetCore.Mvc.TagHelpers;
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -12,9 +11,9 @@
     [HtmlTargetElement("div", Attributes = ValidationForAttributeName + "," + ValidationErrorClassName)]
     public class ValidationClassTagHelper : TagHelper
     {
-        private const string ValidationForAttributeName = "app-validation-for";
+        private const string ValidationForAttributeName = "s-validation-for";
 
-        private const string ValidationErrorClassName = "app-validationerror-class";
+        private const string ValidationErrorClassName = "s-validationerror-class";
 
         [HtmlAttributeName(ValidationForAttributeName)]
         public ModelExpression For { get; set; }
@@ -33,7 +32,7 @@
         /// <param name="output"></param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            ViewContext.ViewData.ModelState.TryGetValue(For.Name, out ModelStateEntry entry);
+            ViewContext.ViewData.ModelState.TryGetValue(For.Name, out var entry);
 
             if ((entry == null) || (entry.Errors.Count == 0))
             {

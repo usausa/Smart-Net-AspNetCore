@@ -1,4 +1,4 @@
-﻿namespace Smart.AspNetCore.Filters
+﻿namespace Smart.AspNetCore.ActionConstraints
 {
     using System;
 
