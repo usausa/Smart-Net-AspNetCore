@@ -1,4 +1,4 @@
-﻿namespace WebApplication.Controllers
+﻿namespace WebApplication.Mvc.Controllers
 {
     using System.Diagnostics;
 
