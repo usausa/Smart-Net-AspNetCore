@@ -9,7 +9,7 @@
     /// <summary>
     ///
     /// </summary>
-    public class TimeLoggingFilter : IActionFilter
+    public sealed class TimeLoggingFilter : IActionFilter
     {
         private readonly ILogger<TimeLoggingFilter> logger;
 

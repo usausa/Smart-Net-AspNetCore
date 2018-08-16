@@ -10,7 +10,7 @@
     ///
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class RequireRouteValuesAttribute : ActionMethodSelectorAttribute
+    public sealed class RequireRouteValuesAttribute : ActionMethodSelectorAttribute
     {
         private readonly string[] values;
 

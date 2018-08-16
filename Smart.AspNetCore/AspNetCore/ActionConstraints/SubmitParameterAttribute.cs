@@ -10,7 +10,7 @@
     ///
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public class SubmitParameterAttribute : ActionMethodSelectorAttribute
+    public sealed class SubmitParameterAttribute : ActionMethodSelectorAttribute
     {
         private readonly string name;
 

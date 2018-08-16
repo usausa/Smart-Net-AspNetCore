@@ -7,7 +7,7 @@
     /// <summary>
     ///
     /// </summary>
-    public class ExceptionLoggingFilter : IExceptionFilter
+    public sealed class ExceptionLoggingFilter : IExceptionFilter
     {
         private readonly ILogger<ExceptionLoggingFilter> logger;
 

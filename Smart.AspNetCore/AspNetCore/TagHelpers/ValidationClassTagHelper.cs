@@ -9,7 +9,7 @@
     ///
     /// </summary>
     [HtmlTargetElement("div", Attributes = ValidationForAttributeName + "," + ValidationErrorClassName)]
-    public class ValidationClassTagHelper : TagHelper
+    public sealed class ValidationClassTagHelper : TagHelper
     {
         private const string ValidationForAttributeName = "s-validation-for";
 

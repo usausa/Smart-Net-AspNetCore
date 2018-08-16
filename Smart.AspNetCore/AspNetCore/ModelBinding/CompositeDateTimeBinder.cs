@@ -5,7 +5,7 @@
 
     using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-    public class CompositeDateTimeBinder : IModelBinder
+    public sealed class CompositeDateTimeBinder : IModelBinder
     {
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {

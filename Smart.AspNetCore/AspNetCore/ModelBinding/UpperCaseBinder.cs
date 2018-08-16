@@ -7,7 +7,7 @@
     /// <summary>
     ///
     /// </summary>
-    public class UpperCaseBinder : IModelBinder
+    public sealed class UpperCaseBinder : IModelBinder
     {
         /// <summary>
         ///

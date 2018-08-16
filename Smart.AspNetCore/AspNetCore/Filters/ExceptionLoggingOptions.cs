@@ -2,7 +2,7 @@
 {
     using Microsoft.Extensions.Logging;
 
-    public class ExceptionLoggingOptions
+    public sealed class ExceptionLoggingOptions
     {
         public EventId EventId { get; set; }
 

@@ -3,7 +3,7 @@ namespace Smart.AspNetCore.TagHelpers
     using Microsoft.AspNetCore.Razor.TagHelpers;
 
     [HtmlTargetElement(Attributes = ConditionAttributeName)]
-    public class ConditionTagHelper : TagHelper
+    public sealed class ConditionTagHelper : TagHelper
     {
         private const string ConditionAttributeName = "s-if";
 
