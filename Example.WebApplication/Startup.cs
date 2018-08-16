@@ -11,6 +11,7 @@
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
 
+    using Smart.AspNetCore.ApplicationModels;
     using Smart.AspNetCore.Filters;
 
     public class Startup
@@ -31,7 +32,6 @@
             services.Configure<RouteOptions>(options =>
             {
                 options.AppendTrailingSlash = true;
-                options.LowercaseUrls = true;
             });
 
             services.AddExceptionLogging();
@@ -45,6 +45,7 @@
                 {
                     options.Filters.AddExceptionLogging();
                     options.Filters.AddTimeLogging();
+                    options.Conventions.Add(new LowercaseControllerModelConvention());
                 })
                 .AddJsonOptions(options =>
                 {
