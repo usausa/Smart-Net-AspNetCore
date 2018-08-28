@@ -4,6 +4,6 @@
     {
         public string Key { get; set; } = "_TimeLogging";
 
-        public long Thresold { get; set; }
+        public long Threshold { get; set; }
     }
 }

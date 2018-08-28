@@ -37,7 +37,7 @@
             services.AddExceptionLogging();
             services.AddTimeLogging(options =>
             {
-                options.Thresold = 5000;
+                options.Threshold = 5000;
             });
 
             services

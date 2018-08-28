@@ -4,9 +4,9 @@
 
     public static class ModelStateDictionaryExtensions
     {
-        public static bool IsValid(this ModelStateDictionary mdelsState, string key)
+        public static bool IsValid(this ModelStateDictionary modelsState, string key)
         {
-            return mdelsState[key]?.Errors.Count == 0;
+            return modelsState[key]?.Errors.Count == 0;
         }
     }
 }

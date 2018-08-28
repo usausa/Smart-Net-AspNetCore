@@ -44,7 +44,7 @@
             var watch = (Stopwatch)context.HttpContext.Items[options.Key];
             var elapsed = watch.ElapsedMilliseconds;
 
-            if (watch.ElapsedMilliseconds >= options.Thresold)
+            if (watch.ElapsedMilliseconds >= options.Threshold)
             {
                 logger.LogWarning("Long execution. Elapsed=[{0}]", elapsed);
             }
