@@ -8,8 +8,8 @@
     {
         public static bool IsAjaxRequest(this HttpRequest request)
         {
-            return String.Equals(request.Query["X-Requested-With"], "XMLHttpRequest", StringComparison.Ordinal) ||
-                   String.Equals(request.Headers["X-Requested-With"], "XMLHttpRequest", StringComparison.Ordinal);
+            return String.Equals(request.Query["X-Requested-With"], "XMLHttpRequest") ||
+                   String.Equals(request.Headers["X-Requested-With"], "XMLHttpRequest");
         }
     }
 }
