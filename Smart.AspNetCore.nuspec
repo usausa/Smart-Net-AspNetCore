@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-  <metadata>
+  <metadata minClientVersion="2.12">
     <id>Usa.Smart.AspNetCore</id>
-    <version>1.1.2</version>
+    <version>1.2.0</version>
     <title>Smart.AspNetCore .NET</title>
     <authors>machi_pon</authors>
     <owners>machi_pon</owners>
@@ -10,6 +10,7 @@
     <releaseNotes></releaseNotes>
     <summary>Smart ASP.NET Core library for .NET</summary>
     <projectUrl>https://github.com/usausa/Smart-Net-AspNetCore</projectUrl>
+    <repository type="git" url="https://github.com/usausa/Smart-Net-AspNetCore" />
     <copyright></copyright>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <dependencies>
