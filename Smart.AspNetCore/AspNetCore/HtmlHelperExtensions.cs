@@ -1,7 +1,8 @@
-﻿namespace Smart.AspNetCore
+namespace Smart.AspNetCore
 {
     using System;
     using System.Linq;
+    using System.Threading;
 
     using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -33,7 +34,7 @@
 
         public static T RouteValue<T>(this IHtmlHelper helper, string key)
         {
-            return (T)Convert.ChangeType(helper.ViewContext.RouteData.Values[key], typeof(T));
+            return (T)Convert.ChangeType(helper.ViewContext.RouteData.Values[key], typeof(T), Thread.CurrentThread.CurrentCulture);
         }
 
         public static string QueryValue(this IHtmlHelper helper, string key)

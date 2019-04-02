@@ -1,6 +1,7 @@
-﻿namespace Smart.AspNetCore.ModelBinding
+namespace Smart.AspNetCore.ModelBinding
 {
     using System;
+    using System.Globalization;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -60,10 +61,10 @@
 
             try
             {
-                value = Int32.Parse(str);
+                value = Int32.Parse(str, NumberStyles.Integer, NumberFormatInfo.InvariantInfo);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is FormatException || ex is OverflowException)
             {
                 bindingContext.ModelState.AddModelError(
                     bindingContext.ModelName,

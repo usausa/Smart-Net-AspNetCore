@@ -1,4 +1,4 @@
-﻿namespace Smart.AspNetCore
+namespace Smart.AspNetCore
 {
     using System;
 
@@ -8,8 +8,8 @@
     {
         public static bool IsAjaxRequest(this HttpRequest request)
         {
-            return String.Equals(request.Query["X-Requested-With"], "XMLHttpRequest") ||
-                   String.Equals(request.Headers["X-Requested-With"], "XMLHttpRequest");
+            return String.Equals(request.Query["X-Requested-With"], "XMLHttpRequest", StringComparison.Ordinal) ||
+                   String.Equals(request.Headers["X-Requested-With"], "XMLHttpRequest", StringComparison.Ordinal);
         }
     }
 }
