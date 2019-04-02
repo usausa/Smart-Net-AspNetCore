@@ -7,7 +7,7 @@
     {
         public override void OnResultExecuting(ResultExecutingContext context)
         {
-            if (context.Result is ObjectResult objectResult && objectResult.Value == null)
+            if (context.Result is ObjectResult objectResult && objectResult.Value is null)
             {
                 context.Result = new NotFoundResult();
             }

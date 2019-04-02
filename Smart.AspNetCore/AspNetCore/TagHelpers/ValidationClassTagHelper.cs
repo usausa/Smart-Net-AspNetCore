@@ -34,7 +34,7 @@
         {
             ViewContext.ViewData.ModelState.TryGetValue(For.Name, out var entry);
 
-            if ((entry == null) || (entry.Errors.Count == 0))
+            if (entry is null || (entry.Errors.Count == 0))
             {
                 return;
             }
