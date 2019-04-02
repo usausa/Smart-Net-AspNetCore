@@ -3,18 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Smart</RootNamespace>
-    <LangVersion>latest</LangVersion>
     <CodeAnalysisRuleSet>..\Smart.AspNetCore.ruleset</CodeAnalysisRuleSet>
-    <Version>1.2.2</Version>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <DebugType>full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <DebugType>pdbonly</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
