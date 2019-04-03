@@ -1,4 +1,4 @@
-namespace Smart.AspNetCore.ApplicationModels
+﻿namespace Smart.AspNetCore.ApplicationModels
 {
     using System.Globalization;
 

@@ -1,4 +1,4 @@
-namespace Smart.AspNetCore.TagHelpers
+﻿namespace Smart.AspNetCore.TagHelpers
 {
     using Microsoft.AspNetCore.Razor.TagHelpers;
 

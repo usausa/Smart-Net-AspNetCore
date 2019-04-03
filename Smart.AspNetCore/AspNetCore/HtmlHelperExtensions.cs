@@ -1,4 +1,4 @@
-namespace Smart.AspNetCore
+﻿namespace Smart.AspNetCore
 {
     using System;
     using System.Linq;

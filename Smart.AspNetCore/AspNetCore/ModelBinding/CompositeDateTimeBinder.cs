@@ -1,4 +1,4 @@
-namespace Smart.AspNetCore.ModelBinding
+﻿namespace Smart.AspNetCore.ModelBinding
 {
     using System;
     using System.Globalization;
