@@ -1,4 +1,4 @@
-﻿namespace Smart.AspNetCore
+namespace Smart.AspNetCore
 {
     using System;
     using System.Linq;
@@ -6,9 +6,6 @@
 
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    /// <summary>
-    ///
-    /// </summary>
     public static class HtmlHelperExtensions
     {
         public static bool IsSelected(this IHtmlHelper helper, params string[] controllers)

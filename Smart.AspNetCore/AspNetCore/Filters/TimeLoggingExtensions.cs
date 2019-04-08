@@ -1,4 +1,4 @@
-﻿namespace Smart.AspNetCore.Filters
+namespace Smart.AspNetCore.Filters
 {
     using System;
 
@@ -6,16 +6,8 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
 
-    /// <summary>
-    ///
-    /// </summary>
     public static class TimeLoggingExtensions
     {
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
         public static IServiceCollection AddTimeLogging(this IServiceCollection services)
         {
             services.AddOptions();
@@ -25,12 +17,6 @@
             return services;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="setupAction"></param>
-        /// <returns></returns>
         public static IServiceCollection AddTimeLogging(this IServiceCollection services, Action<TimeLoggingOptions> setupAction)
         {
             services.AddTimeLogging();
@@ -39,11 +25,6 @@
             return services;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="filters"></param>
-        /// <returns></returns>
         public static IFilterMetadata AddTimeLogging(this FilterCollection filters)
         {
             return filters.AddService<TimeLoggingFilter>();

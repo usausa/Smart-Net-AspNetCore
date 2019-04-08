@@ -1,7 +1,5 @@
-﻿namespace Smart.AspNetCore.ApplicationModels
+namespace Smart.AspNetCore.ApplicationModels
 {
-    using System.Globalization;
-
     using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
     public sealed class LowercaseControllerModelConvention : IControllerModelConvention

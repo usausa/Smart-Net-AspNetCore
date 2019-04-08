@@ -1,13 +1,10 @@
-﻿namespace Smart.AspNetCore.TagHelpers
+namespace Smart.AspNetCore.TagHelpers
 {
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.AspNetCore.Mvc.TagHelpers;
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
     using Microsoft.AspNetCore.Razor.TagHelpers;
 
-    /// <summary>
-    ///
-    /// </summary>
     [HtmlTargetElement("div", Attributes = ValidationForAttributeName + "," + ValidationErrorClassName)]
     public sealed class ValidationClassTagHelper : TagHelper
     {
@@ -25,11 +22,6 @@
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="output"></param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             ViewContext.ViewData.ModelState.TryGetValue(For.Name, out var entry);
