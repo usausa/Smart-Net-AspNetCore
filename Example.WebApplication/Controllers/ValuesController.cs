@@ -1,4 +1,4 @@
-﻿namespace Example.WebApplication.Api.Controllers
+namespace Example.WebApplication.Controllers
 {
     using System.Collections.Generic;
 

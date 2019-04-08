@@ -1,8 +1,8 @@
-﻿namespace Example.WebApplication.Mvc.Controllers
+namespace Example.WebApplication.Controllers
 {
     using System.Diagnostics;
 
-    using Example.WebApplication.Mvc.Models;
+    using Example.WebApplication.Models;
 
     using Microsoft.AspNetCore.Mvc;
 
@@ -10,12 +10,6 @@
     {
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Index()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Forbidden()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }

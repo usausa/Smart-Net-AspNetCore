@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <CodeAnalysisRuleSet>..\Example.ruleset</CodeAnalysisRuleSet>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <CodeAnalysisRuleSet>..\Example.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
