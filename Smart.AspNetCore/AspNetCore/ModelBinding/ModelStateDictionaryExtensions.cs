@@ -1,4 +1,4 @@
-﻿namespace Smart.AspNetCore
+namespace Smart.AspNetCore.ModelBinding
 {
     using Microsoft.AspNetCore.Mvc.ModelBinding;
 
