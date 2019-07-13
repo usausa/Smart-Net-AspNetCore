@@ -24,6 +24,7 @@ namespace Smart.AspNetCore.ActionConstraints
             this.value = value;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Ignore")]
         public override bool IsValidForRequest(RouteContext routeContext, ActionDescriptor action)
         {
             if (!routeContext.HttpContext.Request.HasFormContentType)

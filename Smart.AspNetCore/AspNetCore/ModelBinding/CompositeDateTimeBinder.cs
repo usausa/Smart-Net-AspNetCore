@@ -1,4 +1,4 @@
-﻿namespace Smart.AspNetCore.ModelBinding
+namespace Smart.AspNetCore.ModelBinding
 {
     using System;
     using System.Globalization;
@@ -8,6 +8,7 @@
 
     public sealed class CompositeDateTimeBinder : IModelBinder
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Ignore")]
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
             var yearProvider = bindingContext.ValueProvider.GetValue(bindingContext.ModelName + ".Year");

@@ -12,17 +12,20 @@ namespace Smart.AspNetCore.Filters
 
         private readonly TimeLoggingOptions options;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Ignore")]
         public TimeLoggingFilter(ILogger<TimeLoggingFilter> logger, IOptions<TimeLoggingOptions> options)
         {
             this.logger = logger;
             this.options = options.Value;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Ignore")]
         public void OnActionExecuting(ActionExecutingContext context)
         {
             context.HttpContext.Items[options.Key] = Stopwatch.StartNew();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Ignore")]
         public void OnActionExecuted(ActionExecutedContext context)
         {
             var watch = (Stopwatch)context.HttpContext.Items[options.Key];

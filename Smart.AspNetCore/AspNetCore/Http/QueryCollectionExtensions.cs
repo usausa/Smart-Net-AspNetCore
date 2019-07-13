@@ -8,6 +8,7 @@ namespace Smart.AspNetCore.Http
 
     public static class QueryCollectionExtensions
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Extensions")]
         public static string Replace(this IQueryCollection query, string key, string value)
         {
             var replaced = false;

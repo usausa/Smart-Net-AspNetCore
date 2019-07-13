@@ -6,6 +6,7 @@ namespace Smart.AspNetCore.ModelBinding
 
     public sealed class UpperCaseBinder : IModelBinder
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Ignore")]
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
             var valueProvider = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);

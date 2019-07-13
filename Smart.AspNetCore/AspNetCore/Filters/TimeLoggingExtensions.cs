@@ -25,6 +25,7 @@ namespace Smart.AspNetCore.Filters
             return services;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Extensions")]
         public static IFilterMetadata AddTimeLogging(this FilterCollection filters)
         {
             return filters.AddService<TimeLoggingFilter>();

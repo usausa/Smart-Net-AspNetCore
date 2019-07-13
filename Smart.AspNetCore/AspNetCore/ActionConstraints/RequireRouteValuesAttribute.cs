@@ -16,6 +16,7 @@ namespace Smart.AspNetCore.ActionConstraints
             this.values = values;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Ignore")]
         public override bool IsValidForRequest(RouteContext routeContext, ActionDescriptor action)
         {
             foreach (var value in values)

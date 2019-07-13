@@ -10,12 +10,14 @@ namespace Smart.AspNetCore.Filters
 
         private readonly ExceptionLoggingOptions options;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Ignore")]
         public ExceptionLoggingFilter(ILogger<ExceptionLoggingFilter> logger, IOptions<ExceptionLoggingOptions> options)
         {
             this.logger = logger;
             this.options = options.Value;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Ignore")]
         public void OnException(ExceptionContext context)
         {
             logger.LogError(options.EventId, context.Exception, options.Message);

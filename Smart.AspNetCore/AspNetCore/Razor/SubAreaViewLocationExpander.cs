@@ -1,4 +1,4 @@
-﻿namespace Smart.AspNetCore.Razor
+namespace Smart.AspNetCore.Razor
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -19,6 +19,7 @@
             this.useSubAreaPath = useSubAreaPath;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Ignore")]
         public IEnumerable<string> ExpandViewLocations(ViewLocationExpanderContext context, IEnumerable<string> viewLocations)
         {
             if (context.ActionContext.RouteData.Values.ContainsKey("subarea"))
@@ -36,6 +37,7 @@
             return viewLocations;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Ignore")]
         public void PopulateValues(ViewLocationExpanderContext context)
         {
             context.ActionContext.ActionDescriptor.RouteValues.TryGetValue("subarea", out var subArea);

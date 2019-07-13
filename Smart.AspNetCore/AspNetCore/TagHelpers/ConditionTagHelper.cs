@@ -10,6 +10,7 @@ namespace Smart.AspNetCore.TagHelpers
         [HtmlAttributeName(ConditionAttributeName)]
         public bool Condition { get; set; }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Ignore")]
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (!Condition)

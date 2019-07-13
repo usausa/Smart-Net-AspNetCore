@@ -23,6 +23,7 @@ namespace Smart.AspNetCore.Http
             this.next = next;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Ignore")]
         public async Task Invoke(HttpContext context)
         {
             var encodingType = ResolveEncodingType(context.Request.Headers);
