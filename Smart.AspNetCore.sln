@@ -14,12 +14,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.targets = Directory.Build.targets
 		Example.ruleset = Example.ruleset
 		README.md = README.md
-		Smart.AspNetCore.nuspec = Smart.AspNetCore.nuspec
 		Smart.AspNetCore.ruleset = Smart.AspNetCore.ruleset
 		Smart.AspNetCore.sln.DotSettings = Smart.AspNetCore.sln.DotSettings
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.WebApplication", "Example.WebApplication\Example.WebApplication.csproj", "{F420FED1-B384-47C2-B151-B8C9E719B8F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example.WebApplication", "Example.WebApplication\Example.WebApplication.csproj", "{F420FED1-B384-47C2-B151-B8C9E719B8F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
