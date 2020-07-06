@@ -14,12 +14,14 @@ namespace Example.WebApplication.Controllers
             return new[] { "value1", "value2" };
         }
 
+        // ReSharper disable once UnusedParameter.Global
         [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
         }
 
+        // ReSharper disable once UnusedParameter.Global
         [HttpPost]
         public void Post([FromBody]string value)
         {

@@ -1,4 +1,4 @@
-﻿namespace Smart.AspNetCore.Filters
+namespace Smart.AspNetCore.Filters
 {
     using Microsoft.Extensions.Logging;
 
@@ -6,6 +6,7 @@
     {
         public EventId EventId { get; set; }
 
+        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
         public string Message { get; set; } = "Handle exception.";
     }
 }

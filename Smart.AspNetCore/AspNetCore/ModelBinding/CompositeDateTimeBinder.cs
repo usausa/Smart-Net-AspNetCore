@@ -52,7 +52,7 @@ namespace Smart.AspNetCore.ModelBinding
             return Task.CompletedTask;
         }
 
-        private bool ParseValue(ModelBindingContext bindingContext, string str, int defaultValue, out int value)
+        private static bool ParseValue(ModelBindingContext bindingContext, string str, int defaultValue, out int value)
         {
             if (String.IsNullOrEmpty(str))
             {
