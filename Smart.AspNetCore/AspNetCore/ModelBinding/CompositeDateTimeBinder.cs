@@ -1,4 +1,4 @@
-namespace Smart.AspNetCore.ModelBinding
+﻿namespace Smart.AspNetCore.ModelBinding
 {
     using System;
     using System.Globalization;
@@ -29,12 +29,12 @@ namespace Smart.AspNetCore.ModelBinding
             }
 
             var now = DateTimeOffset.Now;
-            if (!ParseValue(bindingContext, yearProvider.FirstValue, now.Year, out int year) ||
-                !ParseValue(bindingContext, monthProvider.FirstValue, now.Month, out int month) ||
-                !ParseValue(bindingContext, dayProvider.FirstValue, now.Day, out int day) ||
-                !ParseValue(bindingContext, hourProvider.FirstValue, 0, out int hour) ||
-                !ParseValue(bindingContext, minuteProvider.FirstValue, 0, out int minute) ||
-                !ParseValue(bindingContext, secondProvider.FirstValue, 0, out int second))
+            if (!ParseValue(bindingContext, yearProvider.FirstValue, now.Year, out var year) ||
+                !ParseValue(bindingContext, monthProvider.FirstValue, now.Month, out var month) ||
+                !ParseValue(bindingContext, dayProvider.FirstValue, now.Day, out var day) ||
+                !ParseValue(bindingContext, hourProvider.FirstValue, 0, out var hour) ||
+                !ParseValue(bindingContext, minuteProvider.FirstValue, 0, out var minute) ||
+                !ParseValue(bindingContext, secondProvider.FirstValue, 0, out var second))
             {
                 return Task.CompletedTask;
             }
