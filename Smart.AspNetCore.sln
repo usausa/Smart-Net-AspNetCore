@@ -18,8 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart.AspNetCore", "Smart.AspNetCore\Smart.AspNetCore.csproj", "{FEFC9F69-D947-41AF-B9DE-0290158E7133}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.Web", "Example.Web\Example.Web.csproj", "{8EBE0896-73CD-4B97-BD5A-37D2BD3C1C3C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,10 +28,6 @@ Global
 		{FEFC9F69-D947-41AF-B9DE-0290158E7133}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEFC9F69-D947-41AF-B9DE-0290158E7133}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEFC9F69-D947-41AF-B9DE-0290158E7133}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8EBE0896-73CD-4B97-BD5A-37D2BD3C1C3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8EBE0896-73CD-4B97-BD5A-37D2BD3C1C3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8EBE0896-73CD-4B97-BD5A-37D2BD3C1C3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8EBE0896-73CD-4B97-BD5A-37D2BD3C1C3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
