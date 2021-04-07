@@ -10,6 +10,26 @@ namespace Smart.AspNetCore
 
     public static class ServiceCollectionExtensions
     {
+        //--------------------------------------------------------------------------------
+        // Exception status
+        //--------------------------------------------------------------------------------
+
+        public static IServiceCollection AddExceptionStatus(this IServiceCollection services)
+        {
+            services.TryAddSingleton<ExceptionStatusFilter>();
+
+            return services;
+        }
+
+        public static IFilterMetadata AddExceptionStatus(this FilterCollection filters)
+        {
+            return filters.AddService<ExceptionStatusFilter>();
+        }
+
+        //--------------------------------------------------------------------------------
+        // Time logging
+        //--------------------------------------------------------------------------------
+
         public static IServiceCollection AddTimeLogging(this IServiceCollection services)
         {
             services.AddOptions();
