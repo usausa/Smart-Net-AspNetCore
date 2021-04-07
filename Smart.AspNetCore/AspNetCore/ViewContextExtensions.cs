@@ -42,6 +42,10 @@ namespace Smart.AspNetCore
             }
         }
 
+        //--------------------------------------------------------------------------------
+        // Route value
+        //--------------------------------------------------------------------------------
+
         public static bool HasRouteValue(this ViewContext context, string key)
         {
             return context.RouteData.Values.ContainsKey(key);
@@ -58,6 +62,10 @@ namespace Smart.AspNetCore
                 _ => TypeConvert<T>(value)
             };
         }
+
+        //--------------------------------------------------------------------------------
+        // Query parameter
+        //--------------------------------------------------------------------------------
 
         public static string? GetQueryString(this ViewContext context, string key)
         {
@@ -76,9 +84,75 @@ namespace Smart.AspNetCore
             };
         }
 
+        //--------------------------------------------------------------------------------
+        // Verb
+        //--------------------------------------------------------------------------------
+
         public static bool IsPost(this ViewContext context)
         {
             return HttpMethods.IsPost(context.HttpContext.Request.Method);
+        }
+
+        //--------------------------------------------------------------------------------
+        // Controller
+        //--------------------------------------------------------------------------------
+
+        public static bool IsAreaActive(this ViewContext context, string area)
+        {
+            return context.RouteData.Values.TryGetValue("area", out var currentArea) &&
+                   area.Equals((string)currentArea!, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static bool IsControllerActive(this ViewContext context, string area, string controller)
+        {
+            return context.RouteData.Values.TryGetValue("area", out var currentArea) &&
+                   area.Equals((string)currentArea!, StringComparison.OrdinalIgnoreCase) &&
+                   context.RouteData.Values.TryGetValue("controller", out var currentController) &&
+                   controller.Equals((string)currentController!, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static bool IsControllerActive(this ViewContext context, string area, string[] controllers)
+        {
+            return context.RouteData.Values.TryGetValue("area", out var currentArea) &&
+                   area.Equals((string)currentArea!, StringComparison.OrdinalIgnoreCase) &&
+                   context.RouteData.Values.TryGetValue("controller", out var currentController) &&
+                   controllers.Any(x => x.Equals((string)currentController!, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public static bool IsActionActive(this ViewContext context, string area, string controller, string action)
+        {
+            return context.RouteData.Values.TryGetValue("area", out var currentArea) &&
+                   area.Equals((string)currentArea!, StringComparison.OrdinalIgnoreCase) &&
+                   context.RouteData.Values.TryGetValue("controller", out var currentController) &&
+                   controller.Equals((string)currentController!, StringComparison.OrdinalIgnoreCase) &&
+                   context.RouteData.Values.TryGetValue("action", out var currentAction) &&
+                   action.Equals((string)currentAction!, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static bool IsActionActive(this ViewContext context, string area, string controller, string[] actions)
+        {
+            return context.RouteData.Values.TryGetValue("area", out var currentArea) &&
+                   area.Equals((string)currentArea!, StringComparison.OrdinalIgnoreCase) &&
+                   context.RouteData.Values.TryGetValue("controller", out var currentController) &&
+                   controller.Equals((string)currentController!, StringComparison.OrdinalIgnoreCase) &&
+                   context.RouteData.Values.TryGetValue("action", out var currentAction) &&
+                   actions.Any(x => x.Equals((string)currentAction!, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public static bool IsActionActive(this ViewContext context, string controller, string action)
+        {
+            return context.RouteData.Values.TryGetValue("controller", out var currentController) &&
+                   controller.Equals((string)currentController!, StringComparison.OrdinalIgnoreCase) &&
+                   context.RouteData.Values.TryGetValue("action", out var currentAction) &&
+                   action.Equals((string)currentAction!, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static bool IsActionActive(this ViewContext context, string controller, string[] actions)
+        {
+            return context.RouteData.Values.TryGetValue("controller", out var currentController) &&
+                   controller.Equals((string)currentController!, StringComparison.OrdinalIgnoreCase) &&
+                   context.RouteData.Values.TryGetValue("action", out var currentAction) &&
+                   actions.Any(x => x.Equals((string)currentAction!, StringComparison.OrdinalIgnoreCase));
         }
     }
 }
