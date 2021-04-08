@@ -8,29 +8,23 @@ namespace Smart.AspNetCore.ActionConstraints
     using Microsoft.AspNetCore.Routing;
 
     [AttributeUsage(AttributeTargets.Method)]
-    public sealed class SubmitParameterAttribute : ActionMethodSelectorAttribute
+    public sealed class QueryParameterAttribute : ActionMethodSelectorAttribute
     {
         private readonly string name;
 
         private readonly string[] values;
 
-        public SubmitParameterAttribute(string name, params string[] values)
+        public QueryParameterAttribute(string name, params object[] values)
         {
             this.name = name;
-            this.values = values;
+            this.values = values.Select(x => x.ToString()!).ToArray();
         }
 
         public override bool IsValidForRequest(RouteContext routeContext, ActionDescriptor action)
         {
-            if (!routeContext.HttpContext.Request.HasFormContentType)
-            {
-                return false;
-            }
-
-            var formValues = routeContext.HttpContext.Request.Form[name];
-            return (formValues.Count > 0) &&
+            return routeContext.HttpContext.Request.Query.TryGetValue(name, out var queryValues) &&
                    ((values.Length == 0) ||
-                    formValues.Any(x => values.Any(y => String.Equals(x, y, StringComparison.OrdinalIgnoreCase))));
+                    queryValues.Any(x => values.Any(y => String.Equals(x, y, StringComparison.OrdinalIgnoreCase))));
         }
     }
 }

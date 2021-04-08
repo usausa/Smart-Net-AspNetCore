@@ -1,12 +1,14 @@
 namespace Smart.AspNetCore
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
 
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.Extensions.Primitives;
 
     public static class ViewContextExtensions
     {
@@ -91,6 +93,20 @@ namespace Smart.AspNetCore
         public static bool IsPost(this ViewContext context)
         {
             return HttpMethods.IsPost(context.HttpContext.Request.Method);
+        }
+
+        //--------------------------------------------------------------------------------
+        // QueryString
+        //--------------------------------------------------------------------------------
+
+        public static QueryString ReplaceQuery(this ViewContext context, string name, StringValues value)
+        {
+            return context.HttpContext.Request.QueryString.Replace(name, value);
+        }
+
+        public static QueryString ReplaceQuery(this ViewContext context, IDictionary<string, StringValues> dictionary)
+        {
+            return context.HttpContext.Request.QueryString.Replace(dictionary);
         }
 
         //--------------------------------------------------------------------------------
