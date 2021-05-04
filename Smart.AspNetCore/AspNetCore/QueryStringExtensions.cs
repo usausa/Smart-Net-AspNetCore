@@ -1,7 +1,9 @@
 namespace Smart.AspNetCore
 {
     using System.Collections.Generic;
+#if NETCOREAPP3_1
     using System.Linq;
+#endif
 
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Http.Extensions;
