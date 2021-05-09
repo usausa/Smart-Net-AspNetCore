@@ -2,10 +2,12 @@ namespace Smart.AspNetCore.ActionConstraints
 {
     using System;
     using System.Linq;
+    using System.Runtime.CompilerServices;
 
     using Microsoft.AspNetCore.Mvc.Abstractions;
     using Microsoft.AspNetCore.Mvc.ActionConstraints;
     using Microsoft.AspNetCore.Routing;
+    using Microsoft.Extensions.Primitives;
 
     [AttributeUsage(AttributeTargets.Method)]
     public sealed class FormParameterAttribute : ActionMethodSelectorAttribute
@@ -27,9 +29,26 @@ namespace Smart.AspNetCore.ActionConstraints
                 return false;
             }
 
-            return routeContext.HttpContext.Request.Form.TryGetValue(name, out var formValues) &&
-                   ((values.Length == 0) ||
-                    formValues.Any(x => values.Any(y => String.Equals(x, y, StringComparison.OrdinalIgnoreCase))));
+            return routeContext.HttpContext.Request.Form.TryGetValue(name, out var formValues) && Match(values, formValues);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool Match(string[] values, StringValues formValues)
+        {
+            if (values.Length == 0)
+            {
+                return true;
+            }
+
+            for (var i = 0; i < values.Length; i++)
+            {
+                if (formValues.Contains(values[i]))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

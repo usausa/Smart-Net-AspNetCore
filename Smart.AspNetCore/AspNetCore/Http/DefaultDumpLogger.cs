@@ -67,9 +67,10 @@ namespace Smart.AspNetCore.Http
                 return DumpType.None;
             }
 
-            for (var i = 0; i < targets.Length; i++)
+            var local = targets;
+            for (var i = 0; i < local.Length; i++)
             {
-                var target = targets[i];
+                var target = local[i];
                 if (contentType.StartsWith(target.ContentType, StringComparison.InvariantCulture))
                 {
                     return target.DumpType;
