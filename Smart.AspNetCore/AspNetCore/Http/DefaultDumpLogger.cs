@@ -39,7 +39,7 @@ namespace Smart.AspNetCore.Http
                 return;
             }
 
-            logger.Log(logLevel, "Request dump. dump=[{dump}]", dumpType == DumpType.Text ? textEncoding.GetString(body) : HexEncoder.ToHex(body));
+            logger.Log(logLevel, "Request dump. dump=[{dump}]", dumpType == DumpType.Text ? textEncoding.GetString(body) : HexEncoder.Encode(body));
         }
 
         public void DumpResponse(ILogger logger, HttpContext context, byte[] body)
@@ -56,7 +56,7 @@ namespace Smart.AspNetCore.Http
                 return;
             }
 
-            logger.Log(logLevel, "Response dump. dump=[{dump}]", dumpType == DumpType.Text ? textEncoding.GetString(body) : HexEncoder.ToHex(body));
+            logger.Log(logLevel, "Response dump. dump=[{dump}]", dumpType == DumpType.Text ? textEncoding.GetString(body) : HexEncoder.Encode(body));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
