@@ -61,11 +61,16 @@ namespace Smart.AspNetCore.Routing
             foreach (var pi in type.GetRuntimeProperties().Where(IsTargetProperty))
             {
                 var getter = factory.CreateGetter(pi);
+                if (getter is null)
+                {
+                    continue;
+                }
+
                 var converter = pi.GetCustomAttribute<ConvertAttribute>();
                 if (converter != null)
                 {
                     var g = getter;
-                    var c = (Func<object, object>)converter.Convert;
+                    var c = (Func<object?, object?>)converter.Convert;
                     getter = x => c(g(x));
                 }
 
@@ -94,7 +99,7 @@ namespace Smart.AspNetCore.Routing
             public string Name;
 
             [AllowNull]
-            public Func<object, object> Getter;
+            public Func<object?, object?> Getter;
         }
     }
 }
