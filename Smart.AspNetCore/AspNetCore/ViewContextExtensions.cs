@@ -2,7 +2,6 @@ namespace Smart.AspNetCore
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
 
@@ -12,8 +11,7 @@ namespace Smart.AspNetCore
 
     public static class ViewContextExtensions
     {
-        [return: MaybeNull]
-        private static T TypeConvert<T>(object? value)
+        private static T? TypeConvert<T>(object? value)
         {
             if (value is null)
             {
@@ -53,8 +51,7 @@ namespace Smart.AspNetCore
             return context.RouteData.Values.ContainsKey(key);
         }
 
-        [return: MaybeNull]
-        public static T GetRouteValue<T>(this ViewContext context, string key)
+        public static T? GetRouteValue<T>(this ViewContext context, string key)
         {
             var value = context.RouteData.Values[key];
             return value switch
@@ -74,8 +71,7 @@ namespace Smart.AspNetCore
             return context.HttpContext.Request.Query[key].FirstOrDefault();
         }
 
-        [return: MaybeNull]
-        public static T GetQueryValue<T>(this ViewContext context, string key)
+        public static T? GetQueryValue<T>(this ViewContext context, string key)
         {
             var value = context.HttpContext.Request.Query[key].FirstOrDefault();
             return value switch

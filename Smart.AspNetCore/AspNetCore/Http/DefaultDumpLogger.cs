@@ -3,8 +3,10 @@ namespace Smart.AspNetCore.Http
     using System;
     using System.Runtime.CompilerServices;
     using System.Text;
+
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
+
     using Smart.Text;
 
     public class DefaultDumpLogger : IRequestResponseDumpLogger
