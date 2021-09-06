@@ -2,6 +2,7 @@ namespace Smart.AspNetCore
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
 
@@ -9,13 +10,15 @@ namespace Smart.AspNetCore
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.Extensions.Primitives;
 
+    // ReSharper disable UseNullableAnnotationInsteadOfAttribute
     public static class ViewContextExtensions
     {
+        [return: MaybeNull]
         private static T TypeConvert<T>(object? value)
         {
             if (value is null)
             {
-                return default!;
+                return default;
             }
 
             var type = typeof(T);
@@ -28,7 +31,7 @@ namespace Smart.AspNetCore
                 }
                 catch (Exception e) when (e is ArgumentException || e is OverflowException)
                 {
-                    return default!;
+                    return default;
                 }
             }
 
@@ -38,7 +41,7 @@ namespace Smart.AspNetCore
             }
             catch (Exception e) when (e is FormatException || e is OverflowException)
             {
-                return default!;
+                return default;
             }
         }
 
@@ -51,12 +54,13 @@ namespace Smart.AspNetCore
             return context.RouteData.Values.ContainsKey(key);
         }
 
+        [return: MaybeNull]
         public static T GetRouteValue<T>(this ViewContext context, string key)
         {
             var value = context.RouteData.Values[key];
             return value switch
             {
-                null => default!,
+                null => default,
                 T typedValue => typedValue,
                 _ => TypeConvert<T>(value)
             };
@@ -71,12 +75,13 @@ namespace Smart.AspNetCore
             return context.HttpContext.Request.Query[key].FirstOrDefault();
         }
 
+        [return: MaybeNull]
         public static T GetQueryValue<T>(this ViewContext context, string key)
         {
             var value = context.HttpContext.Request.Query[key].FirstOrDefault();
             return value switch
             {
-                null => default!,
+                null => default,
                 T typedValue => typedValue,
                 _ => TypeConvert<T>(value)
             };
