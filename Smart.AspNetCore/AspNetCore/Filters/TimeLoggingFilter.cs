@@ -23,6 +23,7 @@ namespace Smart.AspNetCore.Filters
             context.HttpContext.Items[options.Key] = Stopwatch.StartNew();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2254", Justification = "Ignore")]
         public void OnActionExecuted(ActionExecutedContext context)
         {
             var watch = (Stopwatch)context.HttpContext.Items[options.Key]!;

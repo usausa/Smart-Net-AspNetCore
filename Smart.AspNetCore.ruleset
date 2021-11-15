@@ -19,5 +19,6 @@
     <Rule Id="CA1019" Action="None" />
     <Rule Id="CA1034" Action="None" />
     <Rule Id="CA1062" Action="None" />
+    <Rule Id="CA1848" Action="None" />
   </Rules>
 </RuleSet>
