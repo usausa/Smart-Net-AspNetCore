@@ -27,7 +27,9 @@ namespace Smart.AspNetCore.Http
             dumpLogger.DumpRequest(logger, context, requestBody);
 
             var originalBodyStream = context.Response.Body;
+#pragma warning disable CA2007
             await using var responseBodyStream = new MemoryStream();
+#pragma warning restore CA2007
             context.Response.Body = responseBodyStream;
 
             await next(context).ConfigureAwait(false);
@@ -45,7 +47,9 @@ namespace Smart.AspNetCore.Http
         {
             request.EnableBuffering();
 
+#pragma warning disable CA2007
             await using var memoryStream = new MemoryStream((int)(request.ContentLength ?? 0));
+#pragma warning restore CA2007
             await request.Body.CopyToAsync(memoryStream).ConfigureAwait(false);
 
             request.Body.Seek(0, SeekOrigin.Begin);
@@ -57,7 +61,9 @@ namespace Smart.AspNetCore.Http
         {
             response.Body.Seek(0, SeekOrigin.Begin);
 
+#pragma warning disable CA2007
             await using var memoryStream = new MemoryStream();
+#pragma warning restore CA2007
             await response.Body.CopyToAsync(memoryStream).ConfigureAwait(false);
 
             response.Body.Seek(0, SeekOrigin.Begin);
