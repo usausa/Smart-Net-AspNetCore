@@ -1,38 +1,37 @@
-namespace Smart.AspNetCore.Filters
+namespace Smart.AspNetCore.Filters;
+
+using System.Diagnostics;
+
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+
+public sealed class TimeLoggingFilter : IActionFilter
 {
-    using System.Diagnostics;
+    private readonly ILogger<TimeLoggingFilter> logger;
 
-    using Microsoft.AspNetCore.Mvc.Filters;
-    using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Options;
+    private readonly TimeLoggingOptions options;
 
-    public sealed class TimeLoggingFilter : IActionFilter
+    public TimeLoggingFilter(ILogger<TimeLoggingFilter> logger, IOptions<TimeLoggingOptions> options)
     {
-        private readonly ILogger<TimeLoggingFilter> logger;
+        this.logger = logger;
+        this.options = options.Value;
+    }
 
-        private readonly TimeLoggingOptions options;
+    public void OnActionExecuting(ActionExecutingContext context)
+    {
+        context.HttpContext.Items[options.Key] = Stopwatch.StartNew();
+    }
 
-        public TimeLoggingFilter(ILogger<TimeLoggingFilter> logger, IOptions<TimeLoggingOptions> options)
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2254", Justification = "Ignore")]
+    public void OnActionExecuted(ActionExecutedContext context)
+    {
+        var watch = (Stopwatch)context.HttpContext.Items[options.Key]!;
+        var elapsed = watch.ElapsedMilliseconds;
+
+        if (watch.ElapsedMilliseconds >= options.Threshold)
         {
-            this.logger = logger;
-            this.options = options.Value;
-        }
-
-        public void OnActionExecuting(ActionExecutingContext context)
-        {
-            context.HttpContext.Items[options.Key] = Stopwatch.StartNew();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2254", Justification = "Ignore")]
-        public void OnActionExecuted(ActionExecutedContext context)
-        {
-            var watch = (Stopwatch)context.HttpContext.Items[options.Key]!;
-            var elapsed = watch.ElapsedMilliseconds;
-
-            if (watch.ElapsedMilliseconds >= options.Threshold)
-            {
-                logger.LogWarning(options.Message, elapsed);
-            }
+            logger.LogWarning(options.Message, elapsed);
         }
     }
 }

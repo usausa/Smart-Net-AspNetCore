@@ -1,48 +1,47 @@
-namespace Smart.AspNetCore.Exceptions
+namespace Smart.AspNetCore.Exceptions;
+
+using System;
+
+public static class HttpStatusExceptionExtensions
 {
-    using System;
-
-    public static class HttpStatusExceptionExtensions
+    public static T MustExist<T>(this T? value)
     {
-        public static T MustExist<T>(this T? value)
+        if (value is null)
         {
-            if (value is null)
-            {
-                throw new NotFoundException();
-            }
-
-            return value;
+            throw new NotFoundException();
         }
 
-        public static T NotFoundIf<T>(this T value, Func<T, bool> func)
-            where T : class
-        {
-            if (func(value))
-            {
-                throw new NotFoundException();
-            }
+        return value;
+    }
 
-            return value;
+    public static T NotFoundIf<T>(this T value, Func<T, bool> func)
+        where T : class
+    {
+        if (func(value))
+        {
+            throw new NotFoundException();
         }
 
-        public static T ForbidIf<T>(this T value, Func<T, bool> func)
-        {
-            if (func(value))
-            {
-                throw new ForbiddenException();
-            }
+        return value;
+    }
 
-            return value;
+    public static T ForbidIf<T>(this T value, Func<T, bool> func)
+    {
+        if (func(value))
+        {
+            throw new ForbiddenException();
         }
 
-        public static T BadRequestIf<T>(this T value, Func<T, bool> func)
-        {
-            if (func(value))
-            {
-                throw new BadRequestException();
-            }
+        return value;
+    }
 
-            return value;
+    public static T BadRequestIf<T>(this T value, Func<T, bool> func)
+    {
+        if (func(value))
+        {
+            throw new BadRequestException();
         }
+
+        return value;
     }
 }

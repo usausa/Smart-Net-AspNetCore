@@ -1,17 +1,16 @@
-namespace Smart.AspNetCore.ActionConstraints
+namespace Smart.AspNetCore.ActionConstraints;
+
+using System;
+
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
+using Microsoft.AspNetCore.Routing;
+
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+public sealed class AjaxOnlyAttribute : ActionMethodSelectorAttribute
 {
-    using System;
-
-    using Microsoft.AspNetCore.Mvc.Abstractions;
-    using Microsoft.AspNetCore.Mvc.ActionConstraints;
-    using Microsoft.AspNetCore.Routing;
-
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public sealed class AjaxOnlyAttribute : ActionMethodSelectorAttribute
+    public override bool IsValidForRequest(RouteContext routeContext, ActionDescriptor action)
     {
-        public override bool IsValidForRequest(RouteContext routeContext, ActionDescriptor action)
-        {
-            return routeContext.HttpContext.Request.IsAjaxRequest();
-        }
+        return routeContext.HttpContext.Request.IsAjaxRequest();
     }
 }

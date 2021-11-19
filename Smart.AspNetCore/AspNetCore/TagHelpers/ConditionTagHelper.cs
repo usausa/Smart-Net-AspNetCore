@@ -1,21 +1,20 @@
-namespace Smart.AspNetCore.TagHelpers
+namespace Smart.AspNetCore.TagHelpers;
+
+using Microsoft.AspNetCore.Razor.TagHelpers;
+
+[HtmlTargetElement(Attributes = ConditionAttributeName)]
+public sealed class ConditionTagHelper : TagHelper
 {
-    using Microsoft.AspNetCore.Razor.TagHelpers;
+    private const string ConditionAttributeName = "if";
 
-    [HtmlTargetElement(Attributes = ConditionAttributeName)]
-    public sealed class ConditionTagHelper : TagHelper
+    [HtmlAttributeName(ConditionAttributeName)]
+    public bool Condition { get; set; }
+
+    public override void Process(TagHelperContext context, TagHelperOutput output)
     {
-        private const string ConditionAttributeName = "if";
-
-        [HtmlAttributeName(ConditionAttributeName)]
-        public bool Condition { get; set; }
-
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        if (!Condition)
         {
-            if (!Condition)
-            {
-                output.SuppressOutput();
-            }
+            output.SuppressOutput();
         }
     }
 }

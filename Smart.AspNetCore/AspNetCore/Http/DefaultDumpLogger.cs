@@ -1,85 +1,84 @@
-namespace Smart.AspNetCore.Http
+namespace Smart.AspNetCore.Http;
+
+using System;
+using System.Runtime.CompilerServices;
+using System.Text;
+
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+
+using Smart.Text;
+
+public class DefaultDumpLogger : IRequestResponseDumpLogger
 {
-    using System;
-    using System.Runtime.CompilerServices;
-    using System.Text;
+    private readonly LogLevel logLevel;
 
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Logging;
+    private readonly DumpType defaultDumpType;
 
-    using Smart.Text;
+    private readonly DumpTarget[] targets;
 
-    public class DefaultDumpLogger : IRequestResponseDumpLogger
+    private readonly Encoding textEncoding;
+
+    internal DefaultDumpLogger(LogLevel logLevel, DumpType defaultDumpType, DumpTarget[] targets, Encoding textEncoding)
     {
-        private readonly LogLevel logLevel;
+        this.logLevel = logLevel;
+        this.defaultDumpType = defaultDumpType;
+        this.targets = targets;
+        this.textEncoding = textEncoding;
+    }
 
-        private readonly DumpType defaultDumpType;
-
-        private readonly DumpTarget[] targets;
-
-        private readonly Encoding textEncoding;
-
-        internal DefaultDumpLogger(LogLevel logLevel, DumpType defaultDumpType, DumpTarget[] targets, Encoding textEncoding)
+    public void DumpRequest(ILogger logger, HttpContext context, byte[] body)
+    {
+        var dumpType = FindEntry(context.Request.ContentType);
+        if (dumpType == DumpType.None)
         {
-            this.logLevel = logLevel;
-            this.defaultDumpType = defaultDumpType;
-            this.targets = targets;
-            this.textEncoding = textEncoding;
+            return;
         }
 
-        public void DumpRequest(ILogger logger, HttpContext context, byte[] body)
+        if (body.Length == 0)
         {
-            var dumpType = FindEntry(context.Request.ContentType);
-            if (dumpType == DumpType.None)
-            {
-                return;
-            }
-
-            if (body.Length == 0)
-            {
-                logger.Log(logLevel, "Request dump. dump=[]");
-                return;
-            }
-
-            logger.Log(logLevel, "Request dump. dump=[{Dump}]", dumpType == DumpType.Text ? textEncoding.GetString(body) : HexEncoder.Encode(body));
+            logger.Log(logLevel, "Request dump. dump=[]");
+            return;
         }
 
-        public void DumpResponse(ILogger logger, HttpContext context, byte[] body)
+        logger.Log(logLevel, "Request dump. dump=[{Dump}]", dumpType == DumpType.Text ? textEncoding.GetString(body) : HexEncoder.Encode(body));
+    }
+
+    public void DumpResponse(ILogger logger, HttpContext context, byte[] body)
+    {
+        var dumpType = FindEntry(context.Response.ContentType);
+        if (dumpType == DumpType.None)
         {
-            var dumpType = FindEntry(context.Response.ContentType);
-            if (dumpType == DumpType.None)
-            {
-                return;
-            }
-
-            if (body.Length == 0)
-            {
-                logger.Log(logLevel, "Response dump. dump=[]");
-                return;
-            }
-
-            logger.Log(logLevel, "Response dump. dump=[{Dump}]", dumpType == DumpType.Text ? textEncoding.GetString(body) : HexEncoder.Encode(body));
+            return;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private DumpType FindEntry(string? contentType)
+        if (body.Length == 0)
         {
-            if (String.IsNullOrEmpty(contentType))
-            {
-                return DumpType.None;
-            }
-
-            var local = targets;
-            for (var i = 0; i < local.Length; i++)
-            {
-                var target = local[i];
-                if (contentType.StartsWith(target.ContentType, StringComparison.InvariantCulture))
-                {
-                    return target.DumpType;
-                }
-            }
-
-            return defaultDumpType;
+            logger.Log(logLevel, "Response dump. dump=[]");
+            return;
         }
+
+        logger.Log(logLevel, "Response dump. dump=[{Dump}]", dumpType == DumpType.Text ? textEncoding.GetString(body) : HexEncoder.Encode(body));
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private DumpType FindEntry(string? contentType)
+    {
+        if (String.IsNullOrEmpty(contentType))
+        {
+            return DumpType.None;
+        }
+
+        var local = targets;
+        for (var i = 0; i < local.Length; i++)
+        {
+            var target = local[i];
+            if (contentType.StartsWith(target.ContentType, StringComparison.InvariantCulture))
+            {
+                return target.DumpType;
+            }
+        }
+
+        return defaultDumpType;
     }
 }

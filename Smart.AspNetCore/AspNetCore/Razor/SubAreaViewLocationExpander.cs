@@ -1,45 +1,44 @@
-namespace Smart.AspNetCore.Razor
+namespace Smart.AspNetCore.Razor;
+
+using System.Collections.Generic;
+using System.Linq;
+
+using Microsoft.AspNetCore.Mvc.Razor;
+
+public sealed class SubAreaViewLocationExpander : IViewLocationExpander
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    private readonly bool useSubAreaPath;
 
-    using Microsoft.AspNetCore.Mvc.Razor;
-
-    public sealed class SubAreaViewLocationExpander : IViewLocationExpander
+    public SubAreaViewLocationExpander()
+        : this(false)
     {
-        private readonly bool useSubAreaPath;
+    }
 
-        public SubAreaViewLocationExpander()
-            : this(false)
-        {
-        }
+    public SubAreaViewLocationExpander(bool useSubAreaPath)
+    {
+        this.useSubAreaPath = useSubAreaPath;
+    }
 
-        public SubAreaViewLocationExpander(bool useSubAreaPath)
+    public IEnumerable<string> ExpandViewLocations(ViewLocationExpanderContext context, IEnumerable<string> viewLocations)
+    {
+        if (context.ActionContext.RouteData.Values.ContainsKey("subarea"))
         {
-            this.useSubAreaPath = useSubAreaPath;
-        }
+            var subArea = RazorViewEngine.GetNormalizedRouteValue(context.ActionContext, "subarea");
 
-        public IEnumerable<string> ExpandViewLocations(ViewLocationExpanderContext context, IEnumerable<string> viewLocations)
-        {
-            if (context.ActionContext.RouteData.Values.ContainsKey("subarea"))
+            if (useSubAreaPath)
             {
-                var subArea = RazorViewEngine.GetNormalizedRouteValue(context.ActionContext, "subarea");
-
-                if (useSubAreaPath)
-                {
-                    return viewLocations.Prepend("/Areas/{2}/SubArea/" + subArea + "/Views/{1}/{0}.cshtml");
-                }
-
-                return viewLocations.Prepend("/Areas/{2}/" + subArea + "/Views/{1}/{0}.cshtml");
+                return viewLocations.Prepend("/Areas/{2}/SubArea/" + subArea + "/Views/{1}/{0}.cshtml");
             }
 
-            return viewLocations;
+            return viewLocations.Prepend("/Areas/{2}/" + subArea + "/Views/{1}/{0}.cshtml");
         }
 
-        public void PopulateValues(ViewLocationExpanderContext context)
-        {
-            context.ActionContext.ActionDescriptor.RouteValues.TryGetValue("subarea", out var subArea);
-            context.Values["subarea"] = subArea;
-        }
+        return viewLocations;
+    }
+
+    public void PopulateValues(ViewLocationExpanderContext context)
+    {
+        context.ActionContext.ActionDescriptor.RouteValues.TryGetValue("subarea", out var subArea);
+        context.Values["subarea"] = subArea;
     }
 }

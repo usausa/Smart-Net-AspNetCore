@@ -1,26 +1,25 @@
-namespace Smart.AspNetCore.Filters
+namespace Smart.AspNetCore.Filters;
+
+using System;
+
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Filters;
+
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+public sealed class ReadableBodyStreamAttribute : Attribute, IFilterFactory
 {
-    using System;
+    public bool IsReusable => true;
 
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc.Filters;
-
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public sealed class ReadableBodyStreamAttribute : Attribute, IFilterFactory
+    public IFilterMetadata CreateInstance(IServiceProvider serviceProvider)
     {
-        public bool IsReusable => true;
+        return new ReadableBodyStreamFilter();
+    }
 
-        public IFilterMetadata CreateInstance(IServiceProvider serviceProvider)
+    public sealed class ReadableBodyStreamFilter : IAuthorizationFilter
+    {
+        public void OnAuthorization(AuthorizationFilterContext context)
         {
-            return new ReadableBodyStreamFilter();
-        }
-
-        public sealed class ReadableBodyStreamFilter : IAuthorizationFilter
-        {
-            public void OnAuthorization(AuthorizationFilterContext context)
-            {
-                context.HttpContext.Request.EnableBuffering();
-            }
+            context.HttpContext.Request.EnableBuffering();
         }
     }
 }

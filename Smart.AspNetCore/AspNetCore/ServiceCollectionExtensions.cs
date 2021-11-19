@@ -1,53 +1,52 @@
-namespace Smart.AspNetCore
+namespace Smart.AspNetCore;
+
+using System;
+
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+
+using Smart.AspNetCore.Filters;
+
+public static class ServiceCollectionExtensions
 {
-    using System;
+    //--------------------------------------------------------------------------------
+    // Exception status
+    //--------------------------------------------------------------------------------
 
-    using Microsoft.AspNetCore.Mvc.Filters;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.DependencyInjection.Extensions;
-
-    using Smart.AspNetCore.Filters;
-
-    public static class ServiceCollectionExtensions
+    public static IServiceCollection AddExceptionStatus(this IServiceCollection services)
     {
-        //--------------------------------------------------------------------------------
-        // Exception status
-        //--------------------------------------------------------------------------------
+        services.TryAddSingleton<ExceptionStatusFilter>();
 
-        public static IServiceCollection AddExceptionStatus(this IServiceCollection services)
-        {
-            services.TryAddSingleton<ExceptionStatusFilter>();
+        return services;
+    }
 
-            return services;
-        }
+    public static IFilterMetadata AddExceptionStatus(this FilterCollection filters)
+    {
+        return filters.AddService<ExceptionStatusFilter>();
+    }
 
-        public static IFilterMetadata AddExceptionStatus(this FilterCollection filters)
-        {
-            return filters.AddService<ExceptionStatusFilter>();
-        }
+    //--------------------------------------------------------------------------------
+    // Time logging
+    //--------------------------------------------------------------------------------
 
-        //--------------------------------------------------------------------------------
-        // Time logging
-        //--------------------------------------------------------------------------------
+    public static IServiceCollection AddTimeLogging(this IServiceCollection services)
+    {
+        services.AddOptions();
+        services.TryAddSingleton<TimeLoggingFilter>();
+        services.TryAddSingleton<TimeLoggingOptions>();
+        return services;
+    }
 
-        public static IServiceCollection AddTimeLogging(this IServiceCollection services)
-        {
-            services.AddOptions();
-            services.TryAddSingleton<TimeLoggingFilter>();
-            services.TryAddSingleton<TimeLoggingOptions>();
-            return services;
-        }
+    public static IServiceCollection AddTimeLogging(this IServiceCollection services, Action<TimeLoggingOptions> setupAction)
+    {
+        services.AddTimeLogging();
+        services.Configure(setupAction);
+        return services;
+    }
 
-        public static IServiceCollection AddTimeLogging(this IServiceCollection services, Action<TimeLoggingOptions> setupAction)
-        {
-            services.AddTimeLogging();
-            services.Configure(setupAction);
-            return services;
-        }
-
-        public static IFilterMetadata AddTimeLogging(this FilterCollection filters)
-        {
-            return filters.AddService<TimeLoggingFilter>();
-        }
+    public static IFilterMetadata AddTimeLogging(this FilterCollection filters)
+    {
+        return filters.AddService<TimeLoggingFilter>();
     }
 }

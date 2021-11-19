@@ -1,10 +1,9 @@
-namespace Smart.AspNetCore.Routing
-{
-    using System;
+namespace Smart.AspNetCore.Routing;
 
-    [AttributeUsage(AttributeTargets.Property)]
-    public abstract class ConvertAttribute : Attribute
-    {
-        public abstract object? Convert(object? source);
-    }
+using System;
+
+[AttributeUsage(AttributeTargets.Property)]
+public abstract class ConvertAttribute : Attribute
+{
+    public abstract object? Convert(object? source);
 }

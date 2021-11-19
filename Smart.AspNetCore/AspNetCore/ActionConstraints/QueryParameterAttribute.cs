@@ -1,49 +1,48 @@
-namespace Smart.AspNetCore.ActionConstraints
+namespace Smart.AspNetCore.ActionConstraints;
+
+using System;
+using System.Linq;
+using System.Runtime.CompilerServices;
+
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Primitives;
+
+[AttributeUsage(AttributeTargets.Method)]
+public sealed class QueryParameterAttribute : ActionMethodSelectorAttribute
 {
-    using System;
-    using System.Linq;
-    using System.Runtime.CompilerServices;
+    private readonly string name;
 
-    using Microsoft.AspNetCore.Mvc.Abstractions;
-    using Microsoft.AspNetCore.Mvc.ActionConstraints;
-    using Microsoft.AspNetCore.Routing;
-    using Microsoft.Extensions.Primitives;
+    private readonly string[] values;
 
-    [AttributeUsage(AttributeTargets.Method)]
-    public sealed class QueryParameterAttribute : ActionMethodSelectorAttribute
+    public QueryParameterAttribute(string name, params object[] values)
     {
-        private readonly string name;
+        this.name = name;
+        this.values = values.Select(x => x.ToString()!).ToArray();
+    }
 
-        private readonly string[] values;
+    public override bool IsValidForRequest(RouteContext routeContext, ActionDescriptor action)
+    {
+        return routeContext.HttpContext.Request.Query.TryGetValue(name, out var queryValues) && Match(values, queryValues);
+    }
 
-        public QueryParameterAttribute(string name, params object[] values)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool Match(string[] values, StringValues queryValues)
+    {
+        if (values.Length == 0)
         {
-            this.name = name;
-            this.values = values.Select(x => x.ToString()!).ToArray();
+            return true;
         }
 
-        public override bool IsValidForRequest(RouteContext routeContext, ActionDescriptor action)
+        for (var i = 0; i < values.Length; i++)
         {
-            return routeContext.HttpContext.Request.Query.TryGetValue(name, out var queryValues) && Match(values, queryValues);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool Match(string[] values, StringValues queryValues)
-        {
-            if (values.Length == 0)
+            if (queryValues.Contains(values[i]))
             {
                 return true;
             }
-
-            for (var i = 0; i < values.Length; i++)
-            {
-                if (queryValues.Contains(values[i]))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
+
+        return false;
     }
 }

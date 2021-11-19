@@ -1,44 +1,43 @@
-namespace Smart.AspNetCore.Exceptions
+namespace Smart.AspNetCore.Exceptions;
+
+using System;
+
+using Microsoft.AspNetCore.Http;
+
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
+public class HttpStatusException : Exception
 {
-    using System;
+    public int StatusCode { get; }
 
-    using Microsoft.AspNetCore.Http;
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
-    public class HttpStatusException : Exception
+    public HttpStatusException(int statusCode)
     {
-        public int StatusCode { get; }
-
-        public HttpStatusException(int statusCode)
-        {
-            StatusCode = statusCode;
-        }
+        StatusCode = statusCode;
     }
+}
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
-    public sealed class NotFoundException : HttpStatusException
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
+public sealed class NotFoundException : HttpStatusException
+{
+    public NotFoundException()
+        : base(StatusCodes.Status404NotFound)
     {
-        public NotFoundException()
-            : base(StatusCodes.Status404NotFound)
-        {
-        }
     }
+}
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
-    public sealed class ForbiddenException : HttpStatusException
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
+public sealed class ForbiddenException : HttpStatusException
+{
+    public ForbiddenException()
+        : base(StatusCodes.Status403Forbidden)
     {
-        public ForbiddenException()
-            : base(StatusCodes.Status403Forbidden)
-        {
-        }
     }
+}
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
-    public sealed class BadRequestException : HttpStatusException
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
+public sealed class BadRequestException : HttpStatusException
+{
+    public BadRequestException()
+        : base(StatusCodes.Status400BadRequest)
     {
-        public BadRequestException()
-            : base(StatusCodes.Status400BadRequest)
-        {
-        }
     }
 }

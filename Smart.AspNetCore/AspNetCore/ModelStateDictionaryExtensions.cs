@@ -1,12 +1,11 @@
-namespace Smart.AspNetCore
-{
-    using Microsoft.AspNetCore.Mvc.ModelBinding;
+namespace Smart.AspNetCore;
 
-    public static class ModelStateDictionaryExtensions
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+
+public static class ModelStateDictionaryExtensions
+{
+    public static bool IsValid(this ModelStateDictionary modelsState, string key)
     {
-        public static bool IsValid(this ModelStateDictionary modelsState, string key)
-        {
-            return !modelsState.TryGetValue(key, out var entry) || (entry.Errors.Count == 0);
-        }
+        return !modelsState.TryGetValue(key, out var entry) || (entry.Errors.Count == 0);
     }
 }

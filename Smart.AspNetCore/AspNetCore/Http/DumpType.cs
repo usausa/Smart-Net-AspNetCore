@@ -1,9 +1,8 @@
-namespace Smart.AspNetCore.Http
+namespace Smart.AspNetCore.Http;
+
+internal enum DumpType
 {
-    internal enum DumpType
-    {
-        None,
-        Text,
-        Binary
-    }
+    None,
+    Text,
+    Binary
 }

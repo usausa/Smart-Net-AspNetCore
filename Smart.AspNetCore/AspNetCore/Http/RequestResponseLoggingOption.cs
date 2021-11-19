@@ -1,7 +1,6 @@
-namespace Smart.AspNetCore.Http
+namespace Smart.AspNetCore.Http;
+
+public class RequestResponseLoggingOption
 {
-    public class RequestResponseLoggingOption
-    {
-        public IRequestResponseDumpLogger DumpLogger { get; set; } = DumpLoggerBuilder.MakeDefault().Build();
-    }
+    public IRequestResponseDumpLogger DumpLogger { get; set; } = DumpLoggerBuilder.MakeDefault().Build();
 }
