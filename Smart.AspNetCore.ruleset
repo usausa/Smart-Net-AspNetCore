@@ -2,23 +2,23 @@
 <RuleSet Name="Smart.AspNetCore Rules" Description="Smart.AspNetCore Rules" ToolsVersion="16.0">
   <IncludeAll Action="Warning" />
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
-    <Rule Id="SA1101" Action="None" />
-    <Rule Id="SA1121" Action="None" />
-    <Rule Id="SA1201" Action="None" />
-    <Rule Id="SA1202" Action="None" />
-    <Rule Id="SA1214" Action="None" />
-    <Rule Id="SA1402" Action="None" />
-    <Rule Id="SA1413" Action="None" />
-    <Rule Id="SA1512" Action="None" />
-    <Rule Id="SA1515" Action="None" />
-    <Rule Id="SA1600" Action="None" />
-    <Rule Id="SA1602" Action="None" />
-    <Rule Id="SA1633" Action="None" />
+    <Rule Id="SA1101" Action="Hidden" />
+    <Rule Id="SA1121" Action="Hidden" />
+    <Rule Id="SA1201" Action="Hidden" />
+    <Rule Id="SA1202" Action="Hidden" />
+    <Rule Id="SA1214" Action="Hidden" />
+    <Rule Id="SA1402" Action="Hidden" />
+    <Rule Id="SA1413" Action="Hidden" />
+    <Rule Id="SA1512" Action="Hidden" />
+    <Rule Id="SA1515" Action="Hidden" />
+    <Rule Id="SA1600" Action="Hidden" />
+    <Rule Id="SA1602" Action="Hidden" />
+    <Rule Id="SA1633" Action="Hidden" />
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
-    <Rule Id="CA1019" Action="None" />
-    <Rule Id="CA1034" Action="None" />
-    <Rule Id="CA1062" Action="None" />
-    <Rule Id="CA1848" Action="None" />
+    <Rule Id="CA1019" Action="Hidden" />
+    <Rule Id="CA1034" Action="Hidden" />
+    <Rule Id="CA1062" Action="Hidden" />
+    <Rule Id="CA1848" Action="Hidden" />
   </Rules>
 </RuleSet>
