@@ -19,7 +19,7 @@
     <Authors>machi_pon</Authors>
     <Copyright>Copyright (c) 2022 machi_pon</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/usausa/Smart-Net</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/usausa/Smart-Net-AspNetCore</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
