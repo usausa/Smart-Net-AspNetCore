@@ -1,6 +1,5 @@
 namespace Smart.AspNetCore.Http;
 
-using System;
 using System.Runtime.CompilerServices;
 using System.Text;
 

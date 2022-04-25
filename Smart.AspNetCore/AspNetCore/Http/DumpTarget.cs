@@ -7,6 +7,5 @@ internal class DumpTarget
 {
     public DumpType DumpType;
 
-    [AllowNull]
-    public string ContentType;
+    public string ContentType = default!;
 }

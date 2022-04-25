@@ -1,7 +1,5 @@
 namespace Smart.AspNetCore.Exceptions;
 
-using System;
-
 public static class HttpStatusExceptionExtensions
 {
     public static T MustExist<T>(this T? value)

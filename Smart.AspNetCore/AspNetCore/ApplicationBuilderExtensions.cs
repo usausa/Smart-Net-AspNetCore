@@ -1,7 +1,5 @@
 namespace Smart.AspNetCore;
 
-using System;
-
 using Microsoft.AspNetCore.Builder;
 
 using Smart.AspNetCore.Http;

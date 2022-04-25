@@ -1,10 +1,6 @@
 namespace Smart.AspNetCore.Routing;
 
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reflection;
 
 using Microsoft.AspNetCore.Routing;
@@ -70,8 +66,7 @@ public static class RouteValues
             if (converter != null)
             {
                 var g = getter;
-                var c = (Func<object?, object?>)converter.Convert;
-                getter = x => c(g(x));
+                getter = x => converter.Convert(g(x));
             }
 
             accessors.Add(new Accessor
@@ -95,10 +90,8 @@ public static class RouteValues
     [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FileMayOnlyContainASingleClass", Justification = "Ignore")]
     private sealed class Accessor
     {
-        [AllowNull]
-        public string Name;
+        public string Name = default!;
 
-        [AllowNull]
-        public Func<object?, object?> Getter;
+        public Func<object?, object?> Getter = default!;
     }
 }

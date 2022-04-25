@@ -1,7 +1,5 @@
 namespace Smart.AspNetCore.ActionConstraints;
 
-using System;
-using System.Linq;
 using System.Runtime.CompilerServices;
 
 using Microsoft.AspNetCore.Mvc.Abstractions;

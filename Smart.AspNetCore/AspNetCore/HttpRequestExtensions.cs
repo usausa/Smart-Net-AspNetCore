@@ -1,7 +1,5 @@
 namespace Smart.AspNetCore;
 
-using System;
-
 using Microsoft.AspNetCore.Http;
 
 public static class HttpRequestExtensions

@@ -1,7 +1,5 @@
 namespace Smart.AspNetCore.Exceptions;
 
-using System;
-
 using Microsoft.AspNetCore.Http;
 
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]

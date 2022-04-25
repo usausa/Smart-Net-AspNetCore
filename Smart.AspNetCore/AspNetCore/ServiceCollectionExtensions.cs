@@ -1,7 +1,5 @@
 namespace Smart.AspNetCore;
 
-using System;
-
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

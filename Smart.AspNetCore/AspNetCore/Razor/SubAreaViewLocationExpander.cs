@@ -1,8 +1,5 @@
 namespace Smart.AspNetCore.Razor;
 
-using System.Collections.Generic;
-using System.Linq;
-
 using Microsoft.AspNetCore.Mvc.Razor;
 
 public sealed class SubAreaViewLocationExpander : IViewLocationExpander

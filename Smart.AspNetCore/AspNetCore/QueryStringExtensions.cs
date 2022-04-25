@@ -1,10 +1,5 @@
 namespace Smart.AspNetCore;
 
-using System.Collections.Generic;
-#if NETCOREAPP3_1
-using System.Linq;
-#endif
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.WebUtilities;
@@ -18,7 +13,7 @@ public static class QueryStringExtensions
         values[name] = value;
 
 #if NETCOREAPP3_1
-        return new QueryBuilder(values.SelectMany(kvp => kvp.Value, (kvp, v) => KeyValuePair.Create(kvp.Key, v))).ToQueryString();
+        return new QueryBuilder(values.SelectMany(static kvp => kvp.Value, static (kvp, v) => KeyValuePair.Create(kvp.Key, v))).ToQueryString();
 #else
         return new QueryBuilder(values).ToQueryString();
 #endif
@@ -33,7 +28,7 @@ public static class QueryStringExtensions
         }
 
 #if NETCOREAPP3_1
-        return new QueryBuilder(values.SelectMany(kvp => kvp.Value, (kvp, v) => KeyValuePair.Create(kvp.Key, v))).ToQueryString();
+        return new QueryBuilder(values.SelectMany(static kvp => kvp.Value, static (kvp, v) => KeyValuePair.Create(kvp.Key, v))).ToQueryString();
 #else
         return new QueryBuilder(values).ToQueryString();
 #endif
