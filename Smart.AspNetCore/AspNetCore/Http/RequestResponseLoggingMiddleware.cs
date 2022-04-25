@@ -1,7 +1,5 @@
 namespace Smart.AspNetCore.Http;
 
-using System.IO;
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 

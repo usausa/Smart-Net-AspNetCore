@@ -1,7 +1,5 @@
 namespace Smart.AspNetCore.Mvc;
 
-using System.IO;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 
