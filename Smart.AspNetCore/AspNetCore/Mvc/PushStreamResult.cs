@@ -23,6 +23,6 @@ public class PushStreamResult : FileResult
         var response = context.HttpContext.Response;
         response.Headers["Content-Disposition"] = $"attachment; filename= {filename}";
         response.ContentType = ContentType;
-        await callback(context.HttpContext.Response.Body);
+        await callback(context.HttpContext.Response.Body).ConfigureAwait(false);
     }
 }
