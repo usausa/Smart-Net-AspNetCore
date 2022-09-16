@@ -25,6 +25,32 @@ public static class ServiceCollectionExtensions
     }
 
     //--------------------------------------------------------------------------------
+    // Exception logging
+    //--------------------------------------------------------------------------------
+
+    public static IServiceCollection AddExceptionLogging(this IServiceCollection services)
+    {
+        services.AddOptions();
+        services.TryAddSingleton<ExceptionLoggingFilter>();
+        services.TryAddSingleton<ExceptionLoggingOptions>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddExceptionLogging(this IServiceCollection services, Action<ExceptionLoggingOptions> setupAction)
+    {
+        services.AddExceptionLogging();
+        services.Configure(setupAction);
+
+        return services;
+    }
+
+    public static IFilterMetadata AddExceptionLogging(this FilterCollection filters)
+    {
+        return filters.AddService<ExceptionLoggingFilter>();
+    }
+
+    //--------------------------------------------------------------------------------
     // Time logging
     //--------------------------------------------------------------------------------
 
