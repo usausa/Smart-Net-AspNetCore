@@ -19,6 +19,5 @@
     <Rule Id="CA1019" Action="Hidden" />
     <Rule Id="CA1034" Action="Hidden" />
     <Rule Id="CA1062" Action="Hidden" />
-    <Rule Id="CA1848" Action="Hidden" />
   </Rules>
 </RuleSet>
