@@ -23,7 +23,6 @@ public sealed class TimeLoggingFilter : IActionFilter
         context.HttpContext.Items[options.Key] = Stopwatch.StartNew();
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2254", Justification = "Ignore")]
     public void OnActionExecuted(ActionExecutedContext context)
     {
         var watch = (Stopwatch)context.HttpContext.Items[options.Key]!;
@@ -31,7 +30,11 @@ public sealed class TimeLoggingFilter : IActionFilter
 
         if (watch.ElapsedMilliseconds >= options.Threshold)
         {
+#pragma warning disable CA1848
+#pragma warning disable CA2254
             logger.LogWarning(options.Message, elapsed);
+#pragma warning restore CA2254
+#pragma warning restore CA1848
         }
     }
 }

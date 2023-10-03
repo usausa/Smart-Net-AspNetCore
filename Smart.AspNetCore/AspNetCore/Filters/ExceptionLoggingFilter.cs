@@ -18,8 +18,10 @@ public sealed class ExceptionLoggingFilter : IExceptionFilter
 
     public void OnException(ExceptionContext context)
     {
+#pragma warning disable CA1848
 #pragma warning disable CA2254
         logger.LogError(options.EventId, context.Exception, options.Message);
 #pragma warning restore CA2254
+#pragma warning restore CA1848
     }
 }
