@@ -35,6 +35,15 @@ public sealed class TimeLoggingFilter : IActionFilter
             logger.LogWarning(options.Message, elapsed);
 #pragma warning restore CA2254
 #pragma warning restore CA1848
+
+            if (options.HeaderType == TimeLoggingHeaderType.LongExecution)
+            {
+                context.HttpContext.Response.Headers[options.Header] = $"{elapsed}";
+            }
+        }
+        else if (options.HeaderType == TimeLoggingHeaderType.Always)
+        {
+            context.HttpContext.Response.Headers[options.Header] = $"{elapsed}";
         }
     }
 }
