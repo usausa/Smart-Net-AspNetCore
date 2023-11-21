@@ -12,6 +12,7 @@
     <Rule Id="SA1512" Action="Hidden" />
     <Rule Id="SA1515" Action="Hidden" />
     <Rule Id="SA1600" Action="Hidden" />
+    <Rule Id="SA1601" Action="Hidden" />
     <Rule Id="SA1602" Action="Hidden" />
     <Rule Id="SA1633" Action="Hidden" />
   </Rules>
@@ -19,5 +20,6 @@
     <Rule Id="CA1019" Action="Hidden" />
     <Rule Id="CA1034" Action="Hidden" />
     <Rule Id="CA1062" Action="Hidden" />
+    <Rule Id="CA1510" Action="Hidden" />
   </Rules>
 </RuleSet>

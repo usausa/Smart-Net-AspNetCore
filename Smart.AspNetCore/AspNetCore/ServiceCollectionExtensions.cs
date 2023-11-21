@@ -32,15 +32,6 @@ public static class ServiceCollectionExtensions
     {
         services.AddOptions();
         services.TryAddSingleton<ExceptionLoggingFilter>();
-        services.TryAddSingleton<ExceptionLoggingOptions>();
-
-        return services;
-    }
-
-    public static IServiceCollection AddExceptionLogging(this IServiceCollection services, Action<ExceptionLoggingOptions> setupAction)
-    {
-        services.AddExceptionLogging();
-        services.Configure(setupAction);
 
         return services;
     }

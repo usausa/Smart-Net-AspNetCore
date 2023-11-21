@@ -2,7 +2,7 @@ namespace Smart.AspNetCore.Exceptions;
 
 using Microsoft.AspNetCore.Http;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
 public class HttpStatusException : Exception
 {
     public int StatusCode { get; }
@@ -13,7 +13,7 @@ public class HttpStatusException : Exception
     }
 }
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
 public sealed class NotFoundException : HttpStatusException
 {
     public NotFoundException()
@@ -22,7 +22,7 @@ public sealed class NotFoundException : HttpStatusException
     }
 }
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
 public sealed class ForbiddenException : HttpStatusException
 {
     public ForbiddenException()
@@ -31,7 +31,7 @@ public sealed class ForbiddenException : HttpStatusException
     }
 }
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
 public sealed class BadRequestException : HttpStatusException
 {
     public BadRequestException()

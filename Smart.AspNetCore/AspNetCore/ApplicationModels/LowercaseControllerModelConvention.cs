@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 public sealed class LowercaseControllerModelConvention : IControllerModelConvention
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "Ignore")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "Ignore")]
     public void Apply(ControllerModel controller)
     {
         controller.ControllerName = controller.ControllerName.ToLowerInvariant();
