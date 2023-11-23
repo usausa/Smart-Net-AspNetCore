@@ -18,11 +18,11 @@ public class PushStreamResult : FileResult
         this.filename = filename;
     }
 
-    public override async Task ExecuteResultAsync(ActionContext context)
+    public override Task ExecuteResultAsync(ActionContext context)
     {
         var response = context.HttpContext.Response;
-        response.Headers["Content-Disposition"] = $"attachment; filename= {filename}";
+        response.Headers["Content-Disposition"] = $"attachment; filename={filename}";
         response.ContentType = ContentType;
-        await callback(context.HttpContext.Response.Body).ConfigureAwait(false);
+        return callback(context.HttpContext.Response.Body);
     }
 }
