@@ -10,7 +10,6 @@
     <PackageId>Usa.Smart.AspNetCore</PackageId>
     <Title>Smart.AspNetCore</Title>
     <Description>Smart ASP.NET Core library</Description>
-    <Summary>Smart ASP.NET Core library</Summary>
     <PackageTags>smart aspnet aspnetcore</PackageTags>
   </PropertyGroup>
 
