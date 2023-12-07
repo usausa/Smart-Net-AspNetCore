@@ -14,39 +14,6 @@ using Smart.AspNetCore.Filters;
 public static class ServiceCollectionExtensions
 {
     //--------------------------------------------------------------------------------
-    // Exception status
-    //--------------------------------------------------------------------------------
-
-    public static IServiceCollection AddExceptionStatus(this IServiceCollection services)
-    {
-        services.TryAddSingleton<ExceptionStatusFilter>();
-
-        return services;
-    }
-
-    public static IFilterMetadata AddExceptionStatus(this FilterCollection filters)
-    {
-        return filters.AddService<ExceptionStatusFilter>();
-    }
-
-    //--------------------------------------------------------------------------------
-    // Exception logging
-    //--------------------------------------------------------------------------------
-
-    public static IServiceCollection AddExceptionLogging(this IServiceCollection services)
-    {
-        services.AddOptions();
-        services.TryAddSingleton<ExceptionLoggingFilter>();
-
-        return services;
-    }
-
-    public static IFilterMetadata AddExceptionLogging(this FilterCollection filters)
-    {
-        return filters.AddService<ExceptionLoggingFilter>();
-    }
-
-    //--------------------------------------------------------------------------------
     // Time logging
     //--------------------------------------------------------------------------------
 
