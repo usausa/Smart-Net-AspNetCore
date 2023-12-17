@@ -3,7 +3,7 @@ namespace Smart.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 
-public class DeletePhysicalFileResult : PhysicalFileResult
+public sealed class DeletePhysicalFileResult : PhysicalFileResult
 {
     public DeletePhysicalFileResult(string fileName, string contentType)
         : base(fileName, contentType)

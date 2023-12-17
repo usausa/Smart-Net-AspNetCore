@@ -87,11 +87,12 @@ public static class RouteValues
                pi.GetMethod.GetParameters().Length == 0;
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FileMayOnlyContainASingleClass", Justification = "Ignore")]
+#pragma warning disable SA1401
     private sealed class Accessor
     {
         public string Name = default!;
 
         public Func<object?, object?> Getter = default!;
     }
+#pragma warning restore SA1401
 }

@@ -2,18 +2,17 @@ namespace Smart.AspNetCore.Exceptions;
 
 using Microsoft.AspNetCore.Http;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
-public class HttpStatusException : Exception
+#pragma warning disable CA1032
+public abstract class HttpStatusException : Exception
 {
     public int StatusCode { get; }
 
-    public HttpStatusException(int statusCode)
+    protected HttpStatusException(int statusCode)
     {
         StatusCode = statusCode;
     }
 }
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
 public sealed class NotFoundException : HttpStatusException
 {
     public NotFoundException()
@@ -22,7 +21,6 @@ public sealed class NotFoundException : HttpStatusException
     }
 }
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
 public sealed class ForbiddenException : HttpStatusException
 {
     public ForbiddenException()
@@ -31,7 +29,6 @@ public sealed class ForbiddenException : HttpStatusException
     }
 }
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Ignore")]
 public sealed class BadRequestException : HttpStatusException
 {
     public BadRequestException()
@@ -39,3 +36,4 @@ public sealed class BadRequestException : HttpStatusException
     {
     }
 }
+#pragma warning restore CA1032

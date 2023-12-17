@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 
-public class PushStreamResult : FileResult
+public sealed class PushStreamResult : FileResult
 {
     private readonly Func<Stream, Task> callback;
 
