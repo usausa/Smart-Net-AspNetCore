@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Usa.Smart.Core" Version="2.3.2" />
+    <PackageReference Include="Usa.Smart.Core" Version="2.3.3" />
   </ItemGroup>
 
 </Project>
