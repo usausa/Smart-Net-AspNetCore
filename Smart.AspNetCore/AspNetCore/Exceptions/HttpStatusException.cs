@@ -31,9 +31,17 @@ public sealed class ForbiddenException : HttpStatusException
 
 public sealed class BadRequestException : HttpStatusException
 {
+    public object? Value { get; }
+
     public BadRequestException()
         : base(StatusCodes.Status400BadRequest)
     {
+    }
+
+    public BadRequestException(object? value)
+        : base(StatusCodes.Status400BadRequest)
+    {
+        Value = value;
     }
 }
 #pragma warning restore CA1032
