@@ -76,7 +76,7 @@ public static class RouteValues
             });
         }
 
-        return accessors.ToArray();
+        return [.. accessors];
     }
 
     private static bool IsTargetProperty(PropertyInfo pi)
