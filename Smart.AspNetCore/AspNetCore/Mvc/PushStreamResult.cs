@@ -1,7 +1,6 @@
 namespace Smart.AspNetCore.Mvc;
 
-using System;
-using System.Threading.Tasks;
+using System.Net;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +20,8 @@ public sealed class PushStreamResult : FileResult
     public override Task ExecuteResultAsync(ActionContext context)
     {
         var response = context.HttpContext.Response;
-        response.Headers["Content-Disposition"] = $"attachment; filename={filename}";
+        var encodedFilename = WebUtility.UrlEncode(filename);
+        response.Headers["Content-Disposition"] = $"attachment; filename={encodedFilename}";
         response.ContentType = ContentType;
         return callback(context.HttpContext.Response.Body);
     }
