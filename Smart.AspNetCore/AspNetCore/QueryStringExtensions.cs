@@ -9,7 +9,7 @@ public static class QueryStringExtensions
 {
     public static QueryString Replace(this QueryString query, string name, StringValues value)
     {
-        var values = QueryHelpers.ParseQuery(query.ToString());
+        var values = QueryHelpers.ParseQuery(query.Value);
         values[name] = value;
 
         return new QueryBuilder(values).ToQueryString();
@@ -17,7 +17,7 @@ public static class QueryStringExtensions
 
     public static QueryString Replace(this QueryString query, IDictionary<string, StringValues> dictionary)
     {
-        var values = QueryHelpers.ParseQuery(query.ToString());
+        var values = QueryHelpers.ParseQuery(query.Value);
         foreach (var pair in dictionary)
         {
             values[pair.Key] = pair.Value;

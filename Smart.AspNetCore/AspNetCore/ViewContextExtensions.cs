@@ -18,13 +18,20 @@ public static class ViewContextExtensions
             return default;
         }
 
+        if (value is T typedValue)
+        {
+            return typedValue;
+        }
+
         var type = typeof(T);
         var targetType = Nullable.GetUnderlyingType(type) ?? type;
         if (targetType.IsEnum)
         {
             try
             {
-                return (T)Enum.Parse(targetType, value.ToString()!, true);
+                return value is string stringValue
+                    ? (T)Enum.Parse(targetType, stringValue, true)
+                    : (T)Enum.Parse(targetType, Convert.ToString(value, CultureInfo.InvariantCulture)!, true);
             }
             catch (Exception e) when (e is ArgumentException || e is OverflowException)
             {
@@ -55,12 +62,7 @@ public static class ViewContextExtensions
     public static T GetRouteValue<T>(this ViewContext context, string key)
     {
         var value = context.RouteData.Values[key];
-        return value switch
-        {
-            null => default,
-            T typedValue => typedValue,
-            _ => TypeConvert<T>(value)
-        };
+        return TypeConvert<T>(value);
     }
 
     //--------------------------------------------------------------------------------
@@ -76,12 +78,7 @@ public static class ViewContextExtensions
     public static T GetQueryValue<T>(this ViewContext context, string key)
     {
         var value = context.HttpContext.Request.Query[key].FirstOrDefault();
-        return value switch
-        {
-            null => default,
-            T typedValue => typedValue,
-            _ => TypeConvert<T>(value)
-        };
+        return TypeConvert<T>(value);
     }
 
     //--------------------------------------------------------------------------------
