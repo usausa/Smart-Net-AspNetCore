@@ -123,6 +123,7 @@ public sealed class BinderDictionaryTest
     [Fact]
     public void WhenBindingQueryThenAllPropertiesAreMapped()
     {
+        // Arrange
         var values = new Dictionary<string, StringValues>
         {
             ["Page"] = "3",
@@ -133,8 +134,10 @@ public sealed class BinderDictionaryTest
             ["IgnoredByProperty"] = "property"
         };
 
+        // Act
         var actual = SearchRequestBinder.BindQuery(values);
 
+        // Assert
         Assert.Equal(3, actual.Page);
         Assert.Equal("source-generator", actual.Keyword);
         Assert.Equal([1, 2], actual.Tags);
@@ -146,15 +149,18 @@ public sealed class BinderDictionaryTest
     [Fact]
     public void WhenBindingToInstanceThenPropertiesAreMapped()
     {
+        // Arrange
         var values = new Dictionary<string, StringValues>
         {
             ["Page"] = "5",
             ["Keyword"] = "instance-pattern"
         };
-
         var target = new SearchRequest();
+
+        // Act
         SearchRequestBinder.BindQueryToInstance(values, target);
 
+        // Assert
         Assert.Equal(5, target.Page);
         Assert.Equal("instance-pattern", target.Keyword);
     }
@@ -162,14 +168,17 @@ public sealed class BinderDictionaryTest
     [Fact]
     public void WhenBindingToInstanceWithReturnThenSameInstanceIsReturned()
     {
+        // Arrange
         var values = new Dictionary<string, StringValues>
         {
             ["Page"] = "7"
         };
-
         var target = new SearchRequest();
+
+        // Act
         var result = SearchRequestBinder.BindQueryReturnInstance(values, target);
 
+        // Assert
         Assert.Same(target, result);
         Assert.Equal(7, result.Page);
     }
@@ -177,35 +186,55 @@ public sealed class BinderDictionaryTest
     [Fact]
     public void WhenBindingStringPropertyThenValueIsMapped()
     {
+        // Arrange
         var dictionary = new Dictionary<string, StringValues> { ["Value"] = "test" };
+
+        // Act
         var target = SimpleBinder.BindStringProperty(dictionary);
+
+        // Assert
         Assert.Equal("test", target.Value);
     }
 
     [Fact]
     public void WhenBindingConvertPropertyThenValueIsMapped()
     {
+        // Arrange
         var dictionary = new Dictionary<string, StringValues> { ["Value"] = "123" };
+
+        // Act
         var target = SimpleBinder.BindConvertProperty(dictionary);
+
+        // Assert
         Assert.Equal(123, target.Value);
     }
 
     [Fact]
     public void WhenBindingConvertNullablePropertyThenValueIsMapped()
     {
+        // Arrange
         var dictionary = new Dictionary<string, StringValues> { ["Value"] = "123" };
+
+        // Act
         var target = SimpleBinder.BindConvertNullableProperty(dictionary);
+
+        // Assert
         Assert.Equal(123, target.Value);
     }
 
     [Fact]
     public void WhenBindingStringArrayPropertyThenAllValuesAreMapped()
     {
+        // Arrange
         var dictionary = new Dictionary<string, StringValues>
         {
             ["Value"] = new(["abc", "cde"])
         };
+
+        // Act
         var target = SimpleBinder.BindStringArrayProperty(dictionary);
+
+        // Assert
         Assert.NotNull(target.Value);
         Assert.Equal(2, target.Value!.Length);
         Assert.Equal("abc", target.Value[0]);
@@ -215,11 +244,16 @@ public sealed class BinderDictionaryTest
     [Fact]
     public void WhenBindingConvertArrayPropertyThenAllValuesAreMapped()
     {
+        // Arrange
         var dictionary = new Dictionary<string, StringValues>
         {
             ["Value"] = new(["123", "456"])
         };
+
+        // Act
         var target = SimpleBinder.BindConvertArrayProperty(dictionary);
+
+        // Assert
         Assert.NotNull(target.Value);
         Assert.Equal([123, 456], target.Value!);
     }
@@ -227,11 +261,16 @@ public sealed class BinderDictionaryTest
     [Fact]
     public void WhenBindingConvertNullableArrayPropertyThenAllValuesAreMapped()
     {
+        // Arrange
         var dictionary = new Dictionary<string, StringValues>
         {
             ["Value"] = new(["123", "456"])
         };
+
+        // Act
         var target = SimpleBinder.BindConvertNullableArrayProperty(dictionary);
+
+        // Assert
         Assert.NotNull(target.Value);
         Assert.Equal<int?>([123, 456], target.Value!);
     }
@@ -239,19 +278,29 @@ public sealed class BinderDictionaryTest
     [Fact]
     public void WhenConvertPropertyCannotBeParsedThenDefaultValueIsReturned()
     {
+        // Arrange
         var dictionary = new Dictionary<string, StringValues> { ["Value"] = "abc" };
+
+        // Act
         var target = SimpleBinder.BindConvertProperty(dictionary);
+
+        // Assert
         Assert.Equal(default, target.Value);
     }
 
     [Fact]
     public void WhenConvertArrayPropertyContainsUnparseableValueThenDefaultElementIsReturned()
     {
+        // Arrange
         var dictionary = new Dictionary<string, StringValues>
         {
             ["Value"] = new(["123", "abc"])
         };
+
+        // Act
         var target = SimpleBinder.BindConvertArrayProperty(dictionary);
+
+        // Assert
         Assert.NotNull(target.Value);
         Assert.Equal(2, target.Value!.Length);
         Assert.Equal(123, target.Value[0]);
@@ -261,14 +310,17 @@ public sealed class BinderDictionaryTest
     [Fact]
     public void WhenUsingExtensionMethodPatternThenPropertiesAreMapped()
     {
+        // Arrange
         var values = new Dictionary<string, StringValues>
         {
             ["Page"] = "3",
             ["Keyword"] = "extension-method"
         };
 
+        // Act
         var actual = values.BindToSearchRequest();
 
+        // Assert
         Assert.Equal(3, actual.Page);
         Assert.Equal("extension-method", actual.Keyword);
     }
@@ -276,15 +328,18 @@ public sealed class BinderDictionaryTest
     [Fact]
     public void WhenUsingExtensionMethodInstancePatternThenTargetIsPopulated()
     {
+        // Arrange
         var values = new Dictionary<string, StringValues>
         {
             ["Page"] = "9",
             ["Keyword"] = "extension-instance"
         };
-
         var target = new SearchRequest();
+
+        // Act
         values.BindToSearchRequestInstance(target);
 
+        // Assert
         Assert.Equal(9, target.Page);
         Assert.Equal("extension-instance", target.Keyword);
     }

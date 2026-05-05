@@ -14,24 +14,12 @@ internal sealed record PropertyModel(
     /// <summary>Fully-qualified type name used for conversion; for arrays this is the element type, and nullable wrappers are unwrapped.
     /// 変換に使用する完全修飾型名。配列の場合は要素型、nullable は unwrap された値型。</summary>
     string AssignmentTypeName,
-    /// <summary>True when the property type is <c>string</c> or <c>string?</c>.
-    /// プロパティ型が <c>string</c> または <c>string?</c> の場合 true。</summary>
-    bool IsString,
-    /// <summary>True when the property type is <c>string[]</c> or <c>string?[]</c>.
-    /// プロパティ型が <c>string[]</c> または <c>string?[]</c> の場合 true。</summary>
-    bool IsStringArray,
-    /// <summary>True when the property is a non-string array type.
-    /// プロパティが string 以外の配列型の場合 true。</summary>
-    bool IsArray,
+    /// <summary>How the property value is read from the source and assigned to the target.
+    /// ソースからの読み取りおよびターゲットへの代入方法。</summary>
+    PropertyValueKind ValueKind,
     /// <summary>True when the assignment type is an enum.
     /// 代入型が enum の場合 true。</summary>
     bool IsEnum,
-    /// <summary>True when the property is excluded from binding (by attribute or by method-level ignore list).
-    /// プロパティがバインドから除外されている場合 true（属性またはメソッドレベルの無視リストによる）。</summary>
-    bool IsIgnored,
-    /// <summary>True when the property has an accessible setter.
-    /// プロパティにアクセス可能なセッターがある場合 true。</summary>
-    bool HasSetter,
     /// <summary>Fully-qualified type name of the converter class that provides the conversion method.
     /// 変換メソッドを提供するコンバータークラスの完全修飾型名。</summary>
     string ConverterMethodTypeName,

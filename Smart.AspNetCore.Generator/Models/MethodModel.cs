@@ -32,13 +32,9 @@ internal sealed record MethodModel(
     /// <summary>Fully-qualified return type name; "void" when the method has no return value.
     /// 完全修飾の戻り値型名。戻り値がない場合は "void"。</summary>
     string ReturnTypeName,
-    /// <summary>
-    /// True when the second parameter is the binding target (instance pattern).
-    /// False when the return value is the binding target (factory pattern).
-    /// 第2パラメーターがバインドターゲットの場合 true（インスタンスパターン）。
-    /// 戻り値がバインドターゲットの場合 false（ファクトリーパターン）。
-    /// </summary>
-    bool HasTargetParameter,
+    /// <summary>Binding pattern that determines how the target is created or received and whether it is returned.
+    /// ターゲットの生成・受け取り方法と返却有無を決定するバインドパターン。</summary>
+    BindingPattern Pattern,
     /// <summary>Fully-qualified type name of the object that properties are bound into.
     /// プロパティのバインド先オブジェクトの完全修飾型名。</summary>
     string TargetTypeName,
@@ -54,6 +50,6 @@ internal sealed record MethodModel(
     /// <summary>True when the method is an extension method (first parameter has <c>this</c> modifier).
     /// メソッドが拡張メソッドの場合 true（第1パラメーターに <c>this</c> 修飾子がある）。</summary>
     bool IsExtensionMethod,
-    /// <summary>Per-property binding metadata for every property of the target type.
-    /// ターゲット型の各プロパティのバインドメタデータ。</summary>
+    /// <summary>Per-property binding metadata for every bindable property of the target type.
+    /// ターゲット型のバインド対象プロパティのバインドメタデータ。</summary>
     EquatableArray<PropertyModel> Properties);
