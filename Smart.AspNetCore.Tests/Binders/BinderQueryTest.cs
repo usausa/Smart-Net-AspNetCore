@@ -2,8 +2,6 @@ namespace Smart.AspNetCore.Binders;
 
 using Microsoft.AspNetCore.Http;
 
-using Smart.AspNetCore.Binders;
-
 // -----------------------------------------------------------------------
 // Binders using ASP.NET Core collections
 // -----------------------------------------------------------------------
@@ -26,7 +24,9 @@ internal static partial class FormBinder
 internal sealed class SearchQueryRequest
 {
     public string? Keyword { get; set; }
+
     public int Page { get; set; }
+
     public int PageSize { get; set; }
 }
 
@@ -43,7 +43,7 @@ public sealed class BinderQueryTest
         {
             ["Keyword"] = "hello",
             ["Page"] = "2",
-            ["PageSize"] = "50",
+            ["PageSize"] = "50"
         });
 
         var result = QueryBinder.BindFromQuery(query);
@@ -71,7 +71,7 @@ public sealed class BinderQueryTest
         var query = new QueryCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>
         {
             ["Keyword"] = "world",
-            ["Page"] = "3",
+            ["Page"] = "3"
         });
 
         var target = new SearchQueryRequest { PageSize = 20 };
@@ -89,7 +89,7 @@ public sealed class BinderQueryTest
         {
             ["Keyword"] = "form-test",
             ["Page"] = "4",
-            ["PageSize"] = "25",
+            ["PageSize"] = "25"
         });
 
         var result = FormBinder.BindFromForm(form);

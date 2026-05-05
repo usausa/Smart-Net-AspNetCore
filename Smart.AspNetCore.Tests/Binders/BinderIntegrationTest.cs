@@ -5,12 +5,9 @@ using System.Text.Json;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
-using Smart.AspNetCore.Binders;
 
 // -----------------------------------------------------------------------
 // Web app binder (uses ASP.NET Core Minimal API)
@@ -48,7 +45,7 @@ internal static class TestWebAppFactory
             {
                 request.Keyword,
                 request.Page,
-                request.PageSize,
+                request.PageSize
             });
         });
 
@@ -60,7 +57,7 @@ internal static class TestWebAppFactory
             {
                 request.Keyword,
                 request.Page,
-                request.PageSize,
+                request.PageSize
             });
         });
 
@@ -84,7 +81,7 @@ public sealed class BinderIntegrationTest : IDisposable
     }
 
     [Fact]
-    public async Task WhenQueryStringIsPassedThenPropertiesAreBindedCorrectly()
+    public async Task WhenQueryStringIsPassedThenPropertiesAreBindCorrectly()
     {
         var response = await client.GetAsync("/search?Keyword=hello&Page=2&PageSize=50");
         response.EnsureSuccessStatusCode();
@@ -108,13 +105,13 @@ public sealed class BinderIntegrationTest : IDisposable
     }
 
     [Fact]
-    public async Task WhenFormDataIsPostedThenPropertiesAreBindedCorrectly()
+    public async Task WhenFormDataIsPostedThenPropertiesAreBindCorrectly()
     {
         var form = new FormUrlEncodedContent(new[]
         {
             new KeyValuePair<string, string>("Keyword", "form-test"),
             new KeyValuePair<string, string>("Page", "4"),
-            new KeyValuePair<string, string>("PageSize", "25"),
+            new KeyValuePair<string, string>("PageSize", "25")
         });
 
         var response = await client.PostAsync("/search-form", form);

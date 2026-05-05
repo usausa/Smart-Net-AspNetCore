@@ -4,13 +4,11 @@ using System.Collections.Generic;
 
 using Microsoft.Extensions.Primitives;
 
-using Smart.AspNetCore.Binders;
-
 // -----------------------------------------------------------------------
 // Binder classes
 // -----------------------------------------------------------------------
 
-[BindConverterType(typeof(SearchRequestConverter))]
+[BindConverter(typeof(SearchRequestConverter))]
 internal static partial class SearchRequestBinder
 {
     [Bind]
@@ -52,9 +50,13 @@ internal static partial class SimpleBinder
 internal sealed class SearchRequest
 {
     public int Page { get; set; }
+
     public string? Keyword { get; set; }
+
     public int[] Tags { get; set; } = [];
+
     public PostStatus Status { get; set; }
+
     public string? IgnoredByMethod { get; set; }
 
     [BindIgnore]
@@ -64,7 +66,7 @@ internal sealed class SearchRequest
 internal enum PostStatus
 {
     Draft,
-    Published,
+    Published
 }
 
 internal static class SearchRequestConverter
@@ -116,10 +118,10 @@ public sealed class BinderDictionaryTest
         {
             ["Page"] = "3",
             ["Keyword"] = "source-generator",
-            ["Tags"] = new StringValues(["1", "2"]),
+            ["Tags"] = new(["1", "2"]),
             ["Status"] = "published",
             ["IgnoredByMethod"] = "method",
-            ["IgnoredByProperty"] = "property",
+            ["IgnoredByProperty"] = "property"
         };
 
         var actual = SearchRequestBinder.BindQuery(values);
@@ -138,7 +140,7 @@ public sealed class BinderDictionaryTest
         var values = new Dictionary<string, StringValues>
         {
             ["Page"] = "5",
-            ["Keyword"] = "instance-pattern",
+            ["Keyword"] = "instance-pattern"
         };
 
         var target = new SearchRequest();
@@ -153,7 +155,7 @@ public sealed class BinderDictionaryTest
     {
         var values = new Dictionary<string, StringValues>
         {
-            ["Page"] = "7",
+            ["Page"] = "7"
         };
 
         var target = new SearchRequest();
@@ -192,7 +194,7 @@ public sealed class BinderDictionaryTest
     {
         var dictionary = new Dictionary<string, StringValues>
         {
-            ["Value"] = new StringValues(["abc", "cde"]),
+            ["Value"] = new(["abc", "cde"])
         };
         var target = SimpleBinder.BindStringArrayProperty(dictionary);
         Assert.NotNull(target.Value);
@@ -206,7 +208,7 @@ public sealed class BinderDictionaryTest
     {
         var dictionary = new Dictionary<string, StringValues>
         {
-            ["Value"] = new StringValues(["123", "456"]),
+            ["Value"] = new(["123", "456"])
         };
         var target = SimpleBinder.BindConvertArrayProperty(dictionary);
         Assert.NotNull(target.Value);
@@ -218,7 +220,7 @@ public sealed class BinderDictionaryTest
     {
         var dictionary = new Dictionary<string, StringValues>
         {
-            ["Value"] = new StringValues(["123", "456"]),
+            ["Value"] = new(["123", "456"])
         };
         var target = SimpleBinder.BindConvertNullableArrayProperty(dictionary);
         Assert.NotNull(target.Value);
@@ -238,7 +240,7 @@ public sealed class BinderDictionaryTest
     {
         var dictionary = new Dictionary<string, StringValues>
         {
-            ["Value"] = new StringValues(["123", "abc"]),
+            ["Value"] = new(["123", "abc"])
         };
         var target = SimpleBinder.BindConvertArrayProperty(dictionary);
         Assert.NotNull(target.Value);

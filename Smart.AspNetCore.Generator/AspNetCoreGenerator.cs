@@ -18,7 +18,7 @@ using SourceGenerateHelper;
 public sealed class AspNetCoreGenerator : IIncrementalGenerator
 {
     private const string BindAttributeName = "Smart.AspNetCore.Binders.BindAttribute";
-    private const string ConverterAttributeName = "Smart.AspNetCore.Binders.BindConverterTypeAttribute";
+    private const string ConverterAttributeName = "Smart.AspNetCore.Binders.BindConverterAttribute";
     private const string IgnoreAttributeName = "Smart.AspNetCore.Binders.BindIgnoreAttribute";
     private const string IgnoreMembersAttributeName = "Smart.AspNetCore.Binders.BindIgnoreMembersAttribute";
     private const string DefaultConverterTypeName = "global::Smart.AspNetCore.Binders.DefaultStringConverter";
@@ -113,9 +113,6 @@ public sealed class AspNetCoreGenerator : IIncrementalGenerator
             sourceParam.Type.ToGlobalTypeName(),
             sourceValueKind,
             sourceParam.Name,
-            methodConverter?.TypeName,
-            containingConverter?.TypeName,
-            new EquatableArray<string>(ignoredNames),
             new EquatableArray<PropertyModel>(properties)));
     }
 
@@ -164,23 +161,21 @@ public sealed class AspNetCoreGenerator : IIncrementalGenerator
             var isArray = arrayType is not null && !isStringArray;
             var assignmentType = isArray ? UnwrapNullable(arrayType!.ElementType) : UnwrapNullable(propertyType);
             var propertyConverter = GetConverterType(member);
-            var converterType = propertyConverter?.TypeName ?? targetConverter?.TypeName ?? methodConverter?.TypeName ?? containingConverter?.TypeName;
             var converterCandidates = DistinctConverterTypes(new[] { propertyConverter, targetConverter, methodConverter, containingConverter });
-            var converterMethod = ResolveConverterMethod(converterCandidates, assignmentType);
+            var (typeName, methodName) = ResolveConverterMethod(converterCandidates, assignmentType);
 
             yield return new PropertyModel(
                 member.Name,
                 propertyType.ToGlobalTypeName(),
                 assignmentType.ToGlobalTypeName(),
-                converterType,
                 isString,
                 isStringArray,
                 isArray,
                 assignmentType.TypeKind == TypeKind.Enum,
                 isIgnored,
                 hasSetter,
-                converterMethod.TypeName,
-                converterMethod.MethodName);
+                typeName,
+                methodName);
         }
     }
 

@@ -8,9 +8,9 @@ public sealed class BindAttribute : Attribute
 }
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Method | AttributeTargets.Property)]
-public sealed class BindConverterTypeAttribute : Attribute
+public sealed class BindConverterAttribute : Attribute
 {
-    public BindConverterTypeAttribute(Type converterType)
+    public BindConverterAttribute(Type converterType)
     {
         ConverterType = converterType;
     }

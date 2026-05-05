@@ -5,7 +5,7 @@ using System;
 public static class DefaultStringConverter
 {
     public static bool ToBoolean(ReadOnlySpan<char> value) =>
-        Boolean.TryParse(value, out var result) ? result : default;
+        Boolean.TryParse(value, out var result) && result;
 
     public static byte ToByte(ReadOnlySpan<char> value) =>
         Byte.TryParse(value, out var result) ? result : default;
