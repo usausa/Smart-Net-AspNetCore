@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
@@ -33,7 +33,7 @@
 
   <ItemGroup>
     <PackageReference Include="SourceGenerateHelper" Version="1.7.0" GeneratePathProperty="true" PrivateAssets="all" />
-    <PackageReference Include="Usa.Smart.Core" Version="2.6.0" />
+    <PackageReference Include="Usa.Smart.Core" Version="2.7.0" />
   </ItemGroup>
 
 </Project>
