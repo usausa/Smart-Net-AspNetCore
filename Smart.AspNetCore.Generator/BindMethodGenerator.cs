@@ -90,11 +90,9 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
             : containingType.ContainingNamespace.ToDisplayString();
 
         // Gather ignores
-        // TODO Optimize？
-        var ignoredNames = GetIgnoreMemberNames(symbol);
-        ignoredNames.AddRange(GetIgnoreMemberNames(targetType));
-        var seenNames = new HashSet<string>(StringComparer.Ordinal);
-        ignoredNames.RemoveAll(n => !seenNames.Add(n));
+        var ignoredNames = new HashSet<string>(StringComparer.Ordinal);
+        GetIgnoreMemberNames(ignoredNames, symbol);
+        GetIgnoreMemberNames(ignoredNames, targetType);
 
         // Gather converters
         var methodConverter = GetConverterType(symbol);
@@ -110,8 +108,8 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
         return Results.Success(new MethodModel(
             ns,
             containingType.GetClassName(),
-            containingType.IsValueType,
             containingType.IsStatic,
+            containingType.IsValueType,
             symbol.DeclaredAccessibility,
             symbol.Name,
             returnTypeName,
@@ -151,7 +149,7 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
 
     private static List<PropertyModel> GetProperties(
         ITypeSymbol targetType,
-        List<string> ignoredNames,
+        HashSet<string> ignoredNames,
         ConverterTypeModel? targetConverter,
         ConverterTypeModel? methodConverter,
         ConverterTypeModel? containingConverter)
@@ -345,9 +343,8 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
         return methods;
     }
 
-    private static List<string> GetIgnoreMemberNames(ISymbol symbol)
+    private static void GetIgnoreMemberNames(HashSet<string> names, ISymbol symbol)
     {
-        var names = new List<string>();
         foreach (var attribute in symbol.GetAttributes())
         {
             if ((attribute.AttributeClass?.ToDisplayString() != IgnoreMembersAttributeName) ||
@@ -364,8 +361,6 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
                 }
             }
         }
-
-        return names;
     }
 
     private static bool HasAttribute(ISymbol symbol, string metadataName) =>
