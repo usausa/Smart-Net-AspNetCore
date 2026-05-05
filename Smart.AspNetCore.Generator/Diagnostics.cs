@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis;
 internal static class Diagnostics
 {
     public static DiagnosticDescriptor InvalidMethodDefinition { get; } = new(
-        id: "SA0001",
+        id: "SAN0001",
         title: "Invalid method definition",
         messageFormat: "Method must be static partial. method=[{0}]",
         category: "Usage",
@@ -13,9 +13,9 @@ internal static class Diagnostics
         isEnabledByDefault: true);
 
     public static DiagnosticDescriptor InvalidMethodParameter { get; } = new(
-        id: "SA0002",
+        id: "SAN0002",
         title: "Invalid method parameter",
-        messageFormat: "Method must not have parameters. method=[{0}]",
+        messageFormat: "Method must have one supported string collection parameter (and optionally a target instance parameter). method=[{0}]",
         category: "Usage",
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
