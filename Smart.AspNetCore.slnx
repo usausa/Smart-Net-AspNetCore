@@ -10,7 +10,12 @@
     <File Path="Directory.Build.targets" />
     <File Path="LICENSE" />
     <File Path="README.md" />
+    <File Path="Smart.AspNetCore.props" />
     <File Path="Smart.AspNetCore.sln.DotSettings" />
   </Folder>
-  <Project Path="Smart.AspNetCore/Smart.AspNetCore.csproj" />
+  <Project Path="Smart.AspNetCore/Smart.AspNetCore.csproj">
+    <BuildDependency Project="Smart.AspNetCore.Generator/Smart.AspNetCore.Generator.csproj" />
+  </Project>
+  <Project Path="Smart.AspNetCore.Generator/Smart.AspNetCore.Generator.csproj" />
+  <Project Path="Smart.AspNetCore.Tests/Smart.AspNetCore.Tests.csproj" />
 </Solution>

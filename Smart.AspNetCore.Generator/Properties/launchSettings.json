@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Smart.AspNetCore.Generator": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\Smart.AspNetCore.Tests\\Smart.AspNetCore.Tests.csproj"
+    }
+  }
+}
