@@ -3,7 +3,7 @@ namespace Smart.AspNetCore.Binders;
 using Microsoft.AspNetCore.Http;
 
 // -----------------------------------------------------------------------
-// Binders using ASP.NET Core collections
+// Binder
 // -----------------------------------------------------------------------
 
 internal static partial class QueryBinder
@@ -31,7 +31,7 @@ internal sealed class SearchQueryRequest
 }
 
 // -----------------------------------------------------------------------
-// Tests
+// Test
 // -----------------------------------------------------------------------
 
 public sealed class BinderQueryTest

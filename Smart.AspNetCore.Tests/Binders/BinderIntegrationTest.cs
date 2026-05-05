@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 // -----------------------------------------------------------------------
-// Web app binder (uses ASP.NET Core Minimal API)
+// Binder
 // -----------------------------------------------------------------------
 
 internal static partial class HttpRequestBinder
@@ -23,8 +23,7 @@ internal static partial class HttpRequestBinder
 }
 
 // -----------------------------------------------------------------------
-// -----------------------------------------------------------------------
-// Test helpers
+// Helper
 // -----------------------------------------------------------------------
 
 internal static class TestWebAppFactory
@@ -50,16 +49,16 @@ internal static class TestWebAppFactory
         });
 
         app.MapPost("/search-form", async (HttpContext ctx) =>
-        {
-            var form = await ctx.Request.ReadFormAsync();
-            var request = HttpRequestBinder.BindSearchFromForm(form);
-            return Results.Ok(new
             {
-                request.Keyword,
-                request.Page,
-                request.PageSize
+                var form = await ctx.Request.ReadFormAsync().ConfigureAwait(false);
+                var request = HttpRequestBinder.BindSearchFromForm(form);
+                return Results.Ok(new
+                {
+                    request.Keyword,
+                    request.Page,
+                    request.PageSize
+                });
             });
-        });
 
         app.Start();
 
@@ -68,7 +67,7 @@ internal static class TestWebAppFactory
 }
 
 // -----------------------------------------------------------------------
-// Integration tests
+// Test
 // -----------------------------------------------------------------------
 
 public sealed class BinderIntegrationTest : IDisposable
@@ -83,10 +82,11 @@ public sealed class BinderIntegrationTest : IDisposable
     [Fact]
     public async Task WhenQueryStringIsPassedThenPropertiesAreBindCorrectly()
     {
-        var response = await client.GetAsync("/search?Keyword=hello&Page=2&PageSize=50");
+        var ct = TestContext.Current.CancellationToken;
+        var response = await client.GetAsync(new Uri("/search?Keyword=hello&Page=2&PageSize=50", UriKind.Relative), ct);
         response.EnsureSuccessStatusCode();
 
-        var json = await response.Content.ReadFromJsonAsync<JsonElement>();
+        var json = await response.Content.ReadFromJsonAsync<JsonElement>(ct);
         Assert.Equal("hello", json.GetProperty("keyword").GetString());
         Assert.Equal(2, json.GetProperty("page").GetInt32());
         Assert.Equal(50, json.GetProperty("pageSize").GetInt32());
@@ -95,10 +95,11 @@ public sealed class BinderIntegrationTest : IDisposable
     [Fact]
     public async Task WhenQueryStringIsMissingThenDefaultValuesAreReturned()
     {
-        var response = await client.GetAsync("/search");
+        var ct = TestContext.Current.CancellationToken;
+        var response = await client.GetAsync(new Uri("/search", UriKind.Relative), ct);
         response.EnsureSuccessStatusCode();
 
-        var json = await response.Content.ReadFromJsonAsync<JsonElement>();
+        var json = await response.Content.ReadFromJsonAsync<JsonElement>(ct);
         Assert.Null(json.GetProperty("keyword").GetString());
         Assert.Equal(0, json.GetProperty("page").GetInt32());
         Assert.Equal(0, json.GetProperty("pageSize").GetInt32());
@@ -107,17 +108,18 @@ public sealed class BinderIntegrationTest : IDisposable
     [Fact]
     public async Task WhenFormDataIsPostedThenPropertiesAreBindCorrectly()
     {
-        var form = new FormUrlEncodedContent(new[]
+        var ct = TestContext.Current.CancellationToken;
+        using var form = new FormUrlEncodedContent(new[]
         {
             new KeyValuePair<string, string>("Keyword", "form-test"),
             new KeyValuePair<string, string>("Page", "4"),
             new KeyValuePair<string, string>("PageSize", "25")
         });
 
-        var response = await client.PostAsync("/search-form", form);
+        var response = await client.PostAsync(new Uri("/search-form", UriKind.Relative), form, ct);
         response.EnsureSuccessStatusCode();
 
-        var json = await response.Content.ReadFromJsonAsync<JsonElement>();
+        var json = await response.Content.ReadFromJsonAsync<JsonElement>(ct);
         Assert.Equal("form-test", json.GetProperty("keyword").GetString());
         Assert.Equal(4, json.GetProperty("page").GetInt32());
         Assert.Equal(25, json.GetProperty("pageSize").GetInt32());

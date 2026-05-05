@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Primitives;
 
 // -----------------------------------------------------------------------
-// Binder classes
+// Binder
 // -----------------------------------------------------------------------
 
 [BindConverter(typeof(SearchRequestConverter))]
@@ -43,8 +43,17 @@ internal static partial class SimpleBinder
     public static partial ConvertNullableArrayPropertyTarget BindConvertNullableArrayProperty(Dictionary<string, StringValues> values);
 }
 
+internal static partial class DictionaryExtensionBinder
+{
+    [Bind]
+    public static partial SearchRequest BindToSearchRequest(this Dictionary<string, StringValues> values);
+
+    [Bind]
+    public static partial void BindToSearchRequestInstance(this Dictionary<string, StringValues> values, SearchRequest target);
+}
+
 // -----------------------------------------------------------------------
-// Targets
+// Target
 // -----------------------------------------------------------------------
 
 internal sealed class SearchRequest
@@ -106,7 +115,7 @@ internal sealed class ConvertNullableArrayPropertyTarget
 }
 
 // -----------------------------------------------------------------------
-// Tests
+// Test
 // -----------------------------------------------------------------------
 
 public sealed class BinderDictionaryTest
@@ -247,5 +256,36 @@ public sealed class BinderDictionaryTest
         Assert.Equal(2, target.Value!.Length);
         Assert.Equal(123, target.Value[0]);
         Assert.Equal(default, target.Value[1]);
+    }
+
+    [Fact]
+    public void WhenUsingExtensionMethodPatternThenPropertiesAreMapped()
+    {
+        var values = new Dictionary<string, StringValues>
+        {
+            ["Page"] = "3",
+            ["Keyword"] = "extension-method"
+        };
+
+        var actual = values.BindToSearchRequest();
+
+        Assert.Equal(3, actual.Page);
+        Assert.Equal("extension-method", actual.Keyword);
+    }
+
+    [Fact]
+    public void WhenUsingExtensionMethodInstancePatternThenTargetIsPopulated()
+    {
+        var values = new Dictionary<string, StringValues>
+        {
+            ["Page"] = "9",
+            ["Keyword"] = "extension-instance"
+        };
+
+        var target = new SearchRequest();
+        values.BindToSearchRequestInstance(target);
+
+        Assert.Equal(9, target.Page);
+        Assert.Equal("extension-instance", target.Keyword);
     }
 }
