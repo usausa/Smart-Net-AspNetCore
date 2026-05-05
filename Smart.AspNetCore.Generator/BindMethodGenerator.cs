@@ -90,9 +90,11 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
             : containingType.ContainingNamespace.ToDisplayString();
 
         // Gather ignores
-        var methodIgnoredNames = GetIgnoreMemberNames(symbol);
-        var targetIgnoredNames = GetIgnoreMemberNames(targetType);
-        var ignoredNames = methodIgnoredNames.Concat(targetIgnoredNames).Distinct(StringComparer.Ordinal).ToArray();
+        // TODO Optimize？
+        var ignoredNames = GetIgnoreMemberNames(symbol);
+        ignoredNames.AddRange(GetIgnoreMemberNames(targetType));
+        var seenNames = new HashSet<string>(StringComparer.Ordinal);
+        ignoredNames.RemoveAll(n => !seenNames.Add(n));
 
         // Gather converters
         var methodConverter = GetConverterType(symbol);
@@ -100,7 +102,7 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
         var targetConverter = GetConverterType(targetType);
 
         // Gather properties
-        var properties = GetProperties(targetType, ignoredNames, targetConverter, methodConverter, containingConverter).ToArray();
+        var properties = GetProperties(targetType, ignoredNames, targetConverter, methodConverter, containingConverter);
 
         var returnTypeName = symbol.ReturnsVoid ? "void" : symbol.ReturnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
         var targetTypeName = pattern != BindingPattern.Factory ? symbol.Parameters[1].Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) : returnTypeName;
@@ -119,7 +121,7 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
             sourceValueKind,
             sourceParam.Name,
             symbol.IsExtensionMethod,
-            new EquatableArray<PropertyModel>(properties)));
+            new EquatableArray<PropertyModel>(properties.ToArray())));
     }
 
     private static string? GetSourceValueKind(ITypeSymbol type)
@@ -147,13 +149,15 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
         return null;
     }
 
-    private static IEnumerable<PropertyModel> GetProperties(
+    private static List<PropertyModel> GetProperties(
         ITypeSymbol targetType,
-        string[] ignoredNames,
+        List<string> ignoredNames,
         ConverterTypeModel? targetConverter,
         ConverterTypeModel? methodConverter,
         ConverterTypeModel? containingConverter)
     {
+        var properties = new List<PropertyModel>();
+
         foreach (var member in targetType.GetMembers().OfType<IPropertySymbol>())
         {
             if (member.IsStatic)
@@ -166,7 +170,7 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
                 continue;
             }
 
-            if (ignoredNames.Contains(member.Name, StringComparer.Ordinal) || HasAttribute(member, IgnoreAttributeName))
+            if (ignoredNames.Contains(member.Name) || HasAttribute(member, IgnoreAttributeName))
             {
                 continue;
             }
@@ -205,22 +209,25 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
             var converterCandidates = DistinctConverterTypes(new[] { propertyConverter, targetConverter, methodConverter, containingConverter });
             var (typeName, methodName) = ResolveConverterMethod(converterCandidates, assignmentType);
 
-            yield return new PropertyModel(
+            properties.Add(new PropertyModel(
                 member.Name,
                 propertyType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
                 assignmentType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
                 valueKind,
                 assignmentType.TypeKind == TypeKind.Enum,
                 typeName,
-                methodName);
+                methodName));
         }
+
+        return properties;
     }
 
-    private static (string TypeName, string? MethodName) ResolveConverterMethod(IEnumerable<ConverterTypeModel> converterTypes, ITypeSymbol assignmentType)
+    private static (string TypeName, string? MethodName) ResolveConverterMethod(List<ConverterTypeModel> converterTypes, ITypeSymbol assignmentType)
     {
+        var assignmentTypeName = assignmentType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
         foreach (var converterType in converterTypes)
         {
-            var method = converterType.Methods.ToArray().FirstOrDefault(x => x.ReturnTypeName == assignmentType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+            var method = converterType.Methods.ToArray().FirstOrDefault(x => x.ReturnTypeName == assignmentTypeName);
             if (method is not null)
             {
                 return (converterType.TypeName, method.Name);
@@ -274,7 +281,8 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
 
     private static ITypeSymbol UnwrapNullable(ITypeSymbol type)
     {
-        if (type is INamedTypeSymbol { OriginalDefinition.SpecialType: SpecialType.System_Nullable_T } named && named.TypeArguments.Length == 1)
+        if (type is INamedTypeSymbol { OriginalDefinition.SpecialType: SpecialType.System_Nullable_T } named &&
+            (named.TypeArguments.Length == 1))
         {
             return named.TypeArguments[0];
         }
@@ -282,7 +290,7 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
         return type;
     }
 
-    private static ConverterTypeModel[] DistinctConverterTypes(IEnumerable<ConverterTypeModel?> converters)
+    private static List<ConverterTypeModel> DistinctConverterTypes(IEnumerable<ConverterTypeModel?> converters)
     {
         var results = new List<ConverterTypeModel>();
         foreach (var converter in converters)
@@ -295,29 +303,33 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
             results.Add(converter);
         }
 
-        return results.ToArray();
+        return results;
     }
 
     private static ConverterTypeModel? GetConverterType(ISymbol symbol)
     {
         foreach (var attribute in symbol.GetAttributes())
         {
-            if (attribute.AttributeClass?.ToDisplayString() == ConverterAttributeName &&
-                attribute.ConstructorArguments.Length == 1 &&
+            if ((attribute.AttributeClass?.ToDisplayString() == ConverterAttributeName) &&
+                (attribute.ConstructorArguments.Length == 1) &&
                 attribute.ConstructorArguments[0].Value is ITypeSymbol type)
             {
-                return new ConverterTypeModel(type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat), new EquatableArray<ConverterMethodModel>(GetConverterMethods(type).ToArray()));
+                var methods = GetConverterMethods(type);
+                return new ConverterTypeModel(
+                    type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+                    new EquatableArray<ConverterMethodModel>(methods.ToArray()));
             }
         }
 
         return null;
     }
 
-    private static IEnumerable<ConverterMethodModel> GetConverterMethods(ITypeSymbol type)
+    private static List<ConverterMethodModel> GetConverterMethods(ITypeSymbol type)
     {
+        var methods = new List<ConverterMethodModel>();
         foreach (var member in type.GetMembers().OfType<IMethodSymbol>())
         {
-            if (!member.IsStatic || member.Parameters.Length != 1 || member.ReturnsVoid)
+            if (!member.IsStatic || (member.Parameters.Length != 1) || member.ReturnsVoid)
             {
                 continue;
             }
@@ -327,16 +339,19 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
                 continue;
             }
 
-            yield return new ConverterMethodModel(member.Name, member.ReturnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+            methods.Add(new ConverterMethodModel(member.Name, member.ReturnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)));
         }
+
+        return methods;
     }
 
-    private static string[] GetIgnoreMemberNames(ISymbol symbol)
+    private static List<string> GetIgnoreMemberNames(ISymbol symbol)
     {
         var names = new List<string>();
         foreach (var attribute in symbol.GetAttributes())
         {
-            if (attribute.AttributeClass?.ToDisplayString() != IgnoreMembersAttributeName || attribute.ConstructorArguments.Length != 1)
+            if ((attribute.AttributeClass?.ToDisplayString() != IgnoreMembersAttributeName) ||
+                (attribute.ConstructorArguments.Length != 1))
             {
                 continue;
             }
@@ -350,7 +365,7 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
             }
         }
 
-        return names.ToArray();
+        return names;
     }
 
     private static bool HasAttribute(ISymbol symbol, string metadataName) =>
@@ -367,103 +382,165 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
             context.ReportDiagnostic(info);
         }
 
+        var builder = new SourceBuilder();
         foreach (var group in methods.SelectValue().GroupBy(static x => new { x.Namespace, x.ClassName }))
         {
             context.CancellationToken.ThrowIfCancellationRequested();
-            var source = BuildSource(group.ToList());
+            builder.Clear();
+            BuildSource(builder, group.ToList());
             var filename = MakeFilename(group.Key.Namespace, group.Key.ClassName);
-            context.AddSource(filename, SourceText.From(source, Encoding.UTF8));
+            context.AddSource(filename, SourceText.From(builder.ToString(), Encoding.UTF8));
         }
     }
 
-    private static string BuildSource(List<MethodModel> methods)
+    private static void BuildSource(SourceBuilder builder, List<MethodModel> methods)
     {
-        var builder = new StringBuilder();
         var ns = methods[0].Namespace;
-        var className = methods[0].ClassName;
         var isValueType = methods[0].IsValueType;
         var isStatic = methods[0].IsStatic;
+        var className = methods[0].ClassName;
 
-        builder.AppendLine("// <auto-generated />");
-        builder.AppendLine("#nullable enable");
-        builder.AppendLine();
+        builder.AutoGenerated();
+        builder.EnableNullable();
+        builder.NewLine();
 
+        // namespace
         if (!String.IsNullOrEmpty(ns))
         {
-            builder.Append("namespace ").Append(ns).AppendLine(";");
-            builder.AppendLine();
+            builder.Namespace(ns);
+            builder.NewLine();
         }
 
-        builder.Append(isStatic ? "static " : string.Empty).Append("partial ").Append(isValueType ? "struct " : "class ").AppendLine(className);
-        builder.AppendLine("{");
+        // class
+        builder
+            .Indent()
+            .Append(isStatic ? "static " : string.Empty)
+            .Append("partial ")
+            .Append(isValueType ? "struct " : "class ")
+            .Append(className)
+            .NewLine();
+        builder.BeginScope();
 
+        // method
         foreach (var method in methods)
         {
             BuildMethod(builder, method);
         }
 
-        builder.AppendLine("}");
-        return builder.ToString();
+        builder.EndScope();
     }
 
-    private static void BuildMethod(StringBuilder builder, MethodModel method)
+    private static void BuildMethod(SourceBuilder builder, MethodModel method)
     {
-        builder.Append("    ").Append(method.MethodAccessibility.ToText()).Append(" static partial ");
-        builder.Append(method.ReturnTypeName).Append(' ').Append(method.MethodName).Append('(');
+        builder
+            .Indent()
+            .Append(method.MethodAccessibility.ToText())
+            .Append(" static partial ")
+            .Append(method.ReturnTypeName)
+            .Append(" ")
+            .Append(method.MethodName)
+            .Append("(");
+
         if (method.IsExtensionMethod)
         {
             builder.Append("this ");
         }
 
-        builder.Append(method.SourceTypeName).Append(' ').Append(method.SourceParameterName);
+        builder
+            .Append(method.SourceTypeName)
+            .Append(" ")
+            .Append(method.SourceParameterName);
 
         if (method.Pattern != BindingPattern.Factory)
         {
-            builder.Append(", ").Append(method.TargetTypeName).Append(" target");
+            builder
+                .Append(", ")
+                .Append(method.TargetTypeName)
+                .Append(" target");
         }
 
-        builder.AppendLine(")");
-        builder.AppendLine("    {");
+        builder.Append(")").NewLine();
+        builder.BeginScope();
 
+        // Create instance if factory pattern
         if (method.Pattern == BindingPattern.Factory)
         {
-            builder.Append("        var target = new ").Append(method.ReturnTypeName).AppendLine("();");
-            builder.AppendLine();
+            builder
+                .Indent()
+                .Append("var target = new ")
+                .Append(method.ReturnTypeName)
+                .Append("();")
+                .NewLine();
+            builder.NewLine();
         }
 
-        foreach (var property in method.Properties.ToArray())
+        // Property bindings
+        var properties = method.Properties.ToArray();
+        for (var index = 0; index < properties.Length; index++)
         {
-            BuildProperty(builder, method, property);
-            builder.AppendLine();
+            BuildProperty(builder, method, properties[index], index);
+            builder.NewLine();
         }
 
+        // Return target if factory or return-instance
         if (method.Pattern != BindingPattern.Instance)
         {
-            builder.AppendLine("        return target;");
+            builder
+                .Indent()
+                .Append("return target;")
+                .NewLine();
         }
 
-        builder.AppendLine("    }");
-        builder.AppendLine();
+        builder.EndScope();
+        builder.NewLine();
     }
 
-    private static void BuildProperty(StringBuilder builder, MethodModel method, PropertyModel property)
+    private static void BuildProperty(SourceBuilder builder, MethodModel method, PropertyModel property, int index)
     {
+        var valueName = "p" + index;
+
         // Bind if value exists in the source and is not empty
-        var valueName = "_v_" + property.Name;
-        builder.Append("        if (").Append(method.SourceParameterName).Append(".TryGetValue(\"").Append(property.Name).Append("\", out var ").Append(valueName).AppendLine(") &&")
-            .Append("            ").Append(GetHasValueExpression(method.SourceValueKind, valueName)).AppendLine(")");
-        builder.AppendLine("        {");
+        builder
+            .Indent()
+            .Append("if (")
+            .Append(method.SourceParameterName)
+            .Append(".TryGetValue(\"")
+            .Append(property.Name)
+            .Append("\", out var ")
+            .Append(valueName)
+            .Append(") &&")
+            .NewLine()
+            .Indent()
+            .Append("    ")
+            .Append(GetHasValueExpression(method.SourceValueKind, valueName))
+            .Append(")")
+            .NewLine();
+        builder.BeginScope();
 
         // Bind by property kind
         switch (property.ValueKind)
         {
             case PropertyValueKind.String:
                 // Directly assign from source
-                builder.Append("            target.").Append(property.Name).Append(" = ").Append(GetSingleValueExpression(method.SourceValueKind, valueName)).AppendLine(";");
+                builder
+                    .Indent()
+                    .Append("target.")
+                    .Append(property.Name)
+                    .Append(" = ")
+                    .Append(GetSingleValueExpression(method.SourceValueKind, valueName))
+                    .Append(";")
+                    .NewLine();
                 break;
             case PropertyValueKind.StringArray:
                 // Directly assign from all source values
-                builder.Append("            target.").Append(property.Name).Append(" = ").Append(GetArrayValueExpression(method.SourceValueKind, valueName)).AppendLine(";");
+                builder
+                    .Indent()
+                    .Append("target.")
+                    .Append(property.Name)
+                    .Append(" = ")
+                    .Append(GetArrayValueExpression(method.SourceValueKind, valueName))
+                    .Append(";")
+                    .NewLine();
                 break;
             case PropertyValueKind.Array:
                 // Convert each element for non-string arrays
@@ -475,49 +552,98 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
                 break;
         }
 
-        builder.AppendLine("        }");
+        builder.EndScope();
     }
 
-    private static void BuildArrayProperty(StringBuilder builder, MethodModel method, PropertyModel property, string valueName)
+    private static void BuildArrayProperty(SourceBuilder builder, MethodModel method, PropertyModel property, string valueName)
     {
         if (property.ConverterMethodName is null)
         {
             return;
         }
 
-        builder.Append("            var _arr_").Append(property.Name).Append(" = new ").Append(GetArrayElementCreationType(property.TypeName, property.AssignmentTypeName)).Append('[');
-        builder.Append(GetCountExpression(method.SourceValueKind, valueName)).AppendLine("];");
-        builder.Append("            for (var _i_").Append(property.Name).Append(" = 0; _i_").Append(property.Name).Append(" < ");
-        builder.Append(GetCountExpression(method.SourceValueKind, valueName)).Append("; _i_").Append(property.Name).AppendLine("++)");
-        builder.AppendLine("            {");
-        builder.Append("                _arr_").Append(property.Name).Append("[_i_").Append(property.Name).Append("] = ");
-        AppendConvertCall(builder, property, GetIndexedSpanExpression(method.SourceValueKind, valueName, "_i_" + property.Name));
-        builder.AppendLine(";");
-        builder.AppendLine("            }");
-        builder.Append("            target.").Append(property.Name).Append(" = _arr_").Append(property.Name).AppendLine(";");
+        var arrName = valueName + "arr";
+        var countExpr = GetCountExpression(method.SourceValueKind, valueName);
+        var elementType = GetArrayElementCreationType(property.TypeName, property.AssignmentTypeName);
+
+        // Allocate result array
+        builder
+            .Indent()
+            .Append("var ")
+            .Append(arrName)
+            .Append(" = new ")
+            .Append(elementType)
+            .Append("[")
+            .Append(countExpr)
+            .Append("];")
+            .NewLine();
+
+        // Loop over source values and convert each element
+        builder
+            .Indent()
+            .Append("for (var i = 0; i < ")
+            .Append(countExpr)
+            .Append("; i++)")
+            .NewLine();
+        builder.BeginScope();
+
+        builder
+            .Indent()
+            .Append(arrName)
+            .Append("[i] = ");
+        AppendConvertCall(builder, property, GetIndexedSpanExpression(method.SourceValueKind, valueName, "i"));
+        builder.Append(";").NewLine();
+
+        builder.EndScope();
+
+        // Assign to property
+        builder
+            .Indent()
+            .Append("target.")
+            .Append(property.Name)
+            .Append(" = ")
+            .Append(arrName)
+            .Append(";")
+            .NewLine();
     }
 
-    private static void BuildSingleConvertedProperty(StringBuilder builder, MethodModel method, PropertyModel property, string valueName)
+    private static void BuildSingleConvertedProperty(SourceBuilder builder, MethodModel method, PropertyModel property, string valueName)
     {
         if (property.ConverterMethodName is null)
         {
             return;
         }
 
-        builder.Append("            target.").Append(property.Name).Append(" = ");
+        builder
+            .Indent()
+            .Append("target.")
+            .Append(property.Name)
+            .Append(" = ");
         AppendConvertCall(builder, property, GetSingleSpanExpression(method.SourceValueKind, valueName));
-        builder.AppendLine(";");
+        builder.Append(";").NewLine();
     }
 
-    private static void AppendConvertCall(StringBuilder builder, PropertyModel property, string valueExpression)
+    private static void AppendConvertCall(SourceBuilder builder, PropertyModel property, string valueExpression)
     {
-        builder.Append(property.ConverterMethodTypeName).Append('.').Append(property.ConverterMethodName);
-        if (property.IsEnum && property.ConverterMethodTypeName == DefaultConverterTypeName && property.ValueKind == PropertyValueKind.Scalar)
+        builder
+            .Append(property.ConverterMethodTypeName)
+            .Append(".")
+            .Append(property.ConverterMethodName!);
+
+        if (property.IsEnum &&
+            (property.ConverterMethodTypeName == DefaultConverterTypeName) &&
+            (property.ValueKind == PropertyValueKind.Scalar))
         {
-            builder.Append('<').Append(property.AssignmentTypeName).Append('>');
+            builder
+                .Append("<")
+                .Append(property.AssignmentTypeName)
+                .Append(">");
         }
 
-        builder.Append('(').Append(valueExpression).Append(')');
+        builder
+            .Append("(")
+            .Append(valueExpression)
+            .Append(")");
     }
 
     private static string GetArrayElementCreationType(string propertyTypeName, string assignmentTypeName)
@@ -530,8 +656,8 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
 
     private static string GetHasValueExpression(string sourceValueKind, string valueName) => sourceValueKind switch
     {
-        "StringValues" => $"{valueName}.Count > 0",
-        _ => $"{valueName} is not null"
+        "StringValues" => $"({valueName}.Count > 0)",
+        _ => $"({valueName} is not null)"
     };
 
     private static string GetSingleValueExpression(string sourceValueKind, string valueName) => sourceValueKind switch
