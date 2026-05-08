@@ -72,12 +72,14 @@ public sealed class KanaValidationController : ControllerBase
 }
 
 // -----------------------------------------------------------------------
-// Helper
+// Test
 // -----------------------------------------------------------------------
 
-internal static class KanaTestWebAppFactory
+public sealed class KanaModelBinderTest
 {
-    public static HttpClient CreateClient()
+    private static readonly HttpClient Client = CreateClient();
+
+    private static HttpClient CreateClient()
     {
         var builder = WebApplication.CreateBuilder();
         builder.WebHost.UseTestServer();
@@ -92,15 +94,6 @@ internal static class KanaTestWebAppFactory
 
         return app.GetTestClient();
     }
-}
-
-// -----------------------------------------------------------------------
-// Test
-// -----------------------------------------------------------------------
-
-public sealed class KanaModelBinderTest
-{
-    private static readonly HttpClient Client = KanaTestWebAppFactory.CreateClient();
 
     // -- Query --
 
