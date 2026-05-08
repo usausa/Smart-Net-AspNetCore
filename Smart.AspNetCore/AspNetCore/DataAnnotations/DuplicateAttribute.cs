@@ -1,7 +1,6 @@
 namespace Smart.AspNetCore.DataAnnotations;
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -11,23 +10,23 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter, AllowMultiple = true)]
-public abstract class DuplicateKeyAttribute : ValidationAttribute
+public abstract class DuplicateAttribute : ValidationAttribute
 {
 }
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter, AllowMultiple = true)]
-public abstract class DuplicateKey2Attribute : ValidationAttribute
+public abstract class Duplicate2Attribute : ValidationAttribute
 {
 }
 
-public sealed class DuplicateKeyAttribute<T, TKey> : DuplicateKeyAttribute
+public sealed class DuplicateAttribute<T, TKey> : DuplicateAttribute
     where TKey : notnull
 {
     private ModelMetadata? memberMetadata;
 
     public string Member { get; }
 
-    public DuplicateKeyAttribute(string member)
+    public DuplicateAttribute(string member)
     {
         Member = member;
     }
@@ -90,7 +89,7 @@ public sealed class DuplicateKeyAttribute<T, TKey> : DuplicateKeyAttribute
         validationContext.GetRequiredService<IModelMetadataProvider>().GetMetadataForProperty(typeof(T), Member);
 }
 
-public sealed class DuplicateKeyAttribute<T, TKey1, TKey2> : DuplicateKey2Attribute
+public sealed class DuplicateAttribute<T, TKey1, TKey2> : Duplicate2Attribute
     where TKey1 : notnull
     where TKey2 : notnull
 {
@@ -102,7 +101,7 @@ public sealed class DuplicateKeyAttribute<T, TKey1, TKey2> : DuplicateKey2Attrib
 
     public string Member2 { get; }
 
-    public DuplicateKeyAttribute(string member1, string member2)
+    public DuplicateAttribute(string member1, string member2)
     {
         Member1 = member1;
         Member2 = member2;

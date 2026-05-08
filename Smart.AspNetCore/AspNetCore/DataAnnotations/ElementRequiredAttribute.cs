@@ -3,7 +3,6 @@ namespace Smart.AspNetCore.DataAnnotations;
 using System;
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
 public sealed class ElementRequiredAttribute : ValidationAttribute
