@@ -1,4 +1,11 @@
 <Solution>
+  <Folder Name="/Library/">
+    <Project Path="Smart.AspNetCore.Generator/Smart.AspNetCore.Generator.csproj" />
+    <Project Path="Smart.AspNetCore.Japanese/Smart.AspNetCore.Japanese.csproj" />
+    <Project Path="Smart.AspNetCore/Smart.AspNetCore.csproj">
+      <BuildDependency Project="Smart.AspNetCore.Generator/Smart.AspNetCore.Generator.csproj" />
+    </Project>
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".gitattributes" />
@@ -13,10 +20,7 @@
     <File Path="Smart.AspNetCore.props" />
     <File Path="Smart.AspNetCore.sln.DotSettings" />
   </Folder>
-  <Project Path="Smart.AspNetCore/Smart.AspNetCore.csproj">
-    <BuildDependency Project="Smart.AspNetCore.Generator/Smart.AspNetCore.Generator.csproj" />
-  </Project>
-  <Project Path="Smart.AspNetCore.Generator/Smart.AspNetCore.Generator.csproj" />
-  <Project Path="Smart.AspNetCore.Japanese/Smart.AspNetCore.Japanese.csproj" />
-  <Project Path="Smart.AspNetCore.Tests/Smart.AspNetCore.Tests.csproj" />
+  <Folder Name="/Test/">
+    <Project Path="Smart.AspNetCore.Tests/Smart.AspNetCore.Tests.csproj" />
+  </Folder>
 </Solution>
