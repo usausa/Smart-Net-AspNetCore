@@ -4,13 +4,6 @@
     <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
     <RootNamespace>Smart</RootNamespace>
     <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
-    <NoWarn>$(NoWarn);NU5118;NU5129;IDE0130</NoWarn>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <PackageId>Usa.Smart.AspNetCore.Japanese</PackageId>
-    <RootNamespace>Smart</RootNamespace>
-    <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup>
