@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
+    <RootNamespace>Smart</RootNamespace>
+    <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>$(NoWarn);NU5118;NU5129;IDE0130</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Usa.Smart.AspNetCore.Japanese</PackageId>
+    <RootNamespace>Smart</RootNamespace>
+    <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Usa.Smart.AspNetCore</PackageId>
+    <Title>Smart.AspNetCore.Japanese</Title>
+    <Description>Smart ASP.NET Core Japanese extension library</Description>
+    <PackageTags>smart aspnet aspnetcore japanese</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="新しいフォルダー\**" />
+    <EmbeddedResource Remove="新しいフォルダー\**" />
+    <None Remove="新しいフォルダー\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Usa.Smart.Core" Version="2.8.0" />
+    <PackageReference Include="Usa.Smart.Text.Japanese" Version="2.6.0" />
+  </ItemGroup>
+
+</Project>

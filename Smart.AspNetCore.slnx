@@ -17,5 +17,6 @@
     <BuildDependency Project="Smart.AspNetCore.Generator/Smart.AspNetCore.Generator.csproj" />
   </Project>
   <Project Path="Smart.AspNetCore.Generator/Smart.AspNetCore.Generator.csproj" />
+  <Project Path="Smart.AspNetCore.Japanese/Smart.AspNetCore.Japanese.csproj" />
   <Project Path="Smart.AspNetCore.Tests/Smart.AspNetCore.Tests.csproj" />
 </Solution>
