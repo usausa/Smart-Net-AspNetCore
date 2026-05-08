@@ -21,12 +21,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="新しいフォルダー\**" />
-    <EmbeddedResource Remove="新しいフォルダー\**" />
-    <None Remove="新しいフォルダー\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
