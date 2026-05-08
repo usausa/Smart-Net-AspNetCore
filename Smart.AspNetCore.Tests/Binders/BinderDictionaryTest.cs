@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 using Microsoft.Extensions.Primitives;
 
-// -----------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 // Binder
-// -----------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 
 [BindConverter(typeof(SearchRequestConverter))]
 internal static partial class SearchRequestBinder
@@ -52,9 +52,9 @@ internal static partial class DictionaryExtensionBinder
     public static partial void BindToSearchRequestInstance(this Dictionary<string, StringValues> values, SearchRequest target);
 }
 
-// -----------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 // Target
-// -----------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 
 internal sealed class SearchRequest
 {
@@ -114,9 +114,9 @@ internal sealed class ConvertNullableArrayPropertyTarget
     public int?[]? Value { get; set; }
 }
 
-// -----------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 // Test
-// -----------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 
 public sealed class BinderDictionaryTest
 {
