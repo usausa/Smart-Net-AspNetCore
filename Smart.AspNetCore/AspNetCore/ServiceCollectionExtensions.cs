@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using Smart.AspNetCore.Filters;
+using Smart.AspNetCore.Middleware;
 
 public static class ServiceCollectionExtensions
 {
@@ -35,6 +36,22 @@ public static class ServiceCollectionExtensions
     public static IFilterMetadata AddTimeLogging(this FilterCollection filters)
     {
         return filters.AddService<TimeLoggingFilter>();
+    }
+
+    //--------------------------------------------------------------------------------
+    // Request/Response dump
+    //--------------------------------------------------------------------------------
+
+    public static IServiceCollection AddRequestResponseDump(this IServiceCollection services)
+    {
+        services.AddOptions<RequestResponseDumpOptions>();
+        return services;
+    }
+
+    public static IServiceCollection AddRequestResponseDump(this IServiceCollection services, Action<RequestResponseDumpOptions> configure)
+    {
+        services.AddOptions<RequestResponseDumpOptions>().Configure(configure);
+        return services;
     }
 
     //--------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-namespace Smart.AspNetCore.Binders;
+namespace Smart.AspNetCore.ModelBinding;
 
 using System;
 using System.Threading.Tasks;

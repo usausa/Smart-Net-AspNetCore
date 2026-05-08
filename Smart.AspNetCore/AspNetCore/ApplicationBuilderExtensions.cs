@@ -3,6 +3,8 @@ namespace Smart.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
+using Smart.AspNetCore.Middleware;
+
 public static class ApplicationBuilderExtensions
 {
     //--------------------------------------------------------------------------------
@@ -52,4 +54,11 @@ public static class ApplicationBuilderExtensions
             return context => predicate(context) ? whenBranch(context) : elseBranch(context);
         });
     }
+
+    //--------------------------------------------------------------------------------
+    // Request/Response dump
+    //--------------------------------------------------------------------------------
+
+    public static IApplicationBuilder UseRequestResponseDump(this IApplicationBuilder app) =>
+        app.UseMiddleware<RequestResponseDumpMiddleware>();
 }

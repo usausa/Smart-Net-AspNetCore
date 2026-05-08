@@ -10,5 +10,11 @@ public static partial class Log
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Long execution. elapsed=[{elapsed}]")]
     public static partial void WarnLongExecution(this ILogger logger, long elapsed);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Request dump. dump=[{dump}]")]
+    public static partial void DebugRequestDump(this ILogger logger, string dump);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Response dump. dump=[{dump}]")]
+    public static partial void DebugResponseDump(this ILogger logger, string dump);
 }
 #pragma warning restore SYSLIB1006
