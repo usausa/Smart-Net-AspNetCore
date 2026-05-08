@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>Usa.Smart.AspNetCore</PackageId>
+    <PackageId>Usa.Smart.AspNetCore.Japanese</PackageId>
     <Title>Smart.AspNetCore.Japanese</Title>
     <Description>Smart ASP.NET Core Japanese extension library</Description>
     <PackageTags>smart aspnet aspnetcore japanese</PackageTags>
