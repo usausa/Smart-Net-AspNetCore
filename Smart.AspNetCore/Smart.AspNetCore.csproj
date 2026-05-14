@@ -33,7 +33,7 @@
 
   <ItemGroup>
     <PackageReference Include="SourceGenerateHelper" Version="1.7.0" GeneratePathProperty="true" PrivateAssets="all" />
-    <PackageReference Include="Usa.Smart.Core" Version="2.8.0" />
+    <PackageReference Include="Usa.Smart.Core" Version="2.9.0" />
   </ItemGroup>
 
 </Project>
