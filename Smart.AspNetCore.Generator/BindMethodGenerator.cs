@@ -225,7 +225,7 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
         var assignmentTypeName = assignmentType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
         foreach (var converterType in converterTypes)
         {
-            var method = converterType.Methods.ToArray().FirstOrDefault(x => x.ReturnTypeName == assignmentTypeName);
+            var method = converterType.Methods.AsArray().FirstOrDefault(x => x.ReturnTypeName == assignmentTypeName);
             if (method is not null)
             {
                 return (converterType.TypeName, method.Name);
@@ -470,7 +470,7 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
         }
 
         // Property bindings
-        var properties = method.Properties.ToArray();
+        var properties = method.Properties.AsArray();
         for (var index = 0; index < properties.Length; index++)
         {
             BuildProperty(builder, method, properties[index], index);
