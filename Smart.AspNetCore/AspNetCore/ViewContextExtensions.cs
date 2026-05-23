@@ -11,6 +11,8 @@ using Microsoft.Extensions.Primitives;
 public static class ViewContextExtensions
 {
     [return: MaybeNull]
+    [RequiresUnreferencedCode("This method uses Enum.Parse and Convert.ChangeType which are not AOT compatible.")]
+    [RequiresDynamicCode("This method uses dynamic type conversion and is not AOT compatible.")]
     private static T TypeConvert<T>(object? value)
     {
         if (value is null)
@@ -59,6 +61,8 @@ public static class ViewContextExtensions
     }
 
     [return: MaybeNull]
+    [RequiresUnreferencedCode("This method uses dynamic type conversion and is not AOT compatible.")]
+    [RequiresDynamicCode("This method uses dynamic type conversion and is not AOT compatible.")]
     public static T GetRouteValue<T>(this ViewContext context, string key)
     {
         var value = context.RouteData.Values[key];
@@ -75,6 +79,8 @@ public static class ViewContextExtensions
     }
 
     [return: MaybeNull]
+    [RequiresUnreferencedCode("This method uses dynamic type conversion and is not AOT compatible.")]
+    [RequiresDynamicCode("This method uses dynamic type conversion and is not AOT compatible.")]
     public static T GetQueryValue<T>(this ViewContext context, string key)
     {
         var value = context.HttpContext.Request.Query[key].FirstOrDefault();
@@ -122,6 +128,7 @@ public static class ViewContextExtensions
                controller.Equals((string)currentController!, StringComparison.OrdinalIgnoreCase);
     }
 
+    // ReSharper disable once ParameterTypeCanBeEnumerable.Global
     public static bool IsControllerActive(this ViewContext context, string area, string[] controllers)
     {
         return context.RouteData.Values.TryGetValue("area", out var currentArea) &&
@@ -140,6 +147,7 @@ public static class ViewContextExtensions
                action.Equals((string)currentAction!, StringComparison.OrdinalIgnoreCase);
     }
 
+    // ReSharper disable once ParameterTypeCanBeEnumerable.Global
     public static bool IsActionActive(this ViewContext context, string area, string controller, string[] actions)
     {
         return context.RouteData.Values.TryGetValue("area", out var currentArea) &&
@@ -158,6 +166,7 @@ public static class ViewContextExtensions
                action.Equals((string)currentAction!, StringComparison.OrdinalIgnoreCase);
     }
 
+    // ReSharper disable once ParameterTypeCanBeEnumerable.Global
     public static bool IsActionActive(this ViewContext context, string controller, string[] actions)
     {
         return context.RouteData.Values.TryGetValue("controller", out var currentController) &&

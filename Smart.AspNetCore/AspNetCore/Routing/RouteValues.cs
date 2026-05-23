@@ -1,6 +1,7 @@
 namespace Smart.AspNetCore.Routing;
 
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 using Microsoft.AspNetCore.Routing;
@@ -11,6 +12,8 @@ public static class RouteValues
 {
     private static readonly ConcurrentDictionary<Type, Accessor[]> Cache = new();
 
+    [RequiresUnreferencedCode("This method uses reflection to access properties of the value type and is not AOT compatible.")]
+    [RequiresDynamicCode("This method uses dynamic delegate creation and is not AOT compatible.")]
     public static RouteValueDictionary From(object value)
     {
         var type = value.GetType();
@@ -30,6 +33,8 @@ public static class RouteValues
         return values;
     }
 
+    [RequiresUnreferencedCode("This method uses reflection to access properties of the value type and is not AOT compatible.")]
+    [RequiresDynamicCode("This method uses dynamic delegate creation and is not AOT compatible.")]
     public static RouteValueDictionary From(string path, object value)
     {
         var type = value.GetType();
@@ -49,7 +54,9 @@ public static class RouteValues
         return values;
     }
 
-    private static Accessor[] CreateAccessors(Type type)
+    [RequiresUnreferencedCode("This method uses reflection to access properties of the value type and is not AOT compatible.")]
+    [RequiresDynamicCode("This method uses dynamic delegate creation and is not AOT compatible.")]
+    private static Accessor[] CreateAccessors([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.NonPublicProperties)] Type type)
     {
         var factory = DelegateFactory.Default;
 

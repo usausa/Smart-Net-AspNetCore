@@ -17,26 +17,6 @@ public static class ApplicationBuilderExtensions
         Action<IApplicationBuilder> whenConfiguration,
         Action<IApplicationBuilder> elseConfiguration)
     {
-        if (app == null)
-        {
-            throw new ArgumentNullException(nameof(app));
-        }
-
-        if (predicate == null)
-        {
-            throw new ArgumentNullException(nameof(predicate));
-        }
-
-        if (whenConfiguration == null)
-        {
-            throw new ArgumentNullException(nameof(whenConfiguration));
-        }
-
-        if (elseConfiguration == null)
-        {
-            throw new ArgumentNullException(nameof(elseConfiguration));
-        }
-
         var whenBranchBuilder = app.New();
         whenConfiguration(whenBranchBuilder);
 
