@@ -36,9 +36,18 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
                 static (context, _) => GetMethodModel(context))
             .Collect();
 
-        context.RegisterImplementationSourceOutput(
+        context.RegisterSourceOutput(
             methodProvider,
-            static (context, provider) => Execute(context, provider));
+            static (context, methods) => ReportDiagnostics(context, methods));
+
+        var groups = methodProvider.SelectMany(static (methods, _) =>
+            methods.SelectValue()
+                .GroupBy(static x => new { x.Namespace, x.ClassName })
+                .Select(static g => new MethodGroupModel(g.Key.Namespace, g.Key.ClassName, new EquatableArray<MethodModel>(g.ToArray())))
+                .ToImmutableArray());
+        context.RegisterImplementationSourceOutput(
+            groups,
+            static (context, group) => Execute(context, group));
     }
 
     private static Result<MethodModel> GetMethodModel(GeneratorAttributeSyntaxContext context)
@@ -52,19 +61,19 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
 
         if (!symbol.IsStatic || !symbol.IsPartialDefinition)
         {
-            return Results.Error<MethodModel>(new DiagnosticInfo(Diagnostics.InvalidMethodDefinition, syntax.GetLocation(), symbol.Name));
+            return Results.Error<MethodModel>(new DiagnosticInfo(Diagnostics.InvalidMethodDefinition, syntax.Identifier.GetLocation(), symbol.Name));
         }
 
         if (symbol.Parameters.Length is < 1 or > 2)
         {
-            return Results.Error<MethodModel>(new DiagnosticInfo(Diagnostics.InvalidMethodParameter, syntax.GetLocation(), symbol.Name));
+            return Results.Error<MethodModel>(new DiagnosticInfo(Diagnostics.InvalidMethodParameter, syntax.Identifier.GetLocation(), symbol.Name));
         }
 
         var sourceParam = symbol.Parameters[0];
         var sourceValueKind = GetSourceValueKind(sourceParam.Type);
         if (sourceValueKind is null)
         {
-            return Results.Error<MethodModel>(new DiagnosticInfo(Diagnostics.InvalidMethodParameter, syntax.GetLocation(), symbol.Name));
+            return Results.Error<MethodModel>(new DiagnosticInfo(Diagnostics.InvalidMethodParameter, syntax.Identifier.GetLocation(), symbol.Name));
         }
 
         BindingPattern pattern;
@@ -81,7 +90,7 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
         }
         else
         {
-            return Results.Error<MethodModel>(new DiagnosticInfo(Diagnostics.InvalidMethodDefinition, syntax.GetLocation(), symbol.Name));
+            return Results.Error<MethodModel>(new DiagnosticInfo(Diagnostics.InvalidMethodDefinition, syntax.Identifier.GetLocation(), symbol.Name));
         }
 
         var containingType = symbol.ContainingType;
@@ -370,22 +379,22 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
     // Builder
     // ------------------------------------------------------------
 
-    private static void Execute(SourceProductionContext context, ImmutableArray<Result<MethodModel>> methods)
+    private static void ReportDiagnostics(SourceProductionContext context, ImmutableArray<Result<MethodModel>> methods)
     {
         foreach (var info in methods.SelectError())
         {
             context.ReportDiagnostic(info);
         }
+    }
+
+    private static void Execute(SourceProductionContext context, MethodGroupModel group)
+    {
+        context.CancellationToken.ThrowIfCancellationRequested();
 
         var builder = new SourceBuilder();
-        foreach (var group in methods.SelectValue().GroupBy(static x => new { x.Namespace, x.ClassName }))
-        {
-            context.CancellationToken.ThrowIfCancellationRequested();
-            builder.Clear();
-            BuildSource(builder, group.ToList());
-            var filename = MakeFilename(group.Key.Namespace, group.Key.ClassName);
-            context.AddSource(filename, SourceText.From(builder.ToString(), Encoding.UTF8));
-        }
+        BuildSource(builder, group.Methods.ToList());
+        var filename = MakeFilename(group.Namespace, group.ClassName);
+        context.AddSource(filename, SourceText.From(builder.ToString(), Encoding.UTF8));
     }
 
     private static void BuildSource(SourceBuilder builder, List<MethodModel> methods)
