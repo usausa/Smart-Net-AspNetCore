@@ -15,8 +15,6 @@ public sealed class BindMethodGeneratorDiagnosticTest
     [Fact]
     public void UnconvertiblePropertyReportsSan0003()
     {
-        // StringBuilder has no available converter, so the generator must report it
-        // instead of silently skipping the property.
         var result = CompilationHelper.RunGenerator(Head + """
             internal sealed class SampleTarget
             {
@@ -39,7 +37,7 @@ public sealed class BindMethodGeneratorDiagnosticTest
     [Fact]
     public void NonPartialContainingTypeReportsSan0004()
     {
-        const string Source = Head + """
+        const string source = Head + """
             internal sealed class Target { public int Id { get; set; } }
 
             internal static class Binder
@@ -49,13 +47,13 @@ public sealed class BindMethodGeneratorDiagnosticTest
             }
             """;
 
-        AssertReported("SAN0004", Source);
+        AssertReported("SAN0004", source);
     }
 
     [Fact]
     public void NestedContainingTypeReportsSan0005()
     {
-        const string Source = Head + """
+        const string source = Head + """
             internal sealed class Target { public int Id { get; set; } }
 
             internal static class Outer
@@ -68,13 +66,13 @@ public sealed class BindMethodGeneratorDiagnosticTest
             }
             """;
 
-        AssertReported("SAN0005", Source);
+        AssertReported("SAN0005", source);
     }
 
     [Fact]
     public void AbstractTargetReportsSan0006()
     {
-        const string Source = Head + """
+        const string source = Head + """
             internal abstract class Target { public int Id { get; set; } }
 
             internal static partial class Binder
@@ -84,13 +82,13 @@ public sealed class BindMethodGeneratorDiagnosticTest
             }
             """;
 
-        AssertReported("SAN0006", Source);
+        AssertReported("SAN0006", source);
     }
 
     [Fact]
     public void TargetWithoutParameterlessConstructorReportsSan0007()
     {
-        const string Source = Head + """
+        const string source = Head + """
             internal sealed class Target
             {
                 public Target(int x) { Id = x; }
@@ -105,13 +103,13 @@ public sealed class BindMethodGeneratorDiagnosticTest
             }
             """;
 
-        AssertReported("SAN0007", Source);
+        AssertReported("SAN0007", source);
     }
 
     [Fact]
     public void GenericMethodReportsSan0008()
     {
-        const string Source = Head + """
+        const string source = Head + """
             internal sealed class Target { public int Id { get; set; } }
 
             internal static partial class Binder
@@ -121,13 +119,12 @@ public sealed class BindMethodGeneratorDiagnosticTest
             }
             """;
 
-        AssertReported("SAN0008", Source);
+        AssertReported("SAN0008", source);
     }
 
     [Fact]
     public void GenericContainingTypeIsSupported()
     {
-        // A generic containing type is supported and must not be rejected.
         var result = CompilationHelper.RunGenerator(Head + """
             internal sealed class Target { public int Id { get; set; } }
 
@@ -145,7 +142,6 @@ public sealed class BindMethodGeneratorDiagnosticTest
     [Fact]
     public void OverloadedBindMethodsAreSupported()
     {
-        // Overloads on different source collections are supported.
         var result = CompilationHelper.RunGenerator(Head + """
             internal sealed class Target { public int Id { get; set; } }
 

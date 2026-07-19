@@ -42,9 +42,14 @@ public sealed class FormParameterAttributeTest
 
     private static RouteContext CreateFormRouteContext(string key, string value)
     {
-        var httpContext = new DefaultHttpContext();
-        httpContext.Request.ContentType = "application/x-www-form-urlencoded";
-        httpContext.Request.Form = new FormCollection(new Dictionary<string, StringValues> { [key] = value });
+        var httpContext = new DefaultHttpContext
+        {
+            Request =
+            {
+                ContentType = "application/x-www-form-urlencoded",
+                Form = new FormCollection(new Dictionary<string, StringValues> { [key] = value })
+            }
+        };
         return new RouteContext(httpContext);
     }
 }
