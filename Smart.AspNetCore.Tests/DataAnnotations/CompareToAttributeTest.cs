@@ -19,6 +19,28 @@ public sealed class CompareToModel
     public DateTime EndDate { get; set; }
 }
 
+public sealed class CompareToMismatchModel
+{
+    public int Value { get; set; }
+
+    public string Other { get; set; } = "x";
+}
+
+public sealed class CompareToDisplayNameModelA
+{
+    public int Min { get; set; }
+
+    public int Max { get; set; }
+}
+
+public sealed class CompareToDisplayNameModelB
+{
+    [Display(Name = "Minimum B")]
+    public int Min { get; set; }
+
+    public int Max { get; set; }
+}
+
 //--------------------------------------------------------------------------------
 // Test
 //--------------------------------------------------------------------------------
@@ -89,7 +111,6 @@ public sealed class CompareToAttributeTest
         var context = ValidationContextHelper.Create(model, nameof(CompareToModel.Min));
         var attribute = new CompareToAttribute(CompareToOperation.LessThan, nameof(CompareToModel.Max)) { ErrorMessage = "{0} must be < {1}." };
 
-        // Min(3) < Max(5) → succeeds
         Assert.Equal(ValidationResult.Success, attribute.GetValidationResult(model.Min, context));
     }
 
@@ -100,7 +121,33 @@ public sealed class CompareToAttributeTest
         var context = ValidationContextHelper.Create(model, nameof(CompareToModel.Max));
         var attribute = new CompareToAttribute(CompareToOperation.GreaterEqualThan, nameof(CompareToModel.Min)) { ErrorMessage = "{0} must be >= {1}." };
 
-        // null value is not IComparable → succeeds
         Assert.Equal(ValidationResult.Success, attribute.GetValidationResult(null, context));
+    }
+
+    [Fact]
+    public void WhenComparedTypesDifferThenThrowsInvalidOperation()
+    {
+        var model = new CompareToMismatchModel { Value = 5, Other = "x" };
+        var context = ValidationContextHelper.Create(model, nameof(CompareToMismatchModel.Value));
+        var attribute = new CompareToAttribute(CompareToOperation.GreaterThan, nameof(CompareToMismatchModel.Other)) { ErrorMessage = "{0} vs {1}" };
+
+        Assert.Throws<InvalidOperationException>(() => attribute.GetValidationResult(model.Value, context));
+    }
+
+    [Fact]
+    public void SameAttributeInstanceResolvesMetadataPerObjectType()
+    {
+        var attribute = new CompareToAttribute(CompareToOperation.GreaterEqualThan, "Min") { ErrorMessage = "{0}/{1}" };
+
+        var a = new CompareToDisplayNameModelA { Min = 10, Max = 5 };
+        var resultA = attribute.GetValidationResult(a.Max, ValidationContextHelper.Create(a, nameof(CompareToDisplayNameModelA.Max)));
+
+        var b = new CompareToDisplayNameModelB { Min = 10, Max = 5 };
+        var resultB = attribute.GetValidationResult(b.Max, ValidationContextHelper.Create(b, nameof(CompareToDisplayNameModelB.Max)));
+
+        Assert.NotEqual(ValidationResult.Success, resultA);
+        Assert.NotEqual(ValidationResult.Success, resultB);
+        Assert.Contains("Minimum B", resultB!.ErrorMessage!, StringComparison.Ordinal);
+        Assert.DoesNotContain("Minimum B", resultA!.ErrorMessage!, StringComparison.Ordinal);
     }
 }

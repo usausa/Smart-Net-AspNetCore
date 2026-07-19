@@ -22,8 +22,6 @@ public abstract class Duplicate2Attribute : ValidationAttribute
 public sealed class DuplicateAttribute<T, TKey> : DuplicateAttribute
     where TKey : notnull
 {
-    private ModelMetadata? memberMetadata;
-
     public string Member { get; }
 
     public DuplicateAttribute(string member)
@@ -35,7 +33,7 @@ public sealed class DuplicateAttribute<T, TKey> : DuplicateAttribute
     {
         if (value is IEnumerable<T> ie)
         {
-            memberMetadata = ResolveMemberMetadata(validationContext);
+            var memberMetadata = validationContext.GetRequiredService<IModelMetadataProvider>().GetMetadataForProperty(typeof(T), Member);
 
             var countsBy = new Dictionary<TKey, int>();
             foreach (var item in ie)
@@ -84,19 +82,12 @@ public sealed class DuplicateAttribute<T, TKey> : DuplicateAttribute
 
         return ValidationResult.Success;
     }
-
-    private ModelMetadata ResolveMemberMetadata(ValidationContext validationContext) =>
-        validationContext.GetRequiredService<IModelMetadataProvider>().GetMetadataForProperty(typeof(T), Member);
 }
 
 public sealed class DuplicateAttribute<T, TKey1, TKey2> : Duplicate2Attribute
     where TKey1 : notnull
     where TKey2 : notnull
 {
-    private ModelMetadata? memberMetadata1;
-
-    private ModelMetadata? memberMetadata2;
-
     public string Member1 { get; }
 
     public string Member2 { get; }
@@ -111,8 +102,9 @@ public sealed class DuplicateAttribute<T, TKey1, TKey2> : Duplicate2Attribute
     {
         if (value is IEnumerable<T> ie)
         {
-            memberMetadata1 = ResolveMemberMetadata1(validationContext);
-            memberMetadata2 = ResolveMemberMetadata2(validationContext);
+            var modelMetadataProvider = validationContext.GetRequiredService<IModelMetadataProvider>();
+            var memberMetadata1 = modelMetadataProvider.GetMetadataForProperty(typeof(T), Member1);
+            var memberMetadata2 = modelMetadataProvider.GetMetadataForProperty(typeof(T), Member2);
 
             var countsBy = new Dictionary<(TKey1, TKey2), int>();
             foreach (var item in ie)
@@ -144,10 +136,4 @@ public sealed class DuplicateAttribute<T, TKey1, TKey2> : Duplicate2Attribute
 
         return ValidationResult.Success;
     }
-
-    private ModelMetadata ResolveMemberMetadata1(ValidationContext validationContext) =>
-        validationContext.GetRequiredService<IModelMetadataProvider>().GetMetadataForProperty(typeof(T), Member1);
-
-    private ModelMetadata ResolveMemberMetadata2(ValidationContext validationContext) =>
-        validationContext.GetRequiredService<IModelMetadataProvider>().GetMetadataForProperty(typeof(T), Member2);
 }

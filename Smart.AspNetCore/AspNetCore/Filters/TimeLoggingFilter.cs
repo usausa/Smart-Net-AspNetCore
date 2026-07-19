@@ -25,19 +25,20 @@ public sealed class TimeLoggingFilter : IActionFilter
 
     public void OnActionExecuted(ActionExecutedContext context)
     {
-        var watch = (Stopwatch)context.HttpContext.Items[options.Key]!;
-        var elapsed = watch.ElapsedMilliseconds;
+        if (!context.HttpContext.Items.TryGetValue(options.Key, out var item) || (item is not Stopwatch watch))
+        {
+            return;
+        }
 
-        if (watch.ElapsedMilliseconds >= options.Threshold)
+        var elapsed = watch.ElapsedMilliseconds;
+        var isLongExecution = elapsed >= options.Threshold;
+        if (isLongExecution)
         {
             logger.WarnLongExecution(elapsed);
-
-            if (options.HeaderType == TimeLoggingHeaderType.LongExecution)
-            {
-                context.HttpContext.Response.Headers[options.Header] = $"{elapsed}";
-            }
         }
-        else if (options.HeaderType == TimeLoggingHeaderType.Always)
+
+        if ((options.HeaderType == TimeLoggingHeaderType.Always) ||
+            (options.HeaderType == TimeLoggingHeaderType.LongExecution && isLongExecution))
         {
             context.HttpContext.Response.Headers[options.Header] = $"{elapsed}";
         }

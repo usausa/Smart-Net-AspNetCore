@@ -5,6 +5,7 @@ using System;
 [AttributeUsage(AttributeTargets.Method)]
 public sealed class BindAttribute : Attribute
 {
+    public bool Strict { get; set; }
 }
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Method | AttributeTargets.Property)]

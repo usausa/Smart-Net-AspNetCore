@@ -1,5 +1,6 @@
 namespace Smart.AspNetCore.ActionConstraints;
 
+using System.Globalization;
 using System.Runtime.CompilerServices;
 
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -17,7 +18,7 @@ public sealed class QueryParameterAttribute : ActionMethodSelectorAttribute
     public QueryParameterAttribute(string name, params object[] values)
     {
         this.name = name;
-        this.values = values.Select(static x => x.ToString()!).ToArray();
+        this.values = Array.ConvertAll(values, static x => Convert.ToString(x, CultureInfo.InvariantCulture) ?? string.Empty);
     }
 
     public override bool IsValidForRequest(RouteContext routeContext, ActionDescriptor action)

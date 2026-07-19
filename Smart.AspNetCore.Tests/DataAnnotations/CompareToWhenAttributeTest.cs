@@ -16,6 +16,15 @@ public sealed class CompareToWhenModel
     public int Max { get; set; }
 }
 
+public sealed class CompareToWhenMismatchModel
+{
+    public bool IsEnabled { get; set; }
+
+    public int Value { get; set; }
+
+    public string Other { get; set; } = "x";
+}
+
 //--------------------------------------------------------------------------------
 // Test
 //--------------------------------------------------------------------------------
@@ -61,5 +70,15 @@ public sealed class CompareToWhenAttributeTest
 
         var result = attribute.GetValidationResult(model.Max, context);
         Assert.NotEqual(ValidationResult.Success, result);
+    }
+
+    [Fact]
+    public void WhenConditionIsTrueAndComparedTypesDifferThenThrowsInvalidOperation()
+    {
+        var model = new CompareToWhenMismatchModel { IsEnabled = true, Value = 5, Other = "x" };
+        var context = ValidationContextHelper.Create(model, nameof(CompareToWhenMismatchModel.Value));
+        var attribute = new CompareToWhenAttribute(nameof(CompareToWhenMismatchModel.IsEnabled), CompareToOperation.GreaterThan, nameof(CompareToWhenMismatchModel.Other)) { ErrorMessage = "{0} vs {1}" };
+
+        Assert.Throws<InvalidOperationException>(() => attribute.GetValidationResult(model.Value, context));
     }
 }

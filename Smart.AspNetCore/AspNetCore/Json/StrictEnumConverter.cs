@@ -20,10 +20,15 @@ public sealed class StrictEnumConverter : JsonConverterFactory
     {
         public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var value = reader.GetString()!;
-            if (!Enum.IsDefined(typeof(T), value))
+            if (reader.TokenType != JsonTokenType.String)
             {
-                throw new JsonException($"Invalid enum value. value=[{value}]");
+                throw new JsonException($"Unexpected token parsing enum. token=[{reader.TokenType}], type=[{typeToConvert}]");
+            }
+
+            var value = reader.GetString();
+            if ((value is null) || !Enum.IsDefined(typeToConvert, value))
+            {
+                throw new JsonException($"Invalid enum value. value=[{value}], type=[{typeToConvert}]");
             }
 
             return (T)Enum.Parse(typeToConvert, value);

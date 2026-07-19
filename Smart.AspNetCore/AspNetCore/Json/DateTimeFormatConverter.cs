@@ -16,14 +16,18 @@ public abstract class DateTimeFormatConverter : JsonConverter<DateTime>
 
     public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        try
+        if (reader.TokenType != JsonTokenType.String)
         {
-            return DateTime.ParseExact(reader.GetString()!, Format, CultureInfo.InvariantCulture);
+            throw new JsonException($"Unexpected token parsing DateTime. token=[{reader.TokenType}], format=[{Format}]");
         }
-        catch (FormatException)
+
+        var value = reader.GetString();
+        if ((value is null) || !DateTime.TryParseExact(value, Format, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result))
         {
-            throw new JsonException($"Invalid date format. format=[{Format}]");
+            throw new JsonException($"Invalid date format. value=[{value}], format=[{Format}]");
         }
+
+        return result;
     }
 
     public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
