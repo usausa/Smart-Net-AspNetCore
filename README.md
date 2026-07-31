@@ -10,6 +10,7 @@
 * Routing (`SubAreaAttribute`, `ConvertAttribute`)
 * Application model conventions (kebab-case and lowercase controller naming)
 * Tag helpers (`ConditionTagHelper`, `RequiredIfTagHelper`)
+* Select list rendering (`SelectListBuilder`, `ToSelectList`, `WithEmpty`, `GetDisplayName`)
 * Model binding (`LocalDateTimeModelBinder`)
 * Middleware (`RequestResponseDumpMiddleware`)
 * Mvc results (`DeletePhysicalFileResult`, `PushStreamResult`)
