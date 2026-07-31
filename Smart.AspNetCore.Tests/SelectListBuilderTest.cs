@@ -6,10 +6,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 using static Smart.AspNetCore.SelectListAssert;
 
-//--------------------------------------------------------------------------------
-// Test
-//--------------------------------------------------------------------------------
-
 public sealed class SelectListBuilderTest
 {
     //--------------------------------------------------------------------------------

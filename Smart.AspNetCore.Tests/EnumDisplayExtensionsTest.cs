@@ -5,10 +5,6 @@ using System.ComponentModel.DataAnnotations;
 
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-//--------------------------------------------------------------------------------
-// Fixture
-//--------------------------------------------------------------------------------
-
 public static class DisplayResources
 {
     public static string Localized => "ResourceText";
