@@ -179,6 +179,13 @@ public sealed class RequestResponseDumpMiddleware
             written += buffer.Length;
         }
 
+        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            Capture(buffer.AsSpan(offset, count));
+            written += count;
+            return inner.WriteAsync(buffer, offset, count, cancellationToken);
+        }
+
         public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
         {
             Capture(buffer.Span);
