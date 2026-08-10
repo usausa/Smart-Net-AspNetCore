@@ -9,7 +9,7 @@ internal static class Diagnostics
         title: "Invalid method definition",
         messageFormat: "Method must be static partial. method=[{0}]",
         category: "Usage",
-        defaultSeverity: DiagnosticSeverity.Warning,
+        defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true);
 
     public static DiagnosticDescriptor InvalidMethodParameter { get; } = new(
@@ -17,7 +17,7 @@ internal static class Diagnostics
         title: "Invalid method parameter",
         messageFormat: "Method must have one supported string collection parameter. method=[{0}]",
         category: "Usage",
-        defaultSeverity: DiagnosticSeverity.Warning,
+        defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true);
 
     public static DiagnosticDescriptor UnconvertibleProperty { get; } = new(
@@ -33,7 +33,7 @@ internal static class Diagnostics
         title: "Containing type must be partial",
         messageFormat: "Type containing a bind method must be declared partial. type=[{0}]",
         category: "Usage",
-        defaultSeverity: DiagnosticSeverity.Warning,
+        defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true);
 
     public static DiagnosticDescriptor NestedContainingType { get; } = new(
@@ -41,7 +41,7 @@ internal static class Diagnostics
         title: "Containing type must be a top-level type",
         messageFormat: "Type containing a bind method must not be nested. type=[{0}]",
         category: "Usage",
-        defaultSeverity: DiagnosticSeverity.Warning,
+        defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true);
 
     public static DiagnosticDescriptor AbstractTargetType { get; } = new(
@@ -49,7 +49,7 @@ internal static class Diagnostics
         title: "Target type must not be abstract",
         messageFormat: "Bind method that creates the target instance requires a non-abstract type. type=[{0}]",
         category: "Usage",
-        defaultSeverity: DiagnosticSeverity.Warning,
+        defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true);
 
     public static DiagnosticDescriptor NoParameterlessConstructor { get; } = new(
@@ -57,7 +57,7 @@ internal static class Diagnostics
         title: "Target type requires a parameterless constructor",
         messageFormat: "Bind method that creates the target instance requires an accessible parameterless constructor. type=[{0}]",
         category: "Usage",
-        defaultSeverity: DiagnosticSeverity.Warning,
+        defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true);
 
     public static DiagnosticDescriptor GenericMethod { get; } = new(
@@ -65,6 +65,6 @@ internal static class Diagnostics
         title: "Bind method must not be generic",
         messageFormat: "Bind method must not have type parameters. method=[{0}]",
         category: "Usage",
-        defaultSeverity: DiagnosticSeverity.Warning,
+        defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true);
 }
