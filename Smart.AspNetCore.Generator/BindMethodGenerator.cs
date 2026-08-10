@@ -2,11 +2,9 @@ namespace Smart.AspNetCore.Generator;
 
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
 
 using Smart.AspNetCore.Generator.Models;
 
@@ -63,7 +61,6 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
 
         var builder = new SourceBuilder();
         BindMethodSourceBuilder.BuildSource(builder, group.Methods.ToList());
-        var filename = BindMethodSourceBuilder.MakeFilename(group.Namespace, group.ClassName);
-        context.AddSource(filename, SourceText.From(builder.ToString(), Encoding.UTF8));
+        context.AddSource(HintNameBuilder.Build(group.Namespace, group.ClassName), builder);
     }
 }

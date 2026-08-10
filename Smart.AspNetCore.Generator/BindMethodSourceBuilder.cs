@@ -2,7 +2,6 @@ namespace Smart.AspNetCore.Generator;
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 using Smart.AspNetCore.Generator.Models;
 
@@ -359,22 +358,4 @@ internal static class BindMethodSourceBuilder
         "StringValues" => $"{valueName}[{indexName}].AsSpan()",
         _ => $"{valueName}.AsSpan()"
     };
-
-    // ------------------------------------------------------------
-    // Helper
-    // ------------------------------------------------------------
-
-    public static string MakeFilename(string ns, string className)
-    {
-        var buffer = new StringBuilder();
-        if (!String.IsNullOrEmpty(ns))
-        {
-            buffer.Append(ns.Replace('.', '_'));
-            buffer.Append('_');
-        }
-
-        buffer.Append(className.Replace('<', '[').Replace('>', ']'));
-        buffer.Append(".g.cs");
-        return buffer.ToString();
-    }
 }
