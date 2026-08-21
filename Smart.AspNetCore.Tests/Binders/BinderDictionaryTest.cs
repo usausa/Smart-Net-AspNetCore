@@ -128,7 +128,7 @@ public sealed class BinderDictionaryTest
         {
             ["Page"] = "3",
             ["Keyword"] = "source-generator",
-            ["Tags"] = new(["1", "2"]),
+            ["Tags"] = [with(["1", "2"])],
             ["Status"] = "published",
             ["IgnoredByMethod"] = "method",
             ["IgnoredByProperty"] = "property"
@@ -228,7 +228,7 @@ public sealed class BinderDictionaryTest
         // Arrange
         var dictionary = new Dictionary<string, StringValues>
         {
-            ["Value"] = new(["abc", "cde"])
+            ["Value"] = [with(["abc", "cde"])]
         };
 
         // Act
@@ -247,7 +247,7 @@ public sealed class BinderDictionaryTest
         // Arrange
         var dictionary = new Dictionary<string, StringValues>
         {
-            ["Value"] = new(["123", "456"])
+            ["Value"] = [with(["123", "456"])]
         };
 
         // Act
@@ -264,7 +264,7 @@ public sealed class BinderDictionaryTest
         // Arrange
         var dictionary = new Dictionary<string, StringValues>
         {
-            ["Value"] = new(["123", "456"])
+            ["Value"] = [with(["123", "456"])]
         };
 
         // Act
@@ -294,7 +294,7 @@ public sealed class BinderDictionaryTest
         // Arrange
         var dictionary = new Dictionary<string, StringValues>
         {
-            ["Value"] = new(["123", "abc"])
+            ["Value"] = [with(["123", "abc"])]
         };
 
         // Act

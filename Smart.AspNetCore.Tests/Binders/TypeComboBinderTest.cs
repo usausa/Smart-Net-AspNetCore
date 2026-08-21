@@ -93,9 +93,9 @@ public sealed class TypeComboBinderTest
     {
         var query = new QueryCollection(new Dictionary<string, StringValues>
         {
-            ["Ints"] = new(IntInput),
-            ["NullableInts"] = new(IntInput),
-            ["Customs"] = new(CustomInput)
+            ["Ints"] = [with(IntInput)],
+            ["NullableInts"] = [with(IntInput)],
+            ["Customs"] = [with(CustomInput)]
         });
 
         var result = TypeComboBinder.BindCombo(query);

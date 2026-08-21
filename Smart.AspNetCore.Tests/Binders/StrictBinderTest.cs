@@ -53,7 +53,7 @@ public sealed class StrictBinderTest
     [Fact]
     public void ValidArrayBindsCorrectly()
     {
-        var query = new QueryCollection(new Dictionary<string, StringValues> { ["Values"] = new(ValidArrayInput) });
+        var query = new QueryCollection(new Dictionary<string, StringValues> { ["Values"] = [with(ValidArrayInput)] });
 
         var result = StrictBinder.BindStrict(query);
 
@@ -63,7 +63,7 @@ public sealed class StrictBinderTest
     [Fact]
     public void InvalidArrayElementThrowsFormatException()
     {
-        var query = new QueryCollection(new Dictionary<string, StringValues> { ["Values"] = new(InvalidArrayInput) });
+        var query = new QueryCollection(new Dictionary<string, StringValues> { ["Values"] = [with(InvalidArrayInput)] });
 
         Assert.Throws<FormatException>(() => StrictBinder.BindStrict(query));
     }

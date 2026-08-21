@@ -56,7 +56,7 @@ public sealed class EnumBinderTest
     {
         var query = new QueryCollection(new Dictionary<string, StringValues>
         {
-            ["Colors"] = new(ColorInput)
+            ["Colors"] = [with(ColorInput)]
         });
 
         var result = EnumBinder.BindEnum(query);
@@ -69,7 +69,7 @@ public sealed class EnumBinderTest
     {
         var query = new QueryCollection(new Dictionary<string, StringValues>
         {
-            ["NullableColors"] = new(ColorInput)
+            ["NullableColors"] = [with(ColorInput)]
         });
 
         var result = EnumBinder.BindEnum(query);
