@@ -131,10 +131,10 @@ internal static class BindMethodModelBuilder
             sourceParam.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
             sourceValueKind,
             sourceParam.Name,
-            new EquatableArray<PropertyModel>(properties.ToArray()),
+            new EquatableArray<PropertyModel>(properties),
             symbol.IsExtensionMethod,
             strict,
-            new EquatableArray<DiagnosticInfo>(diagnostics.ToArray())));
+            new EquatableArray<DiagnosticInfo>(diagnostics)));
     }
 
     private static string? GetSourceValueKind(ITypeSymbol type)
@@ -357,7 +357,7 @@ internal static class BindMethodModelBuilder
                 var methods = GetConverterMethods(type);
                 return new ConverterTypeModel(
                     type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
-                    new EquatableArray<ConverterMethodModel>(methods.ToArray()));
+                    new EquatableArray<ConverterMethodModel>(methods));
             }
         }
 

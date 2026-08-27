@@ -31,7 +31,7 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
         var groups = methodProvider.SelectMany(static (methods, _) =>
             methods.SelectValue()
                 .GroupBy(static x => (x.Namespace, x.ClassName))
-                .Select(static g => new MethodGroupModel(g.Key.Namespace, g.Key.ClassName, new EquatableArray<MethodModel>(g.ToArray())))
+                .Select(static g => new MethodGroupModel(g.Key.Namespace, g.Key.ClassName, new EquatableArray<MethodModel>(g)))
                 .ToImmutableArray());
         context.RegisterImplementationSourceOutput(
             groups,
