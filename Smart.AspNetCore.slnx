@@ -18,8 +18,8 @@
     <File Path="Directory.Build.targets" />
     <File Path="LICENSE" />
     <File Path="README.md" />
-    <File Path="Smart.AspNetCore.props" />
     <File Path="Smart.AspNetCore.sln.DotSettings" />
+    <File Path="Smart.AspNetCore.targets" />
   </Folder>
   <Folder Name="/Test/">
     <Project Path="Smart.AspNetCore.Tests/Smart.AspNetCore.Tests.csproj" />
