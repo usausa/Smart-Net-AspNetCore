@@ -2,18 +2,87 @@ namespace Smart.AspNetCore.Generator;
 
 using System.Globalization;
 
-public sealed class BindMethodGeneratorDiagnosticTest
+public class DiagnosticTest
 {
     private const string Head =
         """
         using Microsoft.AspNetCore.Http;
         using Smart.AspNetCore.Binders;
 
-
         """;
 
+    // ------------------------------------------------------------
+    // Method definition
+    // ------------------------------------------------------------
+
     [Fact]
-    public void UnconvertiblePropertyReportsSan0003()
+    public void San0001NonStaticMethodEmitsDiagnostic()
+    {
+        // Arrange
+        const string source = Head + """
+            internal sealed class Target { public int Id { get; set; } }
+
+            internal partial class Binder
+            {
+                [Bind]
+                public partial Target BindSample(IQueryCollection query);
+            }
+            """;
+
+        // Act
+        var result = CompilationHelper.RunGenerator(source);
+
+        // Assert
+        Assert.Contains(result.Diagnostics, static x => x.Id == "SAN0001");
+    }
+
+    [Fact]
+    public void San0002NoParameterEmitsDiagnostic()
+    {
+        // Arrange
+        const string source = Head + """
+            internal sealed class Target { public int Id { get; set; } }
+
+            internal static partial class Binder
+            {
+                [Bind]
+                public static partial Target BindSample();
+            }
+            """;
+
+        // Act
+        var result = CompilationHelper.RunGenerator(source);
+
+        // Assert
+        Assert.Contains(result.Diagnostics, static x => x.Id == "SAN0002");
+    }
+
+    [Fact]
+    public void San0002UnsupportedParameterTypeEmitsDiagnostic()
+    {
+        // Arrange
+        const string source = Head + """
+            internal sealed class Target { public int Id { get; set; } }
+
+            internal static partial class Binder
+            {
+                [Bind]
+                public static partial Target BindSample(int query);
+            }
+            """;
+
+        // Act
+        var result = CompilationHelper.RunGenerator(source);
+
+        // Assert
+        Assert.Contains(result.Diagnostics, static x => x.Id == "SAN0002");
+    }
+
+    // ------------------------------------------------------------
+    // Property binding
+    // ------------------------------------------------------------
+    [Fact]
+    public void San0003UnconvertiblePropertyEmitsDiagnostic()
     {
         var result = CompilationHelper.RunGenerator(Head + """
             internal sealed class SampleTarget
@@ -35,7 +104,7 @@ public sealed class BindMethodGeneratorDiagnosticTest
     }
 
     [Fact]
-    public void NonPartialContainingTypeReportsSan0004()
+    public void San0004NonPartialContainingTypeEmitsDiagnostic()
     {
         const string source = Head + """
             internal sealed class Target { public int Id { get; set; } }
@@ -51,7 +120,7 @@ public sealed class BindMethodGeneratorDiagnosticTest
     }
 
     [Fact]
-    public void NestedContainingTypeReportsSan0005()
+    public void San0005NestedContainingTypeEmitsDiagnostic()
     {
         const string source = Head + """
             internal sealed class Target { public int Id { get; set; } }
@@ -70,7 +139,7 @@ public sealed class BindMethodGeneratorDiagnosticTest
     }
 
     [Fact]
-    public void AbstractTargetReportsSan0006()
+    public void San0006AbstractTargetEmitsDiagnostic()
     {
         const string source = Head + """
             internal abstract class Target { public int Id { get; set; } }
@@ -86,7 +155,7 @@ public sealed class BindMethodGeneratorDiagnosticTest
     }
 
     [Fact]
-    public void TargetWithoutParameterlessConstructorReportsSan0007()
+    public void San0007TargetWithoutParameterlessConstructorEmitsDiagnostic()
     {
         const string source = Head + """
             internal sealed class Target
@@ -107,7 +176,7 @@ public sealed class BindMethodGeneratorDiagnosticTest
     }
 
     [Fact]
-    public void GenericMethodReportsSan0008()
+    public void San0008GenericMethodEmitsDiagnostic()
     {
         const string source = Head + """
             internal sealed class Target { public int Id { get; set; } }
@@ -160,7 +229,7 @@ public sealed class BindMethodGeneratorDiagnosticTest
     }
 
     [Fact]
-    public void ConvertiblePropertiesReportNoDiagnostic()
+    public void San0003ConvertiblePropertiesReportEmitsNoDiagnostic()
     {
         var result = CompilationHelper.RunGenerator(Head + """
             internal sealed class ConvertibleTarget
