@@ -16,6 +16,7 @@
     <ItemGroup>
       <TfmSpecificPackageFile Include="..\Smart.AspNetCore.Generator\bin\$(Configuration)\netstandard2.0\Smart.AspNetCore.Generator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
       <TfmSpecificPackageFile Include="$(PKGSourceGenerateHelper)\lib\netstandard2.0\SourceGenerateHelper.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+      <TfmSpecificPackageFile Include="..\Smart.AspNetCore.props" Pack="true" PackagePath="buildTransitive\Usa.Smart.AspNetCore.props" Visible="false" />
       <TfmSpecificPackageFile Include="..\Smart.AspNetCore.targets" Pack="true" PackagePath="buildTransitive\Usa.Smart.AspNetCore.targets" Visible="false" />
     </ItemGroup>
   </Target>

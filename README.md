@@ -60,19 +60,6 @@ exposes both forms directly as well: `ToInt32(span)` (lenient) and `TryToInt32(s
 A custom converter can be supplied with `[BindConverter(typeof(...))]`. Custom converters are not
 affected by `Strict`, because they return the converted value directly and cannot report failure.
 
-### Diagnostics
-
-| Id | Description |
-| --- | --- |
-| SAN0001 | Method must be static partial |
-| SAN0002 | Method must have one supported string collection parameter |
-| SAN0003 | Property has no available converter and is not bound |
-| SAN0004 | Containing type must be partial |
-| SAN0005 | Containing type must be a top-level type |
-| SAN0006 | Target type must not be abstract |
-| SAN0007 | Target type requires an accessible parameterless constructor |
-| SAN0008 | Bind method must not be generic |
-
 ## RequestResponseDumpMiddleware
 
 Writes request and response bodies to the log. The middleware is completely inert unless the `Debug`

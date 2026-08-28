@@ -14,11 +14,13 @@
     <File Path="Analyzers.ruleset" />
     <File Path="CLAUDE.md" />
     <File Path="CodeCoverage.runsettings" />
+    <File Path="Diagnostics.md" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Build.targets" />
     <File Path="LICENSE" />
     <File Path="README.md" />
     <File Path="Smart.AspNetCore.sln.DotSettings" />
+    <File Path="Smart.AspNetCore.props" />
     <File Path="Smart.AspNetCore.targets" />
   </Folder>
   <Folder Name="/Test/">
