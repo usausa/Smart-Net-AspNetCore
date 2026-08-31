@@ -22,7 +22,7 @@ public sealed class ElementRequiredAttribute : ValidationAttribute
             foreach (var element in ie)
             {
                 if ((element is null) ||
-                    (!AllowEmptyStrings && element is string str && String.IsNullOrWhiteSpace(str)))
+                    (!AllowEmptyStrings && (element is string str) && String.IsNullOrWhiteSpace(str)))
                 {
                     return false;
                 }

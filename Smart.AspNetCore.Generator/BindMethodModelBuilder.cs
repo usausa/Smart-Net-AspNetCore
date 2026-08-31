@@ -321,7 +321,7 @@ internal static class BindMethodModelBuilder
 
     private static ITypeSymbol UnwrapNullable(ITypeSymbol type)
     {
-        if (type is INamedTypeSymbol { OriginalDefinition.SpecialType: SpecialType.System_Nullable_T } named &&
+        if ((type is INamedTypeSymbol { OriginalDefinition.SpecialType: SpecialType.System_Nullable_T } named) &&
             (named.TypeArguments.Length == 1))
         {
             return named.TypeArguments[0];
@@ -335,7 +335,7 @@ internal static class BindMethodModelBuilder
         var results = new List<ConverterTypeModel>();
         foreach (var converter in converters)
         {
-            if (converter is null || results.Any(x => x.TypeName == converter.TypeName))
+            if ((converter is null) || results.Any(x => x.TypeName == converter.TypeName))
             {
                 continue;
             }
@@ -352,7 +352,7 @@ internal static class BindMethodModelBuilder
         {
             if ((attribute.AttributeClass?.ToDisplayString() == ConverterAttributeName) &&
                 (attribute.ConstructorArguments.Length == 1) &&
-                attribute.ConstructorArguments[0].Value is ITypeSymbol type)
+                (attribute.ConstructorArguments[0].Value is ITypeSymbol type))
             {
                 var methods = GetConverterMethods(type);
                 return new ConverterTypeModel(
@@ -397,7 +397,7 @@ internal static class BindMethodModelBuilder
 
             foreach (var value in attribute.ConstructorArguments[0].Values)
             {
-                if (value.Value is string name && !String.IsNullOrWhiteSpace(name))
+                if ((value.Value is string name) && !String.IsNullOrWhiteSpace(name))
                 {
                     names.Add(name);
                 }
@@ -425,7 +425,7 @@ internal static class BindMethodModelBuilder
     {
         foreach (var reference in type.DeclaringSyntaxReferences)
         {
-            if (reference.GetSyntax() is TypeDeclarationSyntax declaration &&
+            if ((reference.GetSyntax() is TypeDeclarationSyntax declaration) &&
                 declaration.Modifiers.Any(static x => x.IsKind(SyntaxKind.PartialKeyword)))
             {
                 return true;

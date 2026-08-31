@@ -28,7 +28,7 @@ public sealed class LocalDateTimeModelBinderProvider : IModelBinderProvider
     private static readonly LocalDateTimeModelBinder Binder = new();
 
     public IModelBinder? GetBinder(ModelBinderProviderContext context) =>
-        context.Metadata.ModelType == typeof(DateTime) || context.Metadata.ModelType == typeof(DateTime?)
+        (context.Metadata.ModelType == typeof(DateTime)) || (context.Metadata.ModelType == typeof(DateTime?))
             ? Binder
             : null;
 }

@@ -72,6 +72,6 @@ public sealed class AnyRequiredAttribute : ValidationAttribute
             return false;
         }
 
-        return AllowEmptyStrings || value is not string stringValue || !String.IsNullOrWhiteSpace(stringValue);
+        return AllowEmptyStrings || (value is not string stringValue) || !String.IsNullOrWhiteSpace(stringValue);
     }
 }

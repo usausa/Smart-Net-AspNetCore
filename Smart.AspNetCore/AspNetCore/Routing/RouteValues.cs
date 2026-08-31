@@ -88,10 +88,10 @@ public static class RouteValues
 
     private static bool IsTargetProperty(PropertyInfo pi)
     {
-        return pi.GetMethod != null &&
+        return (pi.GetMethod != null) &&
                pi.GetMethod.IsPublic &&
                !pi.GetMethod.IsStatic &&
-               pi.GetMethod.GetParameters().Length == 0;
+               (pi.GetMethod.GetParameters().Length == 0);
     }
 
 #pragma warning disable SA1401

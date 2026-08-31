@@ -71,6 +71,6 @@ public sealed class AnyRequiredWhenAttribute : ConditionalValidationAttribute
             return false;
         }
 
-        return AllowEmptyStrings || value is not string stringValue || !String.IsNullOrWhiteSpace(stringValue);
+        return AllowEmptyStrings || (value is not string stringValue) || !String.IsNullOrWhiteSpace(stringValue);
     }
 }

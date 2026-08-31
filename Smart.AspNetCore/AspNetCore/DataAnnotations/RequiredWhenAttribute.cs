@@ -17,7 +17,7 @@ public sealed class RequiredWhenAttribute : ConditionalValidationAttribute
     protected override ValidationResult? IsValidValue(object? value, ValidationContext validationContext)
     {
         if ((value is not null) &&
-            (AllowEmptyStrings || value is not string stringValue || !String.IsNullOrWhiteSpace(stringValue)))
+            (AllowEmptyStrings || (value is not string stringValue) || !String.IsNullOrWhiteSpace(stringValue)))
         {
             return ValidationResult.Success;
         }

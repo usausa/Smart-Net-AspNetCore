@@ -2,7 +2,6 @@ namespace Smart.AspNetCore.Exceptions;
 
 using Microsoft.AspNetCore.Http;
 
-#pragma warning disable CA1032
 public abstract class HttpStatusException : Exception
 {
     public int StatusCode { get; }
@@ -44,4 +43,3 @@ public sealed class BadRequestException : HttpStatusException
         Value = value;
     }
 }
-#pragma warning restore CA1032

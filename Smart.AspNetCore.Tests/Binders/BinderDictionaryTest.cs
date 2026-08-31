@@ -236,7 +236,7 @@ public sealed class BinderDictionaryTest
 
         // Assert
         Assert.NotNull(target.Value);
-        Assert.Equal(2, target.Value!.Length);
+        Assert.Equal(2, target.Value.Length);
         Assert.Equal("abc", target.Value[0]);
         Assert.Equal("cde", target.Value[1]);
     }
@@ -255,7 +255,7 @@ public sealed class BinderDictionaryTest
 
         // Assert
         Assert.NotNull(target.Value);
-        Assert.Equal([123, 456], target.Value!);
+        Assert.Equal([123, 456], target.Value);
     }
 
     [Fact]
@@ -272,7 +272,7 @@ public sealed class BinderDictionaryTest
 
         // Assert
         Assert.NotNull(target.Value);
-        Assert.Equal<int?>([123, 456], target.Value!);
+        Assert.Equal<int?>([123, 456], target.Value);
     }
 
     [Fact]
@@ -302,7 +302,7 @@ public sealed class BinderDictionaryTest
 
         // Assert
         Assert.NotNull(target.Value);
-        Assert.Equal(2, target.Value!.Length);
+        Assert.Equal(2, target.Value.Length);
         Assert.Equal(123, target.Value[0]);
         Assert.Equal(default, target.Value[1]);
     }

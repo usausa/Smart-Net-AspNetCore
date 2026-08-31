@@ -1,5 +1,6 @@
 namespace Smart.AspNetCore.Routing;
 
+#pragma warning disable CA1034
 public sealed class RouteValuesTest
 {
     public sealed class SampleModel
@@ -27,3 +28,4 @@ public sealed class RouteValuesTest
         Assert.Equal("abc", values["model.Name"]);
     }
 }
+#pragma warning restore CA1034

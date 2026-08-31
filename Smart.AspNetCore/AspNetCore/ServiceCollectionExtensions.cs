@@ -62,10 +62,8 @@ public static class ServiceCollectionExtensions
     {
         if ((networks is null) || (networks.Length == 0))
         {
-            bool Predicate(HttpContext context)
-            {
-                return context.Request.Path.StartsWithSegments(path, StringComparison.OrdinalIgnoreCase);
-            }
+            bool Predicate(HttpContext context) => 
+                context.Request.Path.StartsWithSegments(path, StringComparison.OrdinalIgnoreCase);
 
             builder.UseWhen(Predicate, configuration);
         }

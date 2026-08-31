@@ -35,7 +35,7 @@ public static class ViewContextExtensions
                     ? (T)Enum.Parse(targetType, stringValue, true)
                     : (T)Enum.Parse(targetType, Convert.ToString(value, CultureInfo.InvariantCulture)!, true);
             }
-            catch (Exception e) when (e is ArgumentException || e is OverflowException)
+            catch (Exception e) when ((e is ArgumentException) || (e is OverflowException))
             {
                 return default;
             }
@@ -45,7 +45,7 @@ public static class ViewContextExtensions
         {
             return (T)Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
         }
-        catch (Exception e) when (e is FormatException || e is OverflowException)
+        catch (Exception e) when ((e is FormatException) || (e is OverflowException))
         {
             return default;
         }

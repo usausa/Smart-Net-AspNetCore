@@ -31,7 +31,7 @@ public sealed class TimeLoggingFilterTest
         filter.OnActionExecuting(executing);
         filter.OnActionExecuted(executed);
 
-        Assert.Contains(logs.Entries, static x => x.Level == LogLevel.Warning && x.Message.Contains("Long execution", StringComparison.Ordinal));
+        Assert.Contains(logs.Entries, static x => (x.Level == LogLevel.Warning) && x.Message.Contains("Long execution", StringComparison.Ordinal));
         Assert.False(httpContext.Response.Headers.ContainsKey(HeaderName));
     }
 
@@ -50,7 +50,7 @@ public sealed class TimeLoggingFilterTest
         filter.OnActionExecuting(executing);
         filter.OnActionExecuted(executed);
 
-        Assert.Contains(logs.Entries, static x => x.Level == LogLevel.Warning && x.Message.Contains("Long execution", StringComparison.Ordinal));
+        Assert.Contains(logs.Entries, static x => (x.Level == LogLevel.Warning) && x.Message.Contains("Long execution", StringComparison.Ordinal));
         AssertNumericHeader(httpContext);
     }
 
@@ -69,7 +69,7 @@ public sealed class TimeLoggingFilterTest
         filter.OnActionExecuting(executing);
         filter.OnActionExecuted(executed);
 
-        Assert.DoesNotContain(logs.Entries, static x => x.Level == LogLevel.Warning && x.Message.Contains("Long execution", StringComparison.Ordinal));
+        Assert.DoesNotContain(logs.Entries, static x => (x.Level == LogLevel.Warning) && x.Message.Contains("Long execution", StringComparison.Ordinal));
         Assert.False(httpContext.Response.Headers.ContainsKey(HeaderName));
     }
 
@@ -88,7 +88,7 @@ public sealed class TimeLoggingFilterTest
         filter.OnActionExecuting(executing);
         filter.OnActionExecuted(executed);
 
-        Assert.DoesNotContain(logs.Entries, static x => x.Level == LogLevel.Warning && x.Message.Contains("Long execution", StringComparison.Ordinal));
+        Assert.DoesNotContain(logs.Entries, static x => (x.Level == LogLevel.Warning) && x.Message.Contains("Long execution", StringComparison.Ordinal));
         AssertNumericHeader(httpContext);
     }
 
@@ -107,7 +107,7 @@ public sealed class TimeLoggingFilterTest
         filter.OnActionExecuting(executing);
         filter.OnActionExecuted(executed);
 
-        Assert.Contains(logs.Entries, static x => x.Level == LogLevel.Warning && x.Message.Contains("Long execution", StringComparison.Ordinal));
+        Assert.Contains(logs.Entries, static x => (x.Level == LogLevel.Warning) && x.Message.Contains("Long execution", StringComparison.Ordinal));
         AssertNumericHeader(httpContext);
     }
 

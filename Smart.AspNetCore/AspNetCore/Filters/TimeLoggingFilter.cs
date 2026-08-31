@@ -38,7 +38,7 @@ public sealed class TimeLoggingFilter : IActionFilter
         }
 
         if ((options.HeaderType == TimeLoggingHeaderType.Always) ||
-            (options.HeaderType == TimeLoggingHeaderType.LongExecution && isLongExecution))
+            ((options.HeaderType == TimeLoggingHeaderType.LongExecution) && isLongExecution))
         {
             context.HttpContext.Response.Headers[options.Header] = $"{elapsed}";
         }
