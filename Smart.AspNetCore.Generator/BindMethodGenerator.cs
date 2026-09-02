@@ -48,9 +48,9 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
         foreach (var model in methods.SelectValue())
         {
             var modelDiagnostics = model.Diagnostics;
-            for (var i = 0; i < modelDiagnostics.Count; i++)
+            foreach (var diagnostic in modelDiagnostics)
             {
-                context.ReportDiagnostic(modelDiagnostics[i]);
+                context.ReportDiagnostic(diagnostic);
             }
         }
     }

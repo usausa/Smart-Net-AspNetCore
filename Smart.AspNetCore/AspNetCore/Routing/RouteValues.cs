@@ -24,9 +24,8 @@ public static class RouteValues
         }
 
         var values = new RouteValueDictionary();
-        for (var i = 0; i < accessors.Length; i++)
+        foreach (var accessor in accessors)
         {
-            var accessor = accessors[i];
             values.Add(accessor.Name, accessor.Getter(value));
         }
 
@@ -45,9 +44,8 @@ public static class RouteValues
         }
 
         var values = new RouteValueDictionary();
-        for (var i = 0; i < accessors.Length; i++)
+        foreach (var accessor in accessors)
         {
-            var accessor = accessors[i];
             values.Add(path + "." + accessor.Name, accessor.Getter(value));
         }
 

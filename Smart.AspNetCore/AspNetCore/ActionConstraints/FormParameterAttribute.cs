@@ -38,9 +38,9 @@ public sealed class FormParameterAttribute : ActionMethodSelectorAttribute
             return true;
         }
 
-        for (var i = 0; i < values.Length; i++)
+        foreach (var value in values)
         {
-            if (formValues.Contains(values[i]))
+            if (formValues.Contains(value))
             {
                 return true;
             }

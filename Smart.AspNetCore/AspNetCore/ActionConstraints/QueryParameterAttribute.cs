@@ -34,9 +34,9 @@ public sealed class QueryParameterAttribute : ActionMethodSelectorAttribute
             return true;
         }
 
-        for (var i = 0; i < values.Length; i++)
+        foreach (var value in values)
         {
-            if (queryValues.Contains(values[i]))
+            if (queryValues.Contains(value))
             {
                 return true;
             }
