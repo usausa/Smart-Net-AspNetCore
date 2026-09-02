@@ -20,9 +20,7 @@ public sealed class BindConverterAttribute : Attribute
 }
 
 [AttributeUsage(AttributeTargets.Property)]
-public sealed class BindIgnoreAttribute : Attribute
-{
-}
+public sealed class BindIgnoreAttribute : Attribute;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Method, AllowMultiple = true)]
 public sealed class BindIgnoreMembersAttribute : Attribute

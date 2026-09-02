@@ -10,14 +10,10 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter, AllowMultiple = true)]
-public abstract class DuplicateAttribute : ValidationAttribute
-{
-}
+public abstract class DuplicateAttribute : ValidationAttribute;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter, AllowMultiple = true)]
-public abstract class Duplicate2Attribute : ValidationAttribute
-{
-}
+public abstract class Duplicate2Attribute : ValidationAttribute;
 
 public sealed class DuplicateAttribute<T, TKey> : DuplicateAttribute
     where TKey : notnull
