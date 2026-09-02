@@ -28,9 +28,9 @@ public sealed class AnyRequiredWhenAttribute : ConditionalValidationAttribute
         }
 
         var modelMetadataProvider = validationContext.GetRequiredService<IModelMetadataProvider>();
-        for (var i = 0; i < Properties.Length; i++)
+        foreach (var property in Properties)
         {
-            var metadata = ResolveMetadata(modelMetadataProvider, validationContext.ObjectType, Properties[i]);
+            var metadata = ResolveMetadata(modelMetadataProvider, validationContext.ObjectType, property);
             if (HasValue(metadata.PropertyGetter!(validationContext.ObjectInstance)))
             {
                 return ValidationResult.Success;
