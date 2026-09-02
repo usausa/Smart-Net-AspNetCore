@@ -23,7 +23,7 @@ internal static class CompilationHelper
         var result = Runner.Run(source);
 
         return new GeneratorResult(
-            [.. result.GeneratorDiagnostics],
+            result.GeneratorDiagnostics.ToImmutableArray(),
             result.GeneratedSources,
             result.AllGeneratedText);
     }
