@@ -24,7 +24,7 @@ internal sealed class StrictRequest
 // Test
 //--------------------------------------------------------------------------------
 
-public sealed class StrictBinderTest
+public sealed class StrictBinderTests
 {
     private static readonly string[] ValidArrayInput = ["1", "2"];
 

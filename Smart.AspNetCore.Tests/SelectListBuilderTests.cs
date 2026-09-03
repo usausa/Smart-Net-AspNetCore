@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 using static Smart.AspNetCore.SelectListAssert;
 
-public sealed class SelectListBuilderTest
+public sealed class SelectListBuilderTests
 {
     //--------------------------------------------------------------------------------
     // Enum

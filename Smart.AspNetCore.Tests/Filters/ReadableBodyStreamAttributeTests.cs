@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
-public sealed class ReadableBodyStreamAttributeTest
+public sealed class ReadableBodyStreamAttributeTests
 {
     [Fact]
     public void CreateInstanceReturnsReusableReadableBodyStreamFilter()

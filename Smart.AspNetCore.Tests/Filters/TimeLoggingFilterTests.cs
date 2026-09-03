@@ -12,7 +12,7 @@ using Microsoft.Extensions.Options;
 
 using Smart.AspNetCore.Logging;
 
-public sealed class TimeLoggingFilterTest
+public sealed class TimeLoggingFilterTests
 {
     private const string HeaderName = "X-Server-Elapsed";
 

@@ -4,7 +4,7 @@ using System.Collections;
 
 using static Smart.AspNetCore.SelectListAssert;
 
-public sealed class SelectListExtensionsTest
+public sealed class SelectListExtensionsTests
 {
     private sealed record Entity(string Code, string Name);
 

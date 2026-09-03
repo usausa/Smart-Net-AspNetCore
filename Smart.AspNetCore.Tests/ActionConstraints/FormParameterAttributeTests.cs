@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
 
-public sealed class FormParameterAttributeTest
+public sealed class FormParameterAttributeTests
 {
     [Fact]
     public void MatchesWhenFormValueIsInAllowedSet()

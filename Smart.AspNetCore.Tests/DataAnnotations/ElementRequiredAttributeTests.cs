@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 // Test
 //--------------------------------------------------------------------------------
 
-public sealed class ElementRequiredAttributeTest
+public sealed class ElementRequiredAttributeTests
 {
     private static ValidationContext MakeContext(string memberName = "Items") =>
         new(new object()) { MemberName = memberName };

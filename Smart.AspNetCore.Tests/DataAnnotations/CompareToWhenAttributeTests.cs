@@ -29,7 +29,7 @@ public sealed class CompareToWhenMismatchModel
 // Test
 //--------------------------------------------------------------------------------
 
-public sealed class CompareToWhenAttributeTest
+public sealed class CompareToWhenAttributeTests
 {
     [Fact]
     public void WhenConditionIsFalseAndMaxIsLessThanMinThenValidationSucceeds()

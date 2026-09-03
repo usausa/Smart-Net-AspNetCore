@@ -6,9 +6,11 @@ using System.ComponentModel.DataAnnotations;
 // Model
 //--------------------------------------------------------------------------------
 
-[AnyRequired(nameof(Email), nameof(Phone), ErrorMessage = "Either {0} is required.")]
-public sealed class AnyRequiredModel
+[AnyRequiredWhen(nameof(IsRequired), nameof(Email), nameof(Phone), ErrorMessage = "Either {0} is required.")]
+public sealed class AnyRequiredWhenModel
 {
+    public bool IsRequired { get; set; }
+
     public string? Email { get; set; }
 
     public string? Phone { get; set; }
@@ -18,14 +20,14 @@ public sealed class AnyRequiredModel
 // Test
 //--------------------------------------------------------------------------------
 
-public sealed class AnyRequiredAttributeTest
+public sealed class AnyRequiredWhenAttributeTests
 {
     [Fact]
-    public void WhenAtLeastOnePropertyIsSetThenValidationSucceeds()
+    public void WhenConditionIsFalseAndBothNullThenValidationSucceeds()
     {
-        var model = new AnyRequiredModel { Email = "a@b.com", Phone = null };
+        var model = new AnyRequiredWhenModel { IsRequired = false, Email = null, Phone = null };
         var context = ValidationContextHelper.Create(model);
-        var attribute = new AnyRequiredAttribute(nameof(AnyRequiredModel.Email), nameof(AnyRequiredModel.Phone))
+        var attribute = new AnyRequiredWhenAttribute(nameof(AnyRequiredWhenModel.IsRequired), nameof(AnyRequiredWhenModel.Email), nameof(AnyRequiredWhenModel.Phone))
         {
             ErrorMessage = "Either {0} is required."
         };
@@ -34,11 +36,11 @@ public sealed class AnyRequiredAttributeTest
     }
 
     [Fact]
-    public void WhenAllPropertiesAreSetThenValidationSucceeds()
+    public void WhenConditionIsTrueAndAtLeastOneIsSetThenValidationSucceeds()
     {
-        var model = new AnyRequiredModel { Email = "a@b.com", Phone = "123" };
+        var model = new AnyRequiredWhenModel { IsRequired = true, Email = "a@b.com", Phone = null };
         var context = ValidationContextHelper.Create(model);
-        var attribute = new AnyRequiredAttribute(nameof(AnyRequiredModel.Email), nameof(AnyRequiredModel.Phone))
+        var attribute = new AnyRequiredWhenAttribute(nameof(AnyRequiredWhenModel.IsRequired), nameof(AnyRequiredWhenModel.Email), nameof(AnyRequiredWhenModel.Phone))
         {
             ErrorMessage = "Either {0} is required."
         };
@@ -47,11 +49,11 @@ public sealed class AnyRequiredAttributeTest
     }
 
     [Fact]
-    public void WhenAllPropertiesAreNullThenValidationFails()
+    public void WhenConditionIsTrueAndBothNullThenValidationFails()
     {
-        var model = new AnyRequiredModel { Email = null, Phone = null };
+        var model = new AnyRequiredWhenModel { IsRequired = true, Email = null, Phone = null };
         var context = ValidationContextHelper.Create(model);
-        var attribute = new AnyRequiredAttribute(nameof(AnyRequiredModel.Email), nameof(AnyRequiredModel.Phone))
+        var attribute = new AnyRequiredWhenAttribute(nameof(AnyRequiredWhenModel.IsRequired), nameof(AnyRequiredWhenModel.Email), nameof(AnyRequiredWhenModel.Phone))
         {
             ErrorMessage = "Either {0} is required."
         };
@@ -63,8 +65,8 @@ public sealed class AnyRequiredAttributeTest
     [Fact]
     public void WhenValueIsNullThenValidationSucceeds()
     {
-        var context = ValidationContextHelper.Create(new AnyRequiredModel());
-        var attribute = new AnyRequiredAttribute(nameof(AnyRequiredModel.Email), nameof(AnyRequiredModel.Phone))
+        var context = ValidationContextHelper.Create(new AnyRequiredWhenModel());
+        var attribute = new AnyRequiredWhenAttribute(nameof(AnyRequiredWhenModel.IsRequired), nameof(AnyRequiredWhenModel.Email), nameof(AnyRequiredWhenModel.Phone))
         {
             ErrorMessage = "Either {0} is required."
         };

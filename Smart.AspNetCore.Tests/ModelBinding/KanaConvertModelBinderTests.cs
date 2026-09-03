@@ -50,7 +50,7 @@ public sealed class KanaController : ControllerBase
 // Tests
 //--------------------------------------------------------------------------------
 
-public sealed class KanaConvertModelBinderTest
+public sealed class KanaConvertModelBinderTests
 {
     private static readonly HttpClient Client = CreateClient();
 

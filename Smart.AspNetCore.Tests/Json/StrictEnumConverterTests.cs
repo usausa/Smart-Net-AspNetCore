@@ -2,7 +2,7 @@ namespace Smart.AspNetCore.Json;
 
 using System.Text.Json;
 
-public sealed class StrictEnumConverterTest
+public sealed class StrictEnumConverterTests
 {
     private static readonly JsonSerializerOptions Options = CreateOptions();
 

@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 using Smart.AspNetCore.Logging;
 
-public sealed class RequestResponseDumpMiddlewareTest
+public sealed class RequestResponseDumpMiddlewareTests
 {
     private static WebApplicationBuilder CreateBuilder(LogLevel minimumLevel, ListLoggerProvider logs)
     {

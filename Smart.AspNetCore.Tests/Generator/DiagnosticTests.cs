@@ -2,7 +2,7 @@ namespace Smart.AspNetCore.Generator;
 
 using System.Globalization;
 
-public class DiagnosticTest
+public class DiagnosticTests
 {
     private const string Head =
         """

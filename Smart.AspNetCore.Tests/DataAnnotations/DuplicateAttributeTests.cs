@@ -34,7 +34,7 @@ public sealed class DuplicateCompositeModel
 // Test
 //--------------------------------------------------------------------------------
 
-public sealed class DuplicateAttributeTest
+public sealed class DuplicateAttributeTests
 {
     //--------------------------------------------------------------------------------
     // Single key

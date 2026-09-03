@@ -53,7 +53,7 @@ internal static class SelectListAssert
 // Test
 //--------------------------------------------------------------------------------
 
-public sealed class EnumDisplayExtensionsTest
+public sealed class EnumDisplayExtensionsTests
 {
     [Fact]
     public void WhenDisplayAttributeExistsThenNameIsUsed()

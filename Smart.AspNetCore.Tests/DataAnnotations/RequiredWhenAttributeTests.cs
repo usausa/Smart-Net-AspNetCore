@@ -18,7 +18,7 @@ public sealed class RequiredWhenModel
 // Test
 //--------------------------------------------------------------------------------
 
-public sealed class RequiredWhenAttributeTest
+public sealed class RequiredWhenAttributeTests
 {
     [Fact]
     public void WhenConditionIsFalseAndValueIsNullThenValidationSucceeds()

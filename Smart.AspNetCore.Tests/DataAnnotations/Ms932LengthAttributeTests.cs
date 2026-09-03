@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 // Test
 //--------------------------------------------------------------------------------
 
-public sealed class Ms932LengthAttributeTest
+public sealed class Ms932LengthAttributeTests
 {
     private static ValidationContext MakeContext(string memberName = "Value") =>
         new(new object()) { MemberName = memberName };

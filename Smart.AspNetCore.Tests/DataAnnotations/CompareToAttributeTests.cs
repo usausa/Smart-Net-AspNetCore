@@ -45,7 +45,7 @@ public sealed class CompareToDisplayNameModelB
 // Test
 //--------------------------------------------------------------------------------
 
-public sealed class CompareToAttributeTest
+public sealed class CompareToAttributeTests
 {
     [Fact]
     public void WhenMaxIsGreaterThanMinThenValidationSucceeds()

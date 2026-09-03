@@ -34,7 +34,7 @@ internal sealed class SearchQueryRequest
 // Test
 //--------------------------------------------------------------------------------
 
-public sealed class BinderQueryTest
+public sealed class BinderQueryTests
 {
     [Fact]
     public void WhenBindingFromIQueryCollectionThenPropertiesAreMapped()

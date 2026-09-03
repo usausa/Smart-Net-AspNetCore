@@ -1,6 +1,6 @@
 namespace Smart.AspNetCore.Binders;
 
-public sealed class DefaultStringConverterTest
+public sealed class DefaultStringConverterTests
 {
     [Fact]
     public void ToInt32ReturnsZeroForInvalidInput()

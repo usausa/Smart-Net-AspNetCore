@@ -70,7 +70,7 @@ internal static class TestWebAppFactory
 // Test
 //--------------------------------------------------------------------------------
 
-public sealed class BinderIntegrationTest : IDisposable
+public sealed class BinderIntegrationTests : IDisposable
 {
     private readonly HttpClient client = TestWebAppFactory.CreateClient();
 

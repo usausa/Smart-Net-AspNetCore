@@ -1,6 +1,6 @@
 namespace Smart.AspNetCore.Routing;
 
-public sealed class RouteValuesTest
+public sealed class RouteValuesTests
 {
     public sealed class SampleModel
     {

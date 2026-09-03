@@ -2,7 +2,7 @@ namespace Smart.AspNetCore.Generator;
 
 using SourceGenerateHelper.Testing;
 
-public sealed class PipelineCacheTest
+public sealed class PipelineCacheTests
 {
     private const string Source =
         """

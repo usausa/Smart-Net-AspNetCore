@@ -2,7 +2,7 @@ namespace Smart.AspNetCore.Json;
 
 using System.Text.Json;
 
-public sealed class DateTimeFormatConverterTest
+public sealed class DateTimeFormatConverterTests
 {
     private static readonly JsonSerializerOptions Options = CreateOptions();
 

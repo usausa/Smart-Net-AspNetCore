@@ -50,7 +50,7 @@ internal sealed class TypeComboRequest
 // Test
 //--------------------------------------------------------------------------------
 
-public sealed class TypeComboBinderTest
+public sealed class TypeComboBinderTests
 {
     private static readonly string[] IntInput = ["1", "2"];
 

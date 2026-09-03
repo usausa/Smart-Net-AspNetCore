@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Routing;
 
-public sealed class QueryParameterAttributeTest
+public sealed class QueryParameterAttributeTests
 {
     [Fact]
     public void MatchesWhenQueryValueIsInAllowedSet()

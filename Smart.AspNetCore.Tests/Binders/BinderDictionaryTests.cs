@@ -118,7 +118,7 @@ internal sealed class ConvertNullableArrayPropertyTarget
 // Test
 //--------------------------------------------------------------------------------
 
-public sealed class BinderDictionaryTest
+public sealed class BinderDictionaryTests
 {
     [Fact]
     public void WhenBindingQueryThenAllPropertiesAreMapped()

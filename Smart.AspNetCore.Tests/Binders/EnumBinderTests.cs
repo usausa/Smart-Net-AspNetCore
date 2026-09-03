@@ -33,7 +33,7 @@ internal sealed class EnumRequest
 // Test
 //--------------------------------------------------------------------------------
 
-public sealed class EnumBinderTest
+public sealed class EnumBinderTests
 {
     private static readonly string[] ColorInput = ["Red", "Blue"];
 
