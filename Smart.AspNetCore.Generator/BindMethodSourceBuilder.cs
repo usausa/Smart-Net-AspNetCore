@@ -1,7 +1,6 @@
 namespace Smart.AspNetCore.Generator;
 
 using System;
-using System.Collections.Generic;
 
 using Smart.AspNetCore.Generator.Models;
 
@@ -9,7 +8,7 @@ using SourceGenerateHelper;
 
 internal static class BindMethodSourceBuilder
 {
-    public static void BuildSource(SourceBuilder builder, List<MethodModel> methods)
+    public static void BuildSource(SourceBuilder builder, EquatableArray<MethodModel> methods)
     {
         var ns = methods[0].Namespace;
         var isValueType = methods[0].IsValueType;

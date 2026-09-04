@@ -60,7 +60,7 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
         context.CancellationToken.ThrowIfCancellationRequested();
 
         var builder = new SourceBuilder();
-        BindMethodSourceBuilder.BuildSource(builder, group.Methods.ToList());
+        BindMethodSourceBuilder.BuildSource(builder, group.Methods);
         context.AddSource(HintNameBuilder.Build(group.Namespace, group.ClassName), builder);
     }
 }
