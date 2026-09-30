@@ -20,6 +20,7 @@ internal static class BindMethodModelBuilder
     private const string ConverterAttributeName = "Smart.AspNetCore.Binders.BindConverterAttribute";
     private const string IgnoreAttributeName = "Smart.AspNetCore.Binders.BindIgnoreAttribute";
     private const string IgnoreMembersAttributeName = "Smart.AspNetCore.Binders.BindIgnoreMembersAttribute";
+    private const string SetsRequiredMembersAttributeName = "System.Diagnostics.CodeAnalysis.SetsRequiredMembersAttribute";
 
     public static Result<MethodModel> GetMethodModel(GeneratorAttributeSyntaxContext context)
     {
@@ -30,26 +31,63 @@ internal static class BindMethodModelBuilder
             return Results.Errors<MethodModel>();
         }
 
-        if (!symbol.IsStatic || !symbol.IsPartialDefinition)
+        if (!symbol.IsStatic || !symbol.IsPartialDefinition || (symbol.PartialImplementationPart is not null))
         {
             return Results.Error<MethodModel>(new DiagnosticInfo(Diagnostics.InvalidMethodDefinition, syntax.Identifier.GetLocation(), symbol.Name));
         }
 
+        var containingType = symbol.ContainingType;
+        if (!IsPartialType(containingType))
+        {
+            return Results.Error<MethodModel>(new DiagnosticInfo(Diagnostics.NotPartialContainingType, syntax.Identifier.GetLocation(), containingType.Name));
+        }
+
+        var ns = String.IsNullOrEmpty(containingType.ContainingNamespace.Name)
+            ? string.Empty
+            : containingType.ContainingNamespace.ToDisplayString();
+        var containingTypes = new EquatableArray<string>(containingType.GetContainingTypes()
+            .Append(containingType)
+            .Select(static x => x.GetPartialDeclaration())
+            .ToArray());
+        var hintName = HintNameBuilder.BuildFromType(containingType);
+        var signature = symbol.GetImplementationSignature(syntax);
+        var typeName = containingType.ToDisplayString();
+
+        var canFallback = containingType.GetContainingTypes().All(IsPartialType);
+        Result<MethodModel> Fallback(DiagnosticInfo error) =>
+            !canFallback ? Results.Error<MethodModel>(error) : new(
+                new MethodModel(
+                    ns,
+                    containingTypes,
+                    hintName,
+                    signature,
+                    BindingPattern.Instance,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    EquatableArray<PropertyModel>.Empty,
+                    false,
+                    EquatableArray<DiagnosticInfo>.Empty,
+                    IsFallback: true,
+                    TypeName: typeName),
+                new EquatableArray<DiagnosticInfo>([error]));
+
         if (symbol.IsGenericMethod)
         {
-            return Results.Error<MethodModel>(new DiagnosticInfo(Diagnostics.GenericMethod, syntax.Identifier.GetLocation(), symbol.Name));
+            return Fallback(new DiagnosticInfo(Diagnostics.GenericMethod, syntax.Identifier.GetLocation(), symbol.Name));
         }
 
         if (symbol.Parameters.Length is < 1 or > 2)
         {
-            return Results.Error<MethodModel>(new DiagnosticInfo(Diagnostics.InvalidMethodParameter, syntax.Identifier.GetLocation(), symbol.Name));
+            return Fallback(new DiagnosticInfo(Diagnostics.InvalidMethodParameter, syntax.Identifier.GetLocation(), symbol.Name));
         }
 
         var sourceParam = symbol.Parameters[0];
         var sourceValueKind = GetSourceValueKind(sourceParam.Type);
         if (sourceValueKind is null)
         {
-            return Results.Error<MethodModel>(new DiagnosticInfo(Diagnostics.InvalidMethodParameter, syntax.Identifier.GetLocation(), symbol.Name));
+            return Fallback(new DiagnosticInfo(Diagnostics.InvalidMethodParameter, syntax.Identifier.GetLocation(), symbol.Name));
         }
 
         BindingPattern pattern;
@@ -66,19 +104,12 @@ internal static class BindMethodModelBuilder
         }
         else
         {
-            return Results.Error<MethodModel>(new DiagnosticInfo(Diagnostics.InvalidMethodDefinition, syntax.Identifier.GetLocation(), symbol.Name));
+            return Fallback(new DiagnosticInfo(Diagnostics.InvalidMethodDefinition, syntax.Identifier.GetLocation(), symbol.Name));
         }
 
-        var containingType = symbol.ContainingType;
-
-        if (containingType.ContainingType is not null)
+        if ((containingType.ContainingType is not null) || containingType.IsFileLocal)
         {
-            return Results.Error<MethodModel>(new DiagnosticInfo(Diagnostics.NestedContainingType, syntax.Identifier.GetLocation(), containingType.Name));
-        }
-
-        if (!IsPartialType(containingType))
-        {
-            return Results.Error<MethodModel>(new DiagnosticInfo(Diagnostics.NotPartialContainingType, syntax.Identifier.GetLocation(), containingType.Name));
+            return Fallback(new DiagnosticInfo(Diagnostics.NestedContainingType, syntax.Identifier.GetLocation(), containingType.Name));
         }
 
         // The factory pattern creates the instance in generated code, so it must be constructible.
@@ -86,18 +117,20 @@ internal static class BindMethodModelBuilder
         {
             if (targetType.IsAbstract)
             {
-                return Results.Error<MethodModel>(new DiagnosticInfo(Diagnostics.AbstractTargetType, syntax.Identifier.GetLocation(), targetType.Name));
+                return Fallback(new DiagnosticInfo(Diagnostics.AbstractTargetType, syntax.Identifier.GetLocation(), targetType.Name));
             }
 
             if (!HasAccessibleParameterlessConstructor(targetType))
             {
-                return Results.Error<MethodModel>(new DiagnosticInfo(Diagnostics.NoParameterlessConstructor, syntax.Identifier.GetLocation(), targetType.Name));
+                return Fallback(new DiagnosticInfo(Diagnostics.NoParameterlessConstructor, syntax.Identifier.GetLocation(), targetType.Name));
             }
         }
 
-        var ns = String.IsNullOrEmpty(containingType.ContainingNamespace.Name)
-            ? string.Empty
-            : containingType.ContainingNamespace.ToDisplayString();
+        var sourceParameterName = CSharpIdentifier.Escape(sourceParam.Name);
+        var targetName = pattern != BindingPattern.Factory
+            ? CSharpIdentifier.Escape(symbol.Parameters[1].Name)
+            : "__target";
+        var targetNullable = (pattern != BindingPattern.Factory) && (symbol.Parameters[1].NullableAnnotation == NullableAnnotation.Annotated);
 
         // Gather ignores
         var ignoredNames = new HashSet<string>(StringComparer.Ordinal);
@@ -111,30 +144,27 @@ internal static class BindMethodModelBuilder
 
         // Gather properties
         var diagnostics = new List<DiagnosticInfo>();
-        var properties = GetProperties(targetType, ignoredNames, targetConverter, methodConverter, containingConverter, diagnostics);
+        var properties = GetProperties(context.SemanticModel, syntax.SpanStart, targetType, ignoredNames, targetConverter, methodConverter, containingConverter, diagnostics);
 
         var strict = GetStrictOption(context.Attributes);
 
-        var returnTypeName = symbol.ReturnsVoid ? "void" : symbol.ReturnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-        var targetTypeName = pattern != BindingPattern.Factory ? symbol.Parameters[1].Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) : returnTypeName;
+        var targetTypeName = targetType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
 
         return Results.Success(new MethodModel(
             ns,
-            containingType.GetClassName(),
-            containingType.IsStatic,
-            containingType.IsValueType,
-            symbol.DeclaredAccessibility,
-            symbol.Name,
-            returnTypeName,
+            containingTypes,
+            hintName,
+            signature,
             pattern,
             targetTypeName,
-            sourceParam.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+            targetName,
             sourceValueKind,
-            sourceParam.Name,
+            sourceParameterName,
             new EquatableArray<PropertyModel>(properties),
-            symbol.IsExtensionMethod,
             strict,
-            new EquatableArray<DiagnosticInfo>(diagnostics)));
+            new EquatableArray<DiagnosticInfo>(diagnostics),
+            TargetNullable: targetNullable,
+            TypeName: typeName));
     }
 
     private static string? GetSourceValueKind(ITypeSymbol type)
@@ -184,6 +214,8 @@ internal static class BindMethodModelBuilder
     }
 
     private static List<PropertyModel> GetProperties(
+        SemanticModel semanticModel,
+        int position,
         ITypeSymbol targetType,
         HashSet<string> ignoredNames,
         ConverterTypeModel? targetConverter,
@@ -193,14 +225,18 @@ internal static class BindMethodModelBuilder
     {
         var properties = new List<PropertyModel>();
 
-        foreach (var member in targetType.GetMembers().OfType<IPropertySymbol>())
+        foreach (var member in GetPropertiesWithBase(targetType))
         {
-            if (member.IsStatic)
+            if (member.IsStatic || member.IsIndexer)
             {
                 continue;
             }
 
-            if (member.SetMethod is null)
+            if ((member.SetMethod is not { IsInitOnly: false } setter) ||
+                (member.IsObsolete(out var isError) && isError) ||
+                (setter.IsObsolete(out var isSetterError) && isSetterError) ||
+                !semanticModel.IsAccessible(position, member) ||
+                !semanticModel.IsAccessible(position, setter))
             {
                 continue;
             }
@@ -242,7 +278,7 @@ internal static class BindMethodModelBuilder
             // Resolve converter
             var propertyConverter = GetConverterType(member);
             var converterCandidates = DistinctConverterTypes(new[] { propertyConverter, targetConverter, methodConverter, containingConverter });
-            var (typeName, methodName) = ResolveConverterMethod(converterCandidates, assignmentType);
+            var (typeName, methodName, returnsNullable) = ResolveConverterMethod(converterCandidates, assignmentType);
 
             if ((methodName is null) && (valueKind is PropertyValueKind.Scalar or PropertyValueKind.Array))
             {
@@ -256,13 +292,58 @@ internal static class BindMethodModelBuilder
                 valueKind,
                 assignmentType.TypeKind == TypeKind.Enum,
                 typeName,
-                methodName));
+                methodName,
+                returnsNullable));
         }
 
         return properties;
     }
 
-    private static (string TypeName, string? MethodName) ResolveConverterMethod(List<ConverterTypeModel> converterTypes, ITypeSymbol assignmentType)
+    private static List<IPropertySymbol> GetPropertiesWithBase(ITypeSymbol type)
+    {
+        var types = new List<ITypeSymbol>();
+        for (var current = type; (current is not null) && (current.SpecialType != SpecialType.System_Object); current = current.BaseType)
+        {
+            types.Add(current);
+        }
+
+        var hidden = new HashSet<string>(StringComparer.Ordinal);
+        var properties = new List<IPropertySymbol>[types.Count];
+        for (var i = 0; i < types.Count; i++)
+        {
+            properties[i] = [];
+            var declared = new List<string>();
+            foreach (var member in types[i].GetMembers())
+            {
+                if (hidden.Contains(member.Name))
+                {
+                    continue;
+                }
+
+                if (member is IPropertySymbol property)
+                {
+                    properties[i].Add(property);
+                }
+
+                if (member.DeclaredAccessibility is Accessibility.Public or Accessibility.Internal or Accessibility.ProtectedOrInternal)
+                {
+                    declared.Add(member.Name);
+                }
+            }
+
+            hidden.UnionWith(declared);
+        }
+
+        var result = new List<IPropertySymbol>();
+        for (var i = types.Count - 1; i >= 0; i--)
+        {
+            result.AddRange(properties[i]);
+        }
+
+        return result;
+    }
+
+    private static (string TypeName, string? MethodName, bool ReturnsNullable) ResolveConverterMethod(List<ConverterTypeModel> converterTypes, ITypeSymbol assignmentType)
     {
         var assignmentTypeName = assignmentType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
         foreach (var converterType in converterTypes)
@@ -270,21 +351,21 @@ internal static class BindMethodModelBuilder
             var method = converterType.Methods.FirstOrDefault(x => x.ReturnTypeName == assignmentTypeName);
             if (method is not null)
             {
-                return (converterType.TypeName, method.Name);
+                return (converterType.TypeName, method.Name, method.ReturnsNullable);
             }
         }
 
         if (assignmentType.TypeKind == TypeKind.Enum)
         {
-            return (DefaultConverterTypeName, "ToEnum");
+            return (DefaultConverterTypeName, "ToEnum", false);
         }
 
         if (TryGetDefaultConverterMethod(assignmentType, out var defaultMethod))
         {
-            return (DefaultConverterTypeName, defaultMethod);
+            return (DefaultConverterTypeName, defaultMethod, false);
         }
 
-        return (DefaultConverterTypeName, null);
+        return (DefaultConverterTypeName, null, false);
     }
 
     private static bool TryGetDefaultConverterMethod(ITypeSymbol type, out string methodName)
@@ -379,7 +460,10 @@ internal static class BindMethodModelBuilder
                 continue;
             }
 
-            methods.Add(new ConverterMethodModel(member.Name, member.ReturnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)));
+            var returnType = UnwrapNullable(member.ReturnType);
+            var returnsNullable = !SymbolEqualityComparer.Default.Equals(returnType, member.ReturnType) ||
+                                  (member.ReturnType.IsReferenceType && (member.ReturnType.NullableAnnotation == NullableAnnotation.Annotated));
+            methods.Add(new ConverterMethodModel(member.Name, returnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat), returnsNullable));
         }
 
         return methods;
@@ -437,21 +521,36 @@ internal static class BindMethodModelBuilder
 
     private static bool HasAccessibleParameterlessConstructor(ITypeSymbol type)
     {
-        if (type.IsValueType)
-        {
-            return true;
-        }
-
         if (type is not INamedTypeSymbol named)
         {
             return false;
+        }
+
+        var hasRequiredMembers = HasRequiredMembers(named);
+        if (type.IsValueType)
+        {
+            return !hasRequiredMembers;
         }
 
         foreach (var constructor in named.InstanceConstructors)
         {
             if ((constructor.Parameters.Length == 0) &&
                 (constructor.DeclaredAccessibility != Accessibility.Private) &&
-                (constructor.DeclaredAccessibility != Accessibility.Protected))
+                (constructor.DeclaredAccessibility != Accessibility.Protected) &&
+                (!hasRequiredMembers || HasAttribute(constructor, SetsRequiredMembersAttributeName)))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool HasRequiredMembers(INamedTypeSymbol type)
+    {
+        for (var current = type; current is not null; current = current.BaseType)
+        {
+            if (current.GetMembers().Any(static x => x is IPropertySymbol { IsRequired: true } or IFieldSymbol { IsRequired: true }))
             {
                 return true;
             }

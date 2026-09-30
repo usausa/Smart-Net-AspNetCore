@@ -1,5 +1,7 @@
 namespace Smart.AspNetCore.Generator;
 
+using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -24,35 +26,56 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
                 static (context, _) => BindMethodModelBuilder.GetMethodModel(context))
             .Collect();
 
-        context.RegisterSourceOutput(
-            methodProvider,
-            static (context, methods) => ReportDiagnostics(context, methods));
+        var treeProvider = context.ForAttributeWithMetadataNameSyntaxTrees(
+            BindAttributeName,
+            static (syntax, _) => syntax is MethodDeclarationSyntax);
 
-        var groups = methodProvider.SelectMany(static (methods, _) =>
-            methods.SelectValue()
-                .GroupBy(static x => (x.Namespace, x.ClassName))
-                .Select(static g => new MethodGroupModel(g.Key.Namespace, g.Key.ClassName, new EquatableArray<MethodModel>(g)))
-                .ToImmutableArray());
+        context.RegisterSourceOutput(
+            methodProvider.Combine(treeProvider),
+            static (context, provider) => ReportDiagnostics(context, provider.Left, provider.Right));
+
+        var groups = methodProvider.SelectMany(static (methods, _) => SelectGroups(methods));
         context.RegisterImplementationSourceOutput(
             groups,
             static (context, group) => Execute(context, group));
     }
 
-    private static void ReportDiagnostics(SourceProductionContext context, ImmutableArray<Result<MethodModel>> methods)
+    private static void ReportDiagnostics(SourceProductionContext context, ImmutableArray<Result<MethodModel>> methods, ImmutableArray<SyntaxTree> trees)
     {
-        foreach (var info in methods.SelectError())
-        {
-            context.ReportDiagnostic(info);
-        }
+        var diagnostics = methods.SelectError()
+            .Concat(methods.SelectValue().SelectMany(static x => x.Diagnostics))
+            .Concat(FindHintNameCollisions(methods).Values)
+            .Distinct();
+        context.ReportDiagnostics(diagnostics, trees);
+    }
 
-        foreach (var model in methods.SelectValue())
+    private static ImmutableArray<MethodGroupModel> SelectGroups(ImmutableArray<Result<MethodModel>> methods)
+    {
+        var collisions = FindHintNameCollisions(methods);
+        return methods.SelectValue()
+            .Where(x => !collisions.ContainsKey(x.HintName))
+            .GroupBy(static x => x.HintName)
+            .Select(static x => new MethodGroupModel(x.Key, new EquatableArray<MethodModel>(x)))
+            .ToImmutableArray();
+    }
+
+    private static Dictionary<string, DiagnosticInfo> FindHintNameCollisions(ImmutableArray<Result<MethodModel>> methods)
+    {
+        var collisions = new Dictionary<string, DiagnosticInfo>(StringComparer.Ordinal);
+        var firsts = new Dictionary<string, MethodModel>(StringComparer.OrdinalIgnoreCase);
+        foreach (var method in methods.SelectValue().OrderBy(static x => x.HintName, StringComparer.Ordinal))
         {
-            var modelDiagnostics = model.Diagnostics;
-            foreach (var diagnostic in modelDiagnostics)
+            if (!firsts.TryGetValue(method.HintName, out var first))
             {
-                context.ReportDiagnostic(diagnostic);
+                firsts.Add(method.HintName, method);
+            }
+            else if ((first.HintName != method.HintName) && !collisions.ContainsKey(method.HintName))
+            {
+                collisions.Add(method.HintName, new DiagnosticInfo(Diagnostics.HintNameCollision, (Location?)null, method.TypeName, first.TypeName));
             }
         }
+
+        return collisions;
     }
 
     private static void Execute(SourceProductionContext context, MethodGroupModel group)
@@ -61,6 +84,6 @@ public sealed class BindMethodGenerator : IIncrementalGenerator
 
         var builder = new SourceBuilder();
         BindMethodSourceBuilder.BuildSource(builder, group.Methods);
-        context.AddSource(HintNameBuilder.Build(group.Namespace, group.ClassName), builder);
+        context.AddSource(group.HintName, builder);
     }
 }

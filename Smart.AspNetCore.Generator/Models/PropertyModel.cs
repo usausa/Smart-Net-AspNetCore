@@ -7,4 +7,5 @@ internal sealed record PropertyModel(
     PropertyValueKind ValueKind,
     bool IsEnum,
     string ConverterMethodTypeName,
-    string? ConverterMethodName);
+    string? ConverterMethodName,
+    bool ConverterReturnsNullable = false);

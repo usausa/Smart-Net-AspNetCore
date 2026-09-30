@@ -1,28 +1,25 @@
 namespace Smart.AspNetCore.Generator.Models;
 
-using Microsoft.CodeAnalysis;
-
 using SourceGenerateHelper;
 
 internal sealed record MethodModel(
     // Containing type
     string Namespace,
-    string ClassName,
-    bool IsStatic,
-    bool IsValueType,
+    EquatableArray<string> ContainingTypes,
+    string HintName,
     // Method signature
-    Accessibility MethodAccessibility,
-    string MethodName,
-    string ReturnTypeName,
+    string Signature,
     // Binding target and source
     BindingPattern Pattern,
     string TargetTypeName,
-    string SourceTypeName,
+    string TargetName,
     string SourceValueKind,
     string SourceParameterName,
     EquatableArray<PropertyModel> Properties,
     // Options
-    bool IsExtensionMethod,
     bool Strict,
     // Diagnostics
-    EquatableArray<DiagnosticInfo> Diagnostics);
+    EquatableArray<DiagnosticInfo> Diagnostics,
+    bool IsFallback = false,
+    bool TargetNullable = false,
+    string TypeName = "");
