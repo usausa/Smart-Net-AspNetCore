@@ -15,27 +15,28 @@ internal static class Diagnostics
         isEnabledByDefault: true,
         customTags: DiagnosticTags.NotSuppressible);
 
-    public static DiagnosticDescriptor InvalidMethodParameter { get; } = new(
+    public static DiagnosticDescriptor NotPartialContainingType { get; } = new(
         id: "SAN0002",
-        title: "Invalid method parameter",
-        messageFormat: "[Bind] method must take one string collection. method=[{0}]",
+        title: "Containing type must be partial",
+        messageFormat: "[Bind] containing type is not partial. type=[{0}]",
         category: "Usage",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
         customTags: DiagnosticTags.NotSuppressible);
 
-    public static DiagnosticDescriptor UnconvertibleProperty { get; } = new(
+    public static DiagnosticDescriptor GenericMethod { get; } = new(
         id: "SAN0003",
-        title: "Unconvertible property is not bound",
-        messageFormat: "Property has no available converter. property=[{0}]",
+        title: "Bind method must not be generic",
+        messageFormat: "[Bind] method must not be generic. method=[{0}]",
         category: "Usage",
-        defaultSeverity: DiagnosticSeverity.Warning,
-        isEnabledByDefault: true);
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        customTags: DiagnosticTags.NotSuppressible);
 
-    public static DiagnosticDescriptor NotPartialContainingType { get; } = new(
+    public static DiagnosticDescriptor InvalidMethodParameter { get; } = new(
         id: "SAN0004",
-        title: "Containing type must be partial",
-        messageFormat: "[Bind] containing type is not partial. type=[{0}]",
+        title: "Invalid method parameter",
+        messageFormat: "[Bind] method must take one string collection. method=[{0}]",
         category: "Usage",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -68,21 +69,20 @@ internal static class Diagnostics
         isEnabledByDefault: true,
         customTags: DiagnosticTags.NotSuppressible);
 
-    public static DiagnosticDescriptor GenericMethod { get; } = new(
-        id: "SAN0008",
-        title: "Bind method must not be generic",
-        messageFormat: "[Bind] method must not be generic. method=[{0}]",
-        category: "Usage",
-        defaultSeverity: DiagnosticSeverity.Error,
-        isEnabledByDefault: true,
-        customTags: DiagnosticTags.NotSuppressible);
-
     public static DiagnosticDescriptor HintNameCollision { get; } = new(
-        id: "SAN0009",
+        id: "SAN0008",
         title: "Type name differs only in case",
         messageFormat: "Type name differs only in case from another type, and its source is not generated. type=[{0}], other=[{1}]",
         category: "Usage",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
         customTags: DiagnosticTags.NotSuppressible);
+
+    public static DiagnosticDescriptor UnconvertibleProperty { get; } = new(
+        id: "SAN0009",
+        title: "Unconvertible property is not bound",
+        messageFormat: "Property has no available converter. property=[{0}]",
+        category: "Usage",
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
 }

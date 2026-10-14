@@ -184,9 +184,9 @@ public class BindingCodeTests
         const string source = Head + """
             internal sealed class SearchRequest
             {
-            #pragma warning disable SAN0003
+            #pragma warning disable SAN0009
                 public System.Text.StringBuilder Builder { get; set; } = new();
-            #pragma warning restore SAN0003
+            #pragma warning restore SAN0009
             }
 
             internal static partial class Binder
@@ -196,7 +196,7 @@ public class BindingCodeTests
             }
             """;
 
-        Assert.DoesNotContain("SAN0003", CompilationHelper.GetProblemIds(source));
+        Assert.DoesNotContain("SAN0009", CompilationHelper.GetProblemIds(source));
     }
 
     [Fact]
@@ -344,11 +344,11 @@ public class BindingCodeTests
     }
 
     // ------------------------------------------------------------
-    // SAN0009 : type names differing only in case
+    // SAN0008 : type names differing only in case
     // ------------------------------------------------------------
 
     [Fact]
-    public void San0009CaseOnlyTypeNamesGenerateTheFirstOnly()
+    public void San0008CaseOnlyTypeNamesGenerateTheFirstOnly()
     {
         const string source = Head + """
             internal sealed class SearchRequest
@@ -371,7 +371,7 @@ public class BindingCodeTests
 
         var problems = CompilationHelper.GetProblemIds(source);
 
-        Assert.Contains("SAN0009", problems);
+        Assert.Contains("SAN0008", problems);
         Assert.DoesNotContain("CS8785", problems);
     }
 }
