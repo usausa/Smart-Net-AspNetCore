@@ -1,6 +1,7 @@
 namespace Smart.AspNetCore.ModelBinding;
 
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -13,7 +14,7 @@ public sealed class LocalDateTimeModelBinder : IModelBinder
         if (value != ValueProviderResult.None)
         {
             bindingContext.ModelState.SetModelValue(bindingContext.ModelName, value);
-            if (DateTime.TryParse(value.FirstValue, out var date))
+            if (DateTime.TryParse(value.FirstValue, CultureInfo.InvariantCulture, out var date))
             {
                 bindingContext.Result = ModelBindingResult.Success(DateTime.SpecifyKind(date, DateTimeKind.Local));
             }

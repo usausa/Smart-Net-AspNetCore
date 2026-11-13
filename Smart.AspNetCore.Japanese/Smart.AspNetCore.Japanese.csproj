@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Usa.Smart.Core" Version="2.20.0" />
-    <PackageReference Include="Usa.Smart.Text.Japanese" Version="2.11.0" />
+    <PackageReference Include="Usa.Smart.Core" Version="2.21.0" />
+    <PackageReference Include="Usa.Smart.Text.Japanese" Version="2.13.0" />
   </ItemGroup>
 
 </Project>

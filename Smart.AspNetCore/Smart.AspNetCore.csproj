@@ -34,7 +34,7 @@
 
   <ItemGroup>
     <PackageReference Include="SourceGenerateHelper" Version="1.30.0" GeneratePathProperty="true" PrivateAssets="all" />
-    <PackageReference Include="Usa.Smart.Core" Version="2.20.0" />
+    <PackageReference Include="Usa.Smart.Core" Version="2.21.0" />
   </ItemGroup>
 
   <ItemGroup>
