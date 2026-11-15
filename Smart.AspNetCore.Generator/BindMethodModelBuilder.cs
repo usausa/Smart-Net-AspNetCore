@@ -55,23 +55,25 @@ internal static class BindMethodModelBuilder
 
         var canFallback = containingType.GetContainingTypes().All(IsPartialType);
         Result<MethodModel> Fallback(DiagnosticInfo error) =>
-            !canFallback ? Results.Error<MethodModel>(error) : new(
-                new MethodModel(
-                    ns,
-                    containingTypes,
-                    hintName,
-                    signature,
-                    BindingPattern.Instance,
-                    string.Empty,
-                    string.Empty,
-                    string.Empty,
-                    string.Empty,
-                    EquatableArray<PropertyModel>.Empty,
-                    false,
-                    EquatableArray<DiagnosticInfo>.Empty,
-                    IsFallback: true,
-                    TypeName: typeName),
-                new EquatableArray<DiagnosticInfo>([error]));
+            !canFallback
+                ? Results.Error<MethodModel>(error)
+                : new(
+                    new MethodModel(
+                        ns,
+                        containingTypes,
+                        hintName,
+                        signature,
+                        BindingPattern.Instance,
+                        string.Empty,
+                        string.Empty,
+                        string.Empty,
+                        string.Empty,
+                        EquatableArray<PropertyModel>.Empty,
+                        false,
+                        EquatableArray<DiagnosticInfo>.Empty,
+                        IsFallback: true,
+                        TypeName: typeName),
+                    new EquatableArray<DiagnosticInfo>([error]));
 
         if (symbol.IsGenericMethod)
         {
