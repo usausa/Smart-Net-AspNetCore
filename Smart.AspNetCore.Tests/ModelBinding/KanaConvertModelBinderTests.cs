@@ -44,6 +44,13 @@ public sealed class KanaController : ControllerBase
         request.KatakanaToHankana,
         request.NoConversion
     });
+
+    [HttpPost("State")]
+    public IActionResult State([FromForm] KanaQueryRequest request) => Ok(new
+    {
+        request.HankanaToKatakana,
+        ModelState[nameof(KanaQueryRequest.HankanaToKatakana)]?.AttemptedValue
+    });
 }
 
 //--------------------------------------------------------------------------------
@@ -155,5 +162,19 @@ public sealed class KanaConvertModelBinderTests
         var json = await response.Content.ReadFromJsonAsync<JsonElement>(ct);
 
         Assert.Equal("アイウ", json.GetProperty("hankanaToKatakana").GetString());
+    }
+
+    [Fact]
+    public async Task WhenFormIsPostedThenModelStateHasConvertedValue()
+    {
+        var ct = TestContext.Current.CancellationToken;
+        using var form = new FormUrlEncodedContent([new("HankanaToKatakana", "ｱｲｳ")]);
+
+        var response = await Client.PostAsync(new Uri("/Kana/State", UriKind.Relative), form, ct);
+        response.EnsureSuccessStatusCode();
+        var json = await response.Content.ReadFromJsonAsync<JsonElement>(ct);
+
+        Assert.Equal("アイウ", json.GetProperty("hankanaToKatakana").GetString());
+        Assert.Equal("アイウ", json.GetProperty("attemptedValue").GetString());
     }
 }

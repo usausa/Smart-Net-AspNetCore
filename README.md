@@ -15,6 +15,7 @@
 * Mvc results (`DeletePhysicalFileResult`, `PushStreamResult`)
 * JSON converters (`DateTimeFormatConverter`, `StrictEnumConverter`)
 * Binder source generator (`BindAttribute`, `DefaultStringConverter`)
+* Kana conversion on model binding (`KanaConvertAttribute` in `Usa.Smart.AspNetCore.Japanese`)
 
 ## Binder source generator
 
@@ -69,6 +70,21 @@ original body, so large responses are not buffered in memory.
 > **Do not enable the `Debug` level for this middleware in production.** Request bodies frequently
 > contain passwords, tokens, and personal data, and dumping them writes those values to the log in
 > plain text. This feature is intended for development use only.
+
+## KanaConvertAttribute
+
+`AddKanaConvertModelBinder()` converts the value of a `[KanaConvert]` property on model binding.
+`ModelState` holds the converted value, so a redisplayed form shows it.
+
+Client-side validation sees the value before conversion, so a `[KanaConvert]` property emits only
+`[Required]` as a client-side rule, and the other rules are validated on the server after conversion.
+Set `ClientValidation` to emit all client-side rules, for example when the browser applies the same
+conversion:
+
+```csharp
+[KanaConvert(KanaOption.Wide, ClientValidation = true)]
+public string? Name { get; set; }
+```
 
 ## Notes
 

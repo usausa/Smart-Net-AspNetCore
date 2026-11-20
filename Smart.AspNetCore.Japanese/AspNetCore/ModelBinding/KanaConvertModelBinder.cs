@@ -24,16 +24,17 @@ public sealed class KanaConvertModelBinder : IModelBinder
             return Task.CompletedTask;
         }
 
-        bindingContext.ModelState.SetModelValue(bindingContext.ModelName, valueProviderResult);
-
         var value = valueProviderResult.FirstValue;
         if (value is null)
         {
+            bindingContext.ModelState.SetModelValue(bindingContext.ModelName, valueProviderResult);
             bindingContext.Result = ModelBindingResult.Success(null);
             return Task.CompletedTask;
         }
 
-        bindingContext.Result = ModelBindingResult.Success(KanaConverter.Convert(value, option));
+        var converted = KanaConverter.Convert(value, option);
+        bindingContext.ModelState.SetModelValue(bindingContext.ModelName, new ValueProviderResult(converted, valueProviderResult.Culture));
+        bindingContext.Result = ModelBindingResult.Success(converted);
         return Task.CompletedTask;
     }
 }
