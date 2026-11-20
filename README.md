@@ -5,7 +5,6 @@
 ## Features
 
 * Action constraints (`AjaxOnlyAttribute`, `FormParameterAttribute`, `QueryParameterAttribute`)
-* Data annotations (`AnyRequiredAttribute`, `RequiredWhenAttribute`, `CompareToAttribute`, `DuplicateAttribute`, `ElementRequiredAttribute`)
 * Filters (`TimeLoggingFilter`, `AjaxModelStateAttribute`, `ReadableBodyStreamAttribute`)
 * Routing (`SubAreaAttribute`, `ConvertAttribute`)
 * Application model conventions (kebab-case and lowercase controller naming)
