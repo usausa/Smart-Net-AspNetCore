@@ -25,9 +25,8 @@ public static class ViewContextExtensions
             return typedValue;
         }
 
-        var type = typeof(T);
-        var targetType = Nullable.GetUnderlyingType(type) ?? type;
-        if (targetType.IsEnum)
+        var targetType = TargetType<T>.Value;
+        if (TargetType<T>.IsEnum)
         {
             try
             {
@@ -173,5 +172,12 @@ public static class ViewContextExtensions
                controller.Equals((string)currentController!, StringComparison.OrdinalIgnoreCase) &&
                context.RouteData.Values.TryGetValue("action", out var currentAction) &&
                actions.Any(x => x.Equals((string)currentAction!, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static class TargetType<T>
+    {
+        public static Type Value { get; } = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
+
+        public static bool IsEnum { get; } = (Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T)).IsEnum;
     }
 }
